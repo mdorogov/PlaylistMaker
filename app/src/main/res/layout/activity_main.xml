@@ -13,7 +13,7 @@
         android:padding="@dimen/padding_12"
         android:text="@string/title_name"
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="@dimen/text_size_22"
         android:textStyle="bold"/>
 
     <Button
@@ -27,7 +27,7 @@
         android:text="@string/search_text"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_26"
+        android:textSize="@dimen/text_size_22"
         app:cornerRadius="@dimen/radius_16"
         app:icon="@drawable/ic_search"
         app:iconGravity="textStart"
@@ -45,7 +45,7 @@
         android:text="@string/library_text"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_26"
+        android:textSize="@dimen/text_size_22"
         app:cornerRadius="@dimen/radius_16"
         app:icon="@drawable/ic_library"
         app:iconGravity="textStart"
@@ -64,7 +64,7 @@
         android:text="@string/settings_text"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_26"
+        android:textSize="@dimen/text_size_22"
         app:cornerRadius="@dimen/radius_16"
         app:icon="@drawable/ic_settings"
         app:iconGravity="textStart"
