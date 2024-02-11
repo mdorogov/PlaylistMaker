@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_12">
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/padding_12"
+            android:src="@drawable/ic_back"
+            app:iconSize="@dimen/ic_size_24"
+            app:iconTint="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/padding_12"
+            android:text="@string/settings_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_22"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/frame_padding_16"
+        android:paddingVertical="@dimen/frame_padding_20">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/dark_theme_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_16" />
+
+        <Switch
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="6dp"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/frame_padding_16"
+        android:paddingVertical="@dimen/frame_padding_20">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/sharing_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_16" />
+
+        <ImageView
+            android:layout_width="@dimen/ic_size_24"
+            android:layout_height="@dimen/ic_size_24"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/padding_12"
+            android:src="@drawable/ic_share" />
+
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/frame_padding_16"
+        android:paddingVertical="@dimen/frame_padding_20">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/support_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_16" />
+
+        <ImageView
+            android:layout_width="@dimen/ic_size_24"
+            android:layout_height="@dimen/ic_size_24"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/padding_12"
+            android:src="@drawable/ic_support" />
+
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/frame_padding_16"
+        android:paddingVertical="@dimen/frame_padding_20">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/agreement_text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_16" />
+
+        <ImageView
+            android:layout_width="@dimen/ic_size_24"
+            android:layout_height="@dimen/ic_size_24"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/padding_12"
+            android:src="@drawable/ic_forward" />
+
+
+    </FrameLayout>
+
+
+</LinearLayout>
