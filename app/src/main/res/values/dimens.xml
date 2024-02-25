@@ -15,4 +15,6 @@
     <dimen name="frame_padding_24">24dp</dimen>
     <dimen name="padding_8_5dp">8.5dp</dimen>
     <dimen name="padding_28dp">28dp</dimen>
+    <dimen name="padding_5dp">5dp</dimen>
+    <dimen name="padding_10dp">10dp</dimen>
 </resources>

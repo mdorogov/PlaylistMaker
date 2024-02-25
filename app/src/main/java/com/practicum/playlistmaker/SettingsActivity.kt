@@ -32,10 +32,6 @@ val backButtonIntent = Intent(this, MainActivity::class.java)
         agreementButton.setOnClickListener{
             showAgreement()
         }
-
-
-
-
     }
 
     private fun showAgreement() {
@@ -56,7 +52,8 @@ val backButtonIntent = Intent(this, MainActivity::class.java)
     private fun sendEmail() {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")
-            putExtra(Intent.EXTRA_EMAIL, getString(R.string.test_email))
+            val sendToEmail : Array<String> = arrayOf("dorogovmax@yandex.com")
+            putExtra(Intent.EXTRA_EMAIL, sendToEmail)
             putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_support_mail) +
                     " Playlist Maker")
             putExtra(Intent.EXTRA_TEXT, getString(R.string.text_support_mail))
