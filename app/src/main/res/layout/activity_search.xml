@@ -1,8 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_12">
+
+        <ImageView
+            android:id="@+id/back_button"
+            style="@style/BackButton" />
+
+        <TextView
+            style="@style/ActivityText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/padding_12"
+            android:text="@string/search_text"
+            android:textColor="?attr/colorOnSecondary" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/ic_size_24"
+        android:background="@drawable/shape"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_8_5dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/search_icon" />
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            style="@style/SearchHint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_5dp"
+            android:layout_weight="200"
+            android:background="@android:color/transparent"
+            android:hint="@string/search_text"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:lines="1"
+            android:textCursorDrawable="@drawable/text_cursor" />
+
+        <ImageView
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/padding_10dp"
+            android:src="@drawable/ic_delete"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
