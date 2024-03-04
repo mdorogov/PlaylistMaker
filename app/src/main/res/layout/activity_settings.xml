@@ -85,5 +85,4 @@
             android:src="@drawable/ic_forward" />
     </FrameLayout>
 
-
 </LinearLayout>

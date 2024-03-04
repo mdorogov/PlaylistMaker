@@ -66,5 +66,31 @@
         <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
     </style>
 
+    <style name="ArtistDurationTrackView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="ArtistTrackViw">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">@string/test_text_0_00</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <style name="ChosenTrackView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/padding_18</item>
+        <item name="android:layout_marginEnd">@dimen/padding_10dp</item>
+    </style>
+
+
     <dimen name="text_size_14">14sp</dimen>
+    <dimen name="padding_18">18dp</dimen>
 </resources>
