@@ -1,14 +1,13 @@
 package com.practicum.playlistmaker
 
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -23,8 +22,8 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(model: Track) {
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackDuration.text = model.trackDuration
-        setArtwork(model.artwork)
+        trackDuration.text = setDuration(model.trackTimeMillis)
+        setArtwork(model.artworkUrl100)
     }
 
     private fun setArtwork(art: String) {
@@ -33,6 +32,12 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .placeholder(R.drawable.placeholder)
             .transform(RoundedCorners(DimensConverter.dpToPx(2f, artwork)))
             .into(artwork)
+    }
+
+    private fun setDuration(millis : String) : String {
+        val num = millis.toLong()
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(num)
+
     }
 
 

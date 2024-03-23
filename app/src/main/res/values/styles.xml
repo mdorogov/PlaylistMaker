@@ -90,6 +90,31 @@
         <item name="android:layout_marginEnd">@dimen/padding_10dp</item>
     </style>
 
+    <style name="UpdateButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:text">@string/update_btn_text</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textColor">?attr/colorSecondary</item>
+        <item name="android:backgroundTint">?attr/colorOnSecondary</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="cornerRadius">20dp</item>
+        <item name="android:textFontWeight">500</item>
+    </style>
+
+    <style name="StatusTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:paddingTop">@dimen/padding_14</item>
+        <item name="android:paddingLeft">@dimen/padding_24dp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/text_size_19</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
 
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="padding_18">18dp</dimen>
