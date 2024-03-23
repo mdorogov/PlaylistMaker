@@ -14,8 +14,7 @@ class MainActivity : AppCompatActivity() {
         val libraryButton = findViewById<Button>(R.id.library_button)
         val settingsButton = findViewById<Button>(R.id.settings_button)
 
-
-        searchButton.setOnClickListener{
+        searchButton.setOnClickListener {
             val searchIntent = Intent(this, SearchActivity::class.java)
             startActivity(searchIntent)
 
@@ -24,11 +23,11 @@ class MainActivity : AppCompatActivity() {
             val libraryIntent = Intent(this, LibraryActivity::class.java)
             startActivity(libraryIntent)
         }
-        settingsButton.setOnClickListener{
-           val settingsIntent = Intent(this, SettingsActivity::class.java)
+        settingsButton.setOnClickListener {
+            val settingsIntent = Intent(this, SettingsActivity::class.java)
             startActivity(settingsIntent)
         }
-        }
-
-//check
     }
+
+
+}
