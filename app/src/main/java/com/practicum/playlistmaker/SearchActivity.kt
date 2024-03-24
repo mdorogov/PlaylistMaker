@@ -122,11 +122,12 @@ class SearchActivity : AppCompatActivity() {
             }
 
             "No Connection" -> {
-                statusImage.setImageResource(R.drawable.no_connection)
+                statusImage.setImageResource(R.drawable.connection_error)
                 statusText.setText(getString(R.string.no_connection_text_ru))
                 updateButton.setOnClickListener {
                     trackSearching(inputUserText)
                 }
+                updateButton.visibility = View.VISIBLE
             }
         }
         trackRecycler.visibility = View.GONE
