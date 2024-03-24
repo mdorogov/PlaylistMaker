@@ -87,6 +87,7 @@ class SearchActivity : AppCompatActivity() {
                     inputEditText.requestFocus()
                     inputSearchText = s.toString()
                     deleteButton.setOnClickListener {
+                        statusView.visibility = View.GONE
                         inputEditText.setText("")
                         songs.clear()
                         trackAdapter.notifyDataSetChanged()
@@ -117,18 +118,20 @@ class SearchActivity : AppCompatActivity() {
             "Not Found" -> {
                 statusImage.setImageResource(R.drawable.not_found_error)
                 statusText.setText(getString(R.string.not_found_text_ru))
+                updateButton.visibility = View.GONE
             }
 
             "No Connection" -> {
                 statusImage.setImageResource(R.drawable.no_connection)
                 statusText.setText(getString(R.string.no_connection_text_ru))
+                updateButton.setOnClickListener {
+                    trackSearching(inputUserText)
+                }
             }
         }
         trackRecycler.visibility = View.GONE
         statusView.visibility = View.VISIBLE
-        updateButton.setOnClickListener {
-            trackSearching(inputUserText)
-        }
+
     }
 
     private fun trackSearching(userRequest: String) {
@@ -154,7 +157,6 @@ class SearchActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<ItunesResponse>, t: Throwable) {
                     showStatusView("No Connection", userRequest)
-                    Toast.makeText(this@SearchActivity, "хреново", Toast.LENGTH_SHORT).show()
                 }
             })
         }
