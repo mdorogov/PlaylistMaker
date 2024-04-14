@@ -6,16 +6,29 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.ImageView
+import com.google.android.material.switchmaterial.SwitchMaterial
+
+const val PLAYLIST_MAKER_PREFERENCES = "playlist_maker_preferences"
+const val NIGHT_THEME_CHECKED = "key_for_theme_switcher"
 
 class SettingsActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+
 
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener{
 val backButtonIntent = Intent(this, MainActivity::class.java)
             startActivity(backButtonIntent)
+        }
+
+        val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)
+        themeSwitcher.setOnCheckedChangeListener{switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+            saveThemePreference(checked)
         }
 
         val shareButton = findViewById<FrameLayout>(R.id.share_button)
@@ -32,6 +45,11 @@ val backButtonIntent = Intent(this, MainActivity::class.java)
         agreementButton.setOnClickListener{
             showAgreement()
         }
+    }
+
+    private fun saveThemePreference(checked : Boolean) {
+        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
+        sharedPrefs.edit().putString(NIGHT_THEME_CHECKED, checked.toString()).apply()
     }
 
     private fun showAgreement() {
@@ -62,3 +80,5 @@ val backButtonIntent = Intent(this, MainActivity::class.java)
             startActivity(intent)
     }
 }
+
+
