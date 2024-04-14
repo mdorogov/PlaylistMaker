@@ -25,21 +25,17 @@
             android:textColor="?attr/colorOnSecondary"/>
     </LinearLayout>
 
-    <FrameLayout
-        style="@style/FrameLayoutStyle">
 
-        <TextView
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/themeSwitcher"
             style="@style/SettingsView"
-            android:text="@string/dark_theme_text"/>
-
-        <Switch
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/frame_padding_16"
+            android:paddingVertical="@dimen/frame_padding_20"
             android:layout_marginEnd="6dp"
+            android:text="@string/dark_theme_text"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/share_button"
