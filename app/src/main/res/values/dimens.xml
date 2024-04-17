@@ -22,4 +22,8 @@
     <dimen name="text_size_13">13sp</dimen>
     <dimen name="padding_24dp">24dp</dimen>
     <dimen name="padding_100dp">100dp</dimen>
+    <dimen name="frame_padding_12">12dp</dimen>
+    <dimen name="frame_padding_30">30dp</dimen>
+    <dimen name="frame_padding_26">26dp</dimen>
+    <dimen name="padding_9">9dp</dimen>
 </resources>

@@ -28,4 +28,9 @@
     <string name="not_found_text_ru">Ничего не нашлось</string>
     <string name="no_connection_text_ru">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="update_btn_text">Обновить</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="releaseYear">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
 </resources>

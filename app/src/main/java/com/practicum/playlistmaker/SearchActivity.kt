@@ -79,14 +79,14 @@ class SearchActivity : AppCompatActivity() {
     private fun initializeRecyclerViews() {
         trackRecycler = findViewById(R.id.trackRecycler)
         trackRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(songs, searchHistoryHandler)
+        trackAdapter = TrackAdapter(this, songs, searchHistoryHandler)
 
         searchHistoryView = findViewById(R.id.searchHistoryView)
         cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
         historyRecycler = findViewById(R.id.searchHistoryRecycler)
         historyRecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        searchHistoryAdapter = TrackAdapter(searchHistoryHandler.array, searchHistoryHandler)
+        searchHistoryAdapter = TrackAdapter(this, searchHistoryHandler.array, searchHistoryHandler)
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             searchHistoryView.visibility = if (hasFocus && inputEditText.text.isEmpty()) {

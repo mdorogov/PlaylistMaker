@@ -7,13 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.widget.Toast
 
 interface SavedTrackToHistory {
     fun onSaveTrackToHistory(track: Track)
 }
 
-class TrackAdapter(private var tracks: ArrayList<Track>, private val searchHistory: SearchHistory) :
+class TrackAdapter(private val context : Context, private var tracks: ArrayList<Track>, private val searchHistory: SearchHistory) :
     RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
@@ -27,6 +28,7 @@ class TrackAdapter(private var tracks: ArrayList<Track>, private val searchHisto
 
     override fun getItemCount(): Int {
         return tracks.size
+
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
@@ -34,8 +36,12 @@ class TrackAdapter(private var tracks: ArrayList<Track>, private val searchHisto
         holder.itemView.setOnClickListener {
             searchHistory.addTrackToArray(tracks[position])
             notifyDataSetChanged()
+            val playerIntent = Intent (context, PlayerActivity::class.java)
+            context.startActivity(playerIntent)
+
         }
     }
+
 
 
     @SuppressLint("SuspiciousIndentation")
