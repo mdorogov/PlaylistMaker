@@ -120,12 +120,14 @@
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/text_size_22</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textFontWeight">400</item>
     </style>
 
     <style name="ArtistPlayerTextView">
         <item name="fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/text_size_14</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textFontWeight">400</item>
     </style>
 
     <style name="DescriptionPlayerTextView">

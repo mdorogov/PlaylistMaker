@@ -22,7 +22,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(model: Track) {
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackDuration.text = setDuration(model.trackTimeMillis)
+        trackDuration.text = MillisConverter.millisToMinutesAndSeconds(model.trackTimeMillis)
         setArtwork(model.artworkUrl100)
     }
 

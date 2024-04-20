@@ -3,19 +3,16 @@ package com.practicum.playlistmaker
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.widget.Toast
+import com.google.gson.Gson
 
-interface SavedTrackToHistory {
-    fun onSaveTrackToHistory(track: Track)
-}
-
-class TrackAdapter(private val context : Context, private var tracks: ArrayList<Track>, private val searchHistory: SearchHistory) :
-    RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(
+    private val context: Context,
+    private var tracks: ArrayList<Track>,
+    private val searchHistory: SearchHistory,
+) :RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
 
@@ -28,7 +25,6 @@ class TrackAdapter(private val context : Context, private var tracks: ArrayList<
 
     override fun getItemCount(): Int {
         return tracks.size
-
     }
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
@@ -36,13 +32,12 @@ class TrackAdapter(private val context : Context, private var tracks: ArrayList<
         holder.itemView.setOnClickListener {
             searchHistory.addTrackToArray(tracks[position])
             notifyDataSetChanged()
-            val playerIntent = Intent (context, PlayerActivity::class.java)
+            val playerIntent = Intent(context, PlayerActivity::class.java)
+            playerIntent.putExtra(Intent.EXTRA_SUBJECT, Gson().toJson(tracks[position]))
             context.startActivity(playerIntent)
 
         }
     }
-
-
 
     @SuppressLint("SuspiciousIndentation")
     fun update(tracks: ArrayList<Track>) {

@@ -26,4 +26,5 @@
     <dimen name="frame_padding_30">30dp</dimen>
     <dimen name="frame_padding_26">26dp</dimen>
     <dimen name="padding_9">9dp</dimen>
+    <dimen name="padding_4dp">4dp</dimen>
 </resources>
