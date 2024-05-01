@@ -48,7 +48,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var updateButton: Button
 
     private lateinit var trackAdapter: TrackAdapter
-    //private lateinit var songsSearchHistory: ArrayList<Track>
     private lateinit var searchTrackHistory: SharedPreferences
     private lateinit var searchHistoryView: LinearLayout
     private lateinit var historyRecycler: RecyclerView
@@ -65,7 +64,6 @@ class SearchActivity : AppCompatActivity() {
 
         searchTrackHistory = getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
         searchHistoryHandler = SearchHistory(searchTrackHistory)
-        //songsSearchHistory = searchHistoryHandler.array
 
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener {
@@ -79,14 +77,14 @@ class SearchActivity : AppCompatActivity() {
     private fun initializeRecyclerViews() {
         trackRecycler = findViewById(R.id.trackRecycler)
         trackRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(songs, searchHistoryHandler)
+        trackAdapter = TrackAdapter(this, songs, searchHistoryHandler)
 
         searchHistoryView = findViewById(R.id.searchHistoryView)
         cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
         historyRecycler = findViewById(R.id.searchHistoryRecycler)
         historyRecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        searchHistoryAdapter = TrackAdapter(searchHistoryHandler.array, searchHistoryHandler)
+        searchHistoryAdapter = TrackAdapter(this, searchHistoryHandler.array, searchHistoryHandler)
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             searchHistoryView.visibility = if (hasFocus && inputEditText.text.isEmpty()) {
@@ -122,6 +120,7 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 //
             }
+
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     deleteButton.visibility = View.GONE
@@ -159,6 +158,7 @@ class SearchActivity : AppCompatActivity() {
             false
         }
     }
+
     private fun initializeViews() {
         inputEditText = findViewById(R.id.search_edit_text)
         deleteButton = findViewById(R.id.delete_button)
@@ -173,6 +173,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
     }
+
     private fun showStatusView(typeOfMessage: String, inputUserText: String) {
         statusImage = findViewById(R.id.searchStatusImage)
         statusText = findViewById(R.id.searchStatusText)

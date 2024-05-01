@@ -3,18 +3,16 @@ package com.practicum.playlistmaker
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.widget.Toast
+import android.content.Intent
+import com.google.gson.Gson
 
-interface SavedTrackToHistory {
-    fun onSaveTrackToHistory(track: Track)
-}
-
-class TrackAdapter(private var tracks: ArrayList<Track>, private val searchHistory: SearchHistory) :
-    RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(
+    private val context: Context,
+    private var tracks: ArrayList<Track>,
+    private val searchHistory: SearchHistory,
+) :RecyclerView.Adapter<TrackViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
 
@@ -34,9 +32,12 @@ class TrackAdapter(private var tracks: ArrayList<Track>, private val searchHisto
         holder.itemView.setOnClickListener {
             searchHistory.addTrackToArray(tracks[position])
             notifyDataSetChanged()
+            val playerIntent = Intent(context, PlayerActivity::class.java)
+            playerIntent.putExtra(Intent.EXTRA_SUBJECT, Gson().toJson(tracks[position]))
+            context.startActivity(playerIntent)
+
         }
     }
-
 
     @SuppressLint("SuspiciousIndentation")
     fun update(tracks: ArrayList<Track>) {
