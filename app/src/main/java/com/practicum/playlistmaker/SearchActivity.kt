@@ -6,15 +6,17 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 const val SEARCH_TRACK_HISTORY = "search_track_history"
 const val JSON_HISTORY_KEY = "key_for_json_history"
+const val AUTO_SEARCHING_DELAY = 2000L
 
 class SearchActivity : AppCompatActivity() {
     var inputSearchText: String? = null
@@ -58,6 +61,10 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryHandler: SearchHistory
     private lateinit var searchHistoryAdapter: TrackAdapter
 
+    private lateinit var progressBar: ProgressBar
+    private lateinit var searchRunnable: Runnable
+    private val handler = Handler(Looper.getMainLooper())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -65,11 +72,13 @@ class SearchActivity : AppCompatActivity() {
         searchTrackHistory = getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
         searchHistoryHandler = SearchHistory(searchTrackHistory)
 
+
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener {
             val backButtonIntent = Intent(this, MainActivity::class.java)
             startActivity(backButtonIntent)
         }
+
         initializeViews()
         initializeRecyclerViews()
     }
@@ -85,6 +94,9 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         searchHistoryAdapter = TrackAdapter(this, searchHistoryHandler.array, searchHistoryHandler)
+
+        progressBar = findViewById(R.id.progressBar)
+        searchRunnable = Runnable { trackSearching() }
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
             searchHistoryView.visibility = if (hasFocus && inputEditText.text.isEmpty()) {
@@ -137,6 +149,9 @@ class SearchActivity : AppCompatActivity() {
                     deleteButton.visibility = View.VISIBLE
                     inputEditText.requestFocus()
                     inputSearchText = s.toString()
+                    trackRecycler.visibility = View.GONE
+                    autoTrackSearching()
+
                     deleteButton.setOnClickListener {
                         statusView.visibility = View.GONE
                         inputEditText.setText("")
@@ -151,13 +166,8 @@ class SearchActivity : AppCompatActivity() {
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
-        inputEditText.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                trackSearching(inputEditText.text.toString())
-            }
-            false
-        }
     }
+
 
     private fun initializeViews() {
         inputEditText = findViewById(R.id.search_edit_text)
@@ -190,7 +200,7 @@ class SearchActivity : AppCompatActivity() {
                 statusImage.setImageResource(R.drawable.connection_error)
                 statusText.setText(getString(R.string.no_connection_text_ru))
                 updateButton.setOnClickListener {
-                    trackSearching(inputUserText)
+                    trackSearching()
                 }
                 updateButton.visibility = View.VISIBLE
             }
@@ -200,36 +210,46 @@ class SearchActivity : AppCompatActivity() {
 
     }
 
-    private fun trackSearching(userRequest: String) {
+    private fun autoTrackSearching() {
+        handler.removeCallbacks(searchRunnable)
+        handler.postDelayed(searchRunnable, AUTO_SEARCHING_DELAY)
+    }
+
+    private fun trackSearching() {
+        progressBar.visibility = View.VISIBLE
+        var userRequest = inputEditText.text.toString()
+
 
         if (userRequest.isNotEmpty()) {
             itunesService.search(userRequest).enqueue(object : Callback<ItunesResponse> {
                 override fun onResponse(
+
                     call: Call<ItunesResponse>,
                     response: Response<ItunesResponse>,
                 ) {
+                    progressBar.visibility = View.GONE
                     if (response.code() == 200) {
                         songs.clear()
                         if (response.body()?.results?.isNotEmpty() == true) {
                             trackRecycler.visibility = View.VISIBLE
                             statusView.visibility = View.GONE
                             songs.addAll(response.body()?.results!!)
-
                             trackRecycler.adapter = trackAdapter
                             trackAdapter.notifyDataSetChanged()
                         }
                         if (songs.isEmpty()) {
+                            progressBar.visibility = View.GONE
                             showStatusView("Not Found", userRequest)
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<ItunesResponse>, t: Throwable) {
+                    progressBar.visibility = View.GONE
                     showStatusView("No Connection", userRequest)
                 }
             })
         }
-
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
