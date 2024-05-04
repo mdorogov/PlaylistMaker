@@ -16,6 +16,7 @@ const val STATE_DEFAULT = "0"
 const val STATE_PREPARED = "1"
 const val STATE_PLAYING = "2"
 const val STATE_PAUSED = "3"
+const val PLAYBACK_TIME_UPDATE_DELAY = 500L
 
 class PlayerActivity() : AppCompatActivity() {
     companion object {
@@ -29,7 +30,7 @@ class PlayerActivity() : AppCompatActivity() {
     private lateinit var json: String
 
     private var mediaPlayer = MediaPlayer()
-    var playerState = STATE_DEFAULT
+    private var playerState = STATE_DEFAULT
 
     private lateinit var playButton: ImageView
     private lateinit var playbackTimer: Runnable
@@ -85,7 +86,12 @@ class PlayerActivity() : AppCompatActivity() {
         val genreText = findViewById<TextView>(R.id.genre_text).setText(track.primaryGenreName)
         val countryText = findViewById<TextView>(R.id.country_text).setText(track.country)
 
-        playbackTimer = Runnable { setCurrentPlaybackTime() }
+        playbackTimer = object : Runnable {
+            override fun run() {
+                setCurrentPlaybackTime()
+                handler.postDelayed(this, PLAYBACK_TIME_UPDATE_DELAY)
+            }
+        }
 
         playerPreparing()
 
@@ -134,6 +140,7 @@ class PlayerActivity() : AppCompatActivity() {
         mediaPlayer.pause()
         playButton.setImageResource(R.drawable.play_button)
         playerState = STATE_PAUSED
+        handler.removeCallbacks(playbackTimer)
     }
 
     private fun playerControl() {
@@ -150,14 +157,7 @@ class PlayerActivity() : AppCompatActivity() {
     }
 
     private fun autoPlaybackTimer() {
-        handler.postDelayed(
-            object : Runnable {
-                override fun run() {
-                    setCurrentPlaybackTime()
-                    handler.postDelayed(this, 500L)
-                }
-            }, 500L
-        )
+        handler.postDelayed(playbackTimer, PLAYBACK_TIME_UPDATE_DELAY)
     }
 
     private fun setCurrentPlaybackTime() {
@@ -169,10 +169,9 @@ class PlayerActivity() : AppCompatActivity() {
             }
 
             STATE_PREPARED -> {
-                playtime.setText("00:00")
+                playtime.setText(getString(R.string.prepared_playback_time_text))
                 handler.removeCallbacks(playbackTimer)
             }
-
         }
     }
 

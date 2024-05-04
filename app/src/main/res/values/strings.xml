@@ -33,4 +33,5 @@
     <string name="releaseYear">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
+    <string name="prepared_playback_time_text">00:00</string>
 </resources>
