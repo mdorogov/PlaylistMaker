@@ -1,6 +1,6 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.data.dto
 
-data class Track(
+data class TrackDto(
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,
@@ -10,9 +10,6 @@ data class Track(
     val primaryGenreName: String,
     val country: String,
     val releaseDate: String,
-    val previewUrl: String,
+    val previewUrl: String
 ) {
-    fun getPlayerArtwork(): String {
-        return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
-    }
 }

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.data.mapper
 
 import android.util.TypedValue
 import android.widget.ImageView
