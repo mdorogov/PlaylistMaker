@@ -42,12 +42,7 @@ class SearchActivity : AppCompatActivity() {
     var inputSearchText: String? = null
 
     private val itunesBaseUrl = "https://itunes.apple.com"
-    /*private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
 
-    val itunesService = retrofit.create(ItunesApi::class.java)*/
     private lateinit var inputEditText: EditText
     private lateinit var trackRecycler: RecyclerView
     private lateinit var deleteButton: ImageView
