@@ -21,8 +21,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener{
-val backButtonIntent = Intent(this, MainActivity::class.java)
-            startActivity(backButtonIntent)
+           finish()
         }
 
         val themeSwitcher = findViewById<SwitchMaterial>(R.id.themeSwitcher)

@@ -103,8 +103,7 @@ class PlayerActivity() : AppCompatActivity() {
         playerPreparing()
 
         backButton.setOnClickListener {
-            val backButtonIntent = Intent(this, SearchActivity::class.java)
-            startActivity(backButtonIntent)
+            finish()
         }
 
         playButton.setOnClickListener {
