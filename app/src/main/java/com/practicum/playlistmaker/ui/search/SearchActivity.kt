@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -21,11 +21,17 @@ import android.widget.TextView
 import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.data.dto.ItunesResponse
+import com.practicum.playlistmaker.MainActivity
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.data.SearchHistory
+import com.practicum.playlistmaker.data.models.Track
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.domain.api.TracksInteractor
+import com.practicum.playlistmaker.domain.api.TracksInteractor.TracksConsumer
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 const val SEARCH_TRACK_HISTORY = "search_track_history"
@@ -36,12 +42,7 @@ class SearchActivity : AppCompatActivity() {
     var inputSearchText: String? = null
 
     private val itunesBaseUrl = "https://itunes.apple.com"
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(itunesBaseUrl)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
 
-    val itunesService = retrofit.create(ItunesApi::class.java)
     private lateinit var inputEditText: EditText
     private lateinit var trackRecycler: RecyclerView
     private lateinit var deleteButton: ImageView
@@ -51,32 +52,35 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var updateButton: Button
 
     private lateinit var trackAdapter: TrackAdapter
-    private lateinit var searchTrackHistory: SharedPreferences
+    //private lateinit var searchTrackHistory: SharedPreferences
     private lateinit var searchHistoryView: LinearLayout
     private lateinit var historyRecycler: RecyclerView
     private lateinit var cleanHistoryButton: Button
 
     private var songs = ArrayList<Track>()
 
-    private lateinit var searchHistoryHandler: SearchHistory
+   private lateinit var searchHistoryHandler: SearchHistory
     private lateinit var searchHistoryAdapter: TrackAdapter
 
     private lateinit var progressBar: ProgressBar
     private lateinit var searchRunnable: Runnable
     private val handler = Handler(Looper.getMainLooper())
 
+    private lateinit var getTracksInteractor: TracksInteractor
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        getTracksInteractor =  Creator.provideTracksInteractor(this)
 
-        searchTrackHistory = getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
-        searchHistoryHandler = SearchHistory(searchTrackHistory)
+        /*searchTrackHistory = getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)*/
+        searchHistoryHandler = getTracksInteractor.getSearchHistory()
 
 
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener {
-            val backButtonIntent = Intent(this, MainActivity::class.java)
-            startActivity(backButtonIntent)
+            finish()
         }
 
         initializeViews()
@@ -87,7 +91,6 @@ class SearchActivity : AppCompatActivity() {
         trackRecycler = findViewById(R.id.trackRecycler)
         trackRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         trackAdapter = TrackAdapter(this, songs, searchHistoryHandler)
-
         searchHistoryView = findViewById(R.id.searchHistoryView)
         cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
         historyRecycler = findViewById(R.id.searchHistoryRecycler)
@@ -118,7 +121,7 @@ class SearchActivity : AppCompatActivity() {
                 }
             }
         }
-        searchTrackHistory.registerOnSharedPreferenceChangeListener(sharedListener)
+        searchHistoryHandler.getSharedPrefs().registerOnSharedPreferenceChangeListener(sharedListener)
 
         cleanHistoryButton.setOnClickListener {
             searchHistoryHandler.cleanHistory()
@@ -215,7 +218,7 @@ class SearchActivity : AppCompatActivity() {
         handler.postDelayed(searchRunnable, AUTO_SEARCHING_DELAY)
     }
 
-    private fun trackSearching() {
+   /* private fun trackSearching() {
         progressBar.visibility = View.VISIBLE
         var userRequest = inputEditText.text.toString()
 
@@ -249,6 +252,44 @@ class SearchActivity : AppCompatActivity() {
                     showStatusView("No Connection", userRequest)
                 }
             })
+        }
+    }
+*/
+
+    private fun makeRequest(userRequest: String) {
+        progressBar.visibility = View.GONE
+try{
+    var resp = getTracksInteractor.searchTracks(userRequest, consumer = object : TracksConsumer {
+
+        override fun consume(foundTracks: List<Track>) {
+            handler.post{
+                if(foundTracks.isNotEmpty()){
+                    songs.clear()
+                    trackRecycler.visibility = View.VISIBLE
+                    statusView.visibility = View.GONE
+                    songs.addAll(foundTracks)
+                    trackRecycler.adapter = trackAdapter
+                    trackAdapter.notifyDataSetChanged()
+                } else {
+                    progressBar.visibility = View.GONE
+                    showStatusView("Not Found", userRequest)
+                }
+            }
+
+        }
+
+    })
+} catch (ex: Exception){
+    showStatusView("No Connection", userRequest)
+}
+    }
+
+    private fun trackSearching() {
+        progressBar.visibility = View.VISIBLE
+        var userRequest = inputEditText.text.toString()
+
+        if (userRequest.isNotEmpty()) {
+            makeRequest(userRequest)
         }
     }
 

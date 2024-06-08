@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.search
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,6 +9,10 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import com.google.gson.Gson
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.data.SearchHistory
+import com.practicum.playlistmaker.data.models.Track
+import com.practicum.playlistmaker.ui.player.PlayerActivity
 
 class TrackAdapter(
     private val context: Context,

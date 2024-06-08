@@ -1,8 +1,9 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.data
 
-import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.google.gson.Gson
+import com.practicum.playlistmaker.data.models.Track
+import com.practicum.playlistmaker.ui.search.JSON_HISTORY_KEY
 
 
 class SearchHistory(private val sharedPreferences: SharedPreferences) {
@@ -52,4 +53,11 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         //array.clear()
         sharedPreferences.edit().clear().apply()
     }
+
+    fun getSharedPrefs(): SharedPreferences{
+        return sharedPreferences
+    }
+
+
+
 }
