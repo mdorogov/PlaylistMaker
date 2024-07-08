@@ -46,14 +46,8 @@ class SettingsViewModel(
     }
 
     fun saveThemePreference(checked: Boolean){
-        AppCompatDelegate.setDefaultNightMode(
-            if (checked){
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
         settingsRepository.updateThemeSetting(checked)
+      settingState.postValue(SettingsState(checked))
     }
     fun shareApp(){
         sharingInteractor.shareApp()

@@ -2,15 +2,9 @@ package com.practicum.playlistmaker.player.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -32,6 +26,8 @@ class PlayerActivity() : AppCompatActivity() {
     private lateinit var json: String
     private lateinit var playButton: ImageView
     private lateinit var playtime: TextView
+
+    private var isTrackPlaying = false
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -61,13 +57,19 @@ class PlayerActivity() : AppCompatActivity() {
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
                 is PlayerState.Content -> setPlayerContent(screenState.trackModel, true)
+                is PlayerState.PlayTime -> setPlayStatus(screenState.progress, screenState.isPlaying)
             }
         }
 
-        viewModel.getPlayStatusLiveData().observe(this) { playStatus ->
-            changeButtonStyle(playStatus.isPlaying)
-            playtime.text = playStatus.progress
-        }
+    }
+
+    private fun changeContentVisibility(isVisible: Boolean) {
+
+    }
+
+    fun setPlayStatus(progress: String, isPlaying: Boolean){
+        changeButtonStyle(isPlaying)
+        playtime.text = progress
     }
 
     private fun changeButtonStyle(isPlaying: Boolean) {
@@ -118,15 +120,8 @@ class PlayerActivity() : AppCompatActivity() {
 
     private fun setPlayButtonOnListener() {
         playButton.setOnClickListener {
-            playerControl()
+            playerControl(isTrackPlaying)
         }
-    }
-
-    private fun changeContentVisibility(isVisible: Boolean) {
-    }
-
-    override fun onPause() {
-        super.onPause()
     }
 
     override fun onDestroy() {
@@ -134,25 +129,27 @@ class PlayerActivity() : AppCompatActivity() {
         viewModel.releasePlayer()
     }
 
-    private fun playerControl() {
-        when (viewModel.getPlayStatusLiveData().value!!.isPlaying) {
+    private fun playerControl(isPlaying: Boolean) {
+        when (isPlaying) {
             false -> {
                 changeButtonStyle(true)
+                isTrackPlaying = true
                 viewModel.play()
             }
 
             true -> {
                 changeButtonStyle(false)
+                isTrackPlaying = false
                 viewModel.pause()
             }
         }
     }
 
-    fun setReleaseYear(str: String): String {
+    private fun setReleaseYear(str: String): String {
         return str.substring(0, 4)
     }
 
-    fun setArtwork(imageUrl: String, artworkView: ImageView) {
+    private fun setArtwork(imageUrl: String, artworkView: ImageView) {
         Glide.with(applicationContext)
             .load(imageUrl)
             .placeholder(R.drawable.artwork_placeholder)

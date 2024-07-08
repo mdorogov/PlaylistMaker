@@ -1,12 +1,8 @@
 package com.practicum.playlistmaker.library.ui
 
-import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.data.impl.TrackPlayerImpl
-import com.practicum.playlistmaker.player.domain.api.TrackPlayer
 
 class LibraryActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

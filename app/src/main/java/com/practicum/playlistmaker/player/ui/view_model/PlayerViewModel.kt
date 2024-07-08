@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.player.ui.view_model
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,8 +8,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.creator.Creator.getString
 import com.practicum.playlistmaker.main.ui.App
-import com.practicum.playlistmaker.player.domain.api.TrackPlayer
+import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor
 import com.practicum.playlistmaker.player.ui.state.PlayStatus
 import com.practicum.playlistmaker.player.ui.state.PlayerState
@@ -19,11 +20,10 @@ import com.practicum.playlistmaker.search.data.models.Track
 class PlayerViewModel(
     private val jsonTrack: String,
     private val tracksPlayerInteractor: TracksPlayerInteractor,
-    private val trackPlayer: TrackPlayer,
+    private val trackPlayer: TrackPlayerRepository,
 ) : ViewModel() {
 
-    private var screenPlayerStateLiveData = MutableLiveData<PlayerState>(PlayerState.Loading)
-    private val playStatusLiveData = MutableLiveData(PlayStatus("00:00", false))
+    private var screenPlayerStateLiveData = MutableLiveData<PlayerState>()
     private lateinit var trackModel: Track
 
 
@@ -38,9 +38,8 @@ class PlayerViewModel(
     companion object {
         fun getViewModelFactory(jsonTrack: String): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val myApp = this[APPLICATION_KEY] as App
-                val interactor = myApp.provideTracksPlayerInteractor()
-                val trackPlayer = myApp.provideTrackPlayer()
+                val interactor = Creator.provideTracksPlayerInteractor()
+                val trackPlayer = Creator.provideTrackPlayer()
 
                 PlayerViewModel(jsonTrack, interactor, trackPlayer)
             }
@@ -48,29 +47,41 @@ class PlayerViewModel(
     }
 
     fun play() {
-        trackPlayer.play(trackModel.previewUrl,
-            statusObserver = object : TrackPlayer.StatusObserver {
+        trackPlayer.play(
+            trackModel.previewUrl,
+            statusObserver = object : TrackPlayerRepository.StatusObserver {
                 override fun onProgress(progress: String) {
-                    playStatusLiveData.value = getCurrentPlayStatus().copy(progress = progress, isPlaying = true)
+                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
+                        progress = progress,
+                        isPlaying = true
+                    )
                 }
 
                 override fun onStop() {
-                    playStatusLiveData.value = getCurrentPlayStatus().copy(progress = trackModel.getPlayerTrackTime(), isPlaying = false)
+                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
+                        progress = trackModel.getPlayerTrackTime(),
+                        isPlaying = false
+                    )
                 }
 
                 override fun onPlay() {
-                    playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = true)
+                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
+                        progress = "00:00",
+                        isPlaying = true
+                    )
                 }
 
-                override fun onPause(){
-                    playStatusLiveData.value = getCurrentPlayStatus().copy(isPlaying = false)
+                override fun onPause(progress: String) {
+                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
+                        progress = progress,
+                        isPlaying = false
+                    )
                 }
-
             },
         )
     }
 
-    fun resume(){
+    fun resume() {
         trackPlayer.resume()
     }
 
@@ -78,7 +89,7 @@ class PlayerViewModel(
         trackPlayer.pause()
     }
 
-    fun releasePlayer(){
+    fun releasePlayer() {
         trackPlayer.release()
     }
 
@@ -87,12 +98,6 @@ class PlayerViewModel(
         releasePlayer()
     }
 
-    fun getCurrentPlayStatus(): PlayStatus {
-        return playStatusLiveData.value ?: PlayStatus(progress = "00", isPlaying = false)
-    }
-
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenPlayerStateLiveData
-
-    fun getPlayStatusLiveData(): LiveData<PlayStatus> = playStatusLiveData
 
 }

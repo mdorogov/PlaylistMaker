@@ -7,5 +7,5 @@ sealed class PlayerState {
 
     data class Content(
         val trackModel: Track,): PlayerState()
-
+   data class PlayTime(val progress: String, val isPlaying: Boolean) : PlayerState()
 }

@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.ui.view_model
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
@@ -20,17 +21,16 @@ import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.ui.state.SearchState
 
 
-class SearchViewModel (application: Application) : AndroidViewModel(application) {
-    private var loadingObserver: ((Boolean) -> Unit)? = null
-
-    private var loadingLiveData = MutableLiveData(true)
-    private var stateLiveData = MutableLiveData<SearchState>()
+class SearchViewModel (application: Application,
+    private val tracksInteractor: TracksInteractor
+    ) : AndroidViewModel(application) {
+   // private var loadingObserver: ((Boolean) -> Unit)? = null
 
     private val handler = Handler(Looper.getMainLooper())
 
-    private var tracksInteractor =  Creator.provideTracksInteractor(getApplication())
+   // private var tracksInteractor =  Creator.provideTracksInteractor(getApplication())
     private var searchHistoryHandler = tracksInteractor.getSearchHistory()
-
+    private var stateLiveData = MutableLiveData<SearchState>(SearchState.providingSearchHistory(searchHistoryHandler))
     private var latestUserRequest: String? = null
 
 
@@ -38,10 +38,10 @@ class SearchViewModel (application: Application) : AndroidViewModel(application)
 
         private val SEARCH_REQUEST_TOKEN = Any()
         private const val AUTO_SEARCHING_DELAY = 2000L
-        fun getViewModelFactory(): ViewModelProvider.Factory =
+        fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    SearchViewModel(this[APPLICATION_KEY] as App)
+                    SearchViewModel(this[APPLICATION_KEY] as App,tracksInteractor = Creator.provideTracksInteractor(context))
                 }
             }
     }
@@ -58,7 +58,6 @@ class SearchViewModel (application: Application) : AndroidViewModel(application)
     fun searchTracks(userRequest: String){
         if (userRequest.isNotEmpty()) {
             renderState(SearchState.Loading)
-
             tracksInteractor.searchTracks(userRequest, object : TracksInteractor.TracksConsumer {
                 override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
                     val songs = mutableListOf<Track>()
@@ -105,28 +104,8 @@ loadTracksHistory()
 renderState(SearchState.History(searchHistoryHandler.createTrackArrayListFromJson()))
     }
 
-    /*init {
-        tracksInteractor.loadSomeData(
-            onComplete = {
-                loadingLiveData.postValue(false)
-            }
-        )
-    }*/
-
-    fun getLoadingLiveData(): LiveData<Boolean> = loadingLiveData
-
-    var isLoading: Boolean = true
-        private set(value) {
-            field = value
-            loadingObserver?.invoke(value)
-        }
-
-    fun addLoadingObserver(loadingObserver: ((Boolean) -> Unit)) {
-        this.loadingObserver = loadingObserver
-    }
-
-    fun removeLoadingObserver(){
-        this.loadingObserver = null
+    fun getSearchHistory(){
+        renderState(SearchState.providingSearchHistory(searchHistoryHandler))
     }
 
     fun cleanHistory() {

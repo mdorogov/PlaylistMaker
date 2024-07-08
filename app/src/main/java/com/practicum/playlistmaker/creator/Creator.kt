@@ -1,13 +1,15 @@
 package com.practicum.playlistmaker.creator
 
 import android.content.Context
+import android.media.MediaPlayer
+import android.provider.MediaStore.Audio.Media
 import androidx.appcompat.app.AppCompatActivity
-import com.practicum.playlistmaker.player.data.api.PlayerRepository
-import com.practicum.playlistmaker.player.data.impl.PlayerRepositoryImpl
-import com.practicum.playlistmaker.search.data.impl.SearchInteractorImpl
+import com.practicum.playlistmaker.player.data.impl.TrackPlayerRepositoryImpl
+import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
+import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor
+import com.practicum.playlistmaker.player.domain.impl.TracksPlayerInteractorImpl
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.TrackRepositoryImpl
-import com.practicum.playlistmaker.search.domain.SearchInteractor
 import com.practicum.playlistmaker.search.domain.api.TrackRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.domain.impl.TracksInteractorImpl
@@ -27,16 +29,19 @@ object Creator : AppCompatActivity() {
     }
 
     fun provideTracksInteractor(context: Context): TracksInteractor {
-        return  TracksInteractorImpl(getTrackRepository(context))
+        return  getTracksInteractor(context)
     }
 
-    private fun getPlayer(): PlayerRepositoryImpl {
-        return PlayerRepositoryImpl()
+    private fun getTracksInteractor(context: Context): TracksInteractor {
+        return TracksInteractorImpl(getTrackRepository(context))
     }
 
-    fun providePlayer(): PlayerRepository {
-        return getPlayer()
+    fun provideTrackPlayer(): TrackPlayerRepository{
+        return getTrackPlayerRepository()
+    }
 
+    private fun getTrackPlayerRepository(): TrackPlayerRepository {
+        return TrackPlayerRepositoryImpl()
     }
 
     private fun getSharingInteractor(context: Context): SharingInteractorImpl {
@@ -55,19 +60,22 @@ object Creator : AppCompatActivity() {
         return getSettingsRepo(context)
     }
 
-    fun provideSearchInteractor(): SearchInteractor {
-        return getSearchInteractor()
+    fun provideTracksPlayerInteractor(): TracksPlayerInteractor {
+        return getTracksPlayerInteractor()
     }
 
-    private fun getSearchInteractor(): SearchInteractorImpl {
-return SearchInteractorImpl()
-    }
-
-  /*  private fun getPlayerInteractor(): Player{
+    private fun getTracksPlayerInteractor(): TracksPlayerInteractor {
+        return TracksPlayerInteractorImpl()
 
     }
-    fun providePlayerInteractor(application: Application): Any {
 
-    }*/
+    fun provideMediaPlayer(): MediaPlayer {
+return getMediaPlayer()
+    }
+
+    private fun getMediaPlayer(): MediaPlayer {
+        return MediaPlayer()
+    }
+
 
 }

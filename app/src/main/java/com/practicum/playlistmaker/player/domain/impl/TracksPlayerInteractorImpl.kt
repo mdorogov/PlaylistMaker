@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player.data.impl
+package com.practicum.playlistmaker.player.domain.impl
 
 import com.google.gson.Gson
 import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor

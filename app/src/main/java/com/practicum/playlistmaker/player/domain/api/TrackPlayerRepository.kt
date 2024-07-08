@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker.player.domain.api
 
-import com.practicum.playlistmaker.search.data.models.Track
-
-interface TrackPlayer {
+interface TrackPlayerRepository {
     fun play(previewUrl: String, statusObserver: StatusObserver)
     fun pause()
     fun seek(str: String)
@@ -15,6 +13,6 @@ interface StatusObserver {
     fun onProgress(progress: String)
     fun onStop()
     fun onPlay()
-    fun onPause()
+    fun onPause(progress: String)
 }
 }

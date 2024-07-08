@@ -10,5 +10,6 @@
         <item name="colorSwitchThumbNormal">@color/blue</item>
         <item name="colorAccent">@color/blue</item>
         <item name="colorOnSurfaceVariant">@color/gray</item>
+        <item name="colorSecondaryVariant">@color/gray_search</item>
     </style>
 </resources>

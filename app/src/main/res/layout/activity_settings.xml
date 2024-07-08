@@ -28,7 +28,7 @@
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/themeSwitcher"
-            style="@style/SettingsView"
+            style="@style/SwitchTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/frame_padding_16"

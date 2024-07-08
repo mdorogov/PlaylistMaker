@@ -3,14 +3,14 @@ package com.practicum.playlistmaker.main.ui
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.player.data.api.PlayerRepository
-import com.practicum.playlistmaker.player.data.impl.PlayerRepositoryImpl
-import com.practicum.playlistmaker.player.data.impl.TrackPlayerImpl
-import com.practicum.playlistmaker.player.data.impl.TracksPlayerInteractorImpl
-import com.practicum.playlistmaker.player.domain.api.TrackPlayer
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.player.data.impl.TrackPlayerRepositoryImpl
+import com.practicum.playlistmaker.player.domain.impl.TracksPlayerInteractorImpl
+import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.TrackRepositoryImpl
+import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.domain.impl.TracksInteractorImpl
 import com.practicum.playlistmaker.settings.ui.activity.NIGHT_THEME_CHECKED
 import com.practicum.playlistmaker.settings.ui.activity.PLAYLIST_MAKER_PREFERENCES
@@ -36,38 +36,25 @@ switchTheme(preference)
         )
     }
 
-    fun provideTracksInteractor(): TracksInteractorImpl{
-        return TracksInteractorImpl(TrackRepositoryImpl(RetrofitNetworkClient(),sharedPrefs))
-    }
 
-    fun provideTrackPlayer(): TrackPlayer{
+
+    fun provideTrackPlayer(): TrackPlayerRepository{
+
         return getTracksPlayerImpl()
     }
 
-    private fun getTracksPlayerImpl(): TrackPlayer {
-return TrackPlayerImpl()
+    private fun getTracksPlayerImpl(): TrackPlayerRepository {
+return TrackPlayerRepositoryImpl()
 
     }
-
-
     fun provideTracksPlayerInteractor(): TracksPlayerInteractor{
         return getTracksPlayerInteractor()
     }
+
 
     private fun getTracksPlayerInteractor(): TracksPlayerInteractor {
 return TracksPlayerInteractorImpl()
 
     }
 
-    private fun getTracksPlayerRepository(): PlayerRepositoryImpl {
-return PlayerRepositoryImpl()
-    }
-
-    fun providePlayerRepository(): PlayerRepository {
-return getPlayerRepositoryImpl()
-    }
-
-    private fun getPlayerRepositoryImpl(): PlayerRepository {
-return PlayerRepositoryImpl()
-    }
 }

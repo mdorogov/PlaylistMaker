@@ -1,15 +1,13 @@
 package com.practicum.playlistmaker.player.data.impl
 
-import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.player.domain.api.TrackPlayer
+import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 
 
-class TrackPlayerImpl() : TrackPlayer {
+class TrackPlayerRepositoryImpl() : TrackPlayerRepository {
     companion object {
         const val STATE_DEFAULT = "0"
         const val STATE_PREPARED = "1"
@@ -18,13 +16,13 @@ class TrackPlayerImpl() : TrackPlayer {
         const val PLAYBACK_TIME_UPDATE_DELAY = 500L
     }
 
-    private val mediaPlayer = MediaPlayer()
+    private val mediaPlayer = Creator.provideMediaPlayer()
     private val handler = Handler(Looper.getMainLooper())
     private var playerState = STATE_DEFAULT
 
 
     private lateinit var playbackTimer: Runnable
-    override fun play(previewUrl: String, statusObserver: TrackPlayer.StatusObserver) {
+    override fun play(previewUrl: String, statusObserver: TrackPlayerRepository.StatusObserver) {
         initializePlayer(previewUrl)
         if (playerState == STATE_PREPARED || playerState == STATE_PAUSED) {
             playerState = STATE_PLAYING
@@ -38,7 +36,7 @@ class TrackPlayerImpl() : TrackPlayer {
                 handler.postDelayed(this, PLAYBACK_TIME_UPDATE_DELAY)
 
                 if (playerState == STATE_PAUSED) {
-                    statusObserver.onPause()
+                    statusObserver.onPause(updateCurrentPlaybackTime())
                     handler.removeCallbacks(playbackTimer)
                 } else if (playerState == STATE_PREPARED) {
                     statusObserver.onStop()

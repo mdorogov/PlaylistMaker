@@ -12,7 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
@@ -23,8 +22,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.search.domain.SearchInteractor
-import com.practicum.playlistmaker.search.domain.api.TracksInteractor
+import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.ui.state.SearchState
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 
@@ -46,6 +44,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var updateButton: Button
 
     private lateinit var trackAdapter: TrackAdapter
+    private lateinit var searchHistoryHandler: SearchHistory
     private lateinit var searchHistoryView: LinearLayout
     private lateinit var historyRecycler: RecyclerView
     private lateinit var cleanHistoryButton: Button
@@ -56,22 +55,24 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var searchHistoryAdapter: TrackAdapter
 
     private lateinit var progressBar: ProgressBar
-    private lateinit var tracksInteractor: TracksInteractor
+
 
     private lateinit var binding: ActivitySearchBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tracksInteractor = Creator.provideTracksInteractor(this)
+
         viewModel = ViewModelProvider(
             this,
-            SearchViewModel.getViewModelFactory()
+            SearchViewModel.getViewModelFactory(this)
         )[SearchViewModel::class.java]
 
         viewModel.observeState().observe(this) {
             render(it)
         }
+
+        viewModel.getSearchHistory()
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -81,8 +82,8 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        initializeViews()
-        initializeRecyclerViews()
+      /*  initializeViews()
+        initializeRecyclerViews()*/
     }
 
     private fun showLoading() {
@@ -93,6 +94,11 @@ class SearchActivity : AppCompatActivity() {
 
     private fun render(state: SearchState?) {
         when (state) {
+            is SearchState.providingSearchHistory -> {
+                searchHistoryHandler = state.searchHistory
+                initializeViews()
+                initializeRecyclerViews()
+            }
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.foundTracks)
             is SearchState.Empty -> showStatusView(state.message, state.userRequest)
@@ -126,15 +132,10 @@ class SearchActivity : AppCompatActivity() {
         trackAdapter.notifyDataSetChanged()
     }
 
-
-    private fun changeProgressBarVisibility(loading: Boolean) {
-        binding.progressBar.isVisible = loading
-    }
-
     private fun initializeRecyclerViews() {
         trackRecycler = findViewById(R.id.trackRecycler)
         trackRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(this, songs, tracksInteractor.getSearchHistory())
+        trackAdapter = TrackAdapter(this, songs, searchHistoryHandler)
         searchHistoryView = findViewById(R.id.searchHistoryView)
         cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
 
@@ -142,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         searchHistoryAdapter =
-            TrackAdapter(this, historyTracks, tracksInteractor.getSearchHistory())
+            TrackAdapter(this, historyTracks, searchHistoryHandler)
 
         progressBar = findViewById(R.id.progressBar)
 
@@ -169,6 +170,7 @@ class SearchActivity : AppCompatActivity() {
                     val inputMethodManager =
                         getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                     inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+
                     searchHistoryAdapter.notifyDataSetChanged()
                     inputEditText.clearFocus()
                 } else {
@@ -300,7 +302,6 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.removeLoadingObserver()
     }
 }
 

@@ -34,7 +34,15 @@
         <item name="android:textSize">@dimen/text_size_16</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
+        <item name="thumbTint">@color/blue_cursor_color</item>
     </style>
+
+    <style name="SwitchTheme" parent="Theme.AppCompat.Light">
+        <item name="android:colorControlActivated">@color/blue_cursor_color</item>
+
+    </style>
+
+
 
     <style name="SettingsIcon">
         <item name="android:layout_height">@dimen/ic_size_24</item>
