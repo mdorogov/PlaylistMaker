@@ -72,10 +72,15 @@ class SearchActivity : AppCompatActivity() {
             render(it)
         }
 
-        viewModel.getSearchHistory()
+
+
+
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initializeViews()
+        initializeRecyclerViews()
+        viewModel.loadTracksHistory()
 
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener {
@@ -94,11 +99,12 @@ class SearchActivity : AppCompatActivity() {
 
     private fun render(state: SearchState?) {
         when (state) {
-            is SearchState.providingSearchHistory -> {
-                searchHistoryHandler = state.searchHistory
+            /*is SearchState.providingSearchHistory -> {
+               // searchHistoryHandler = state.searchHistory
+                historyTracks = state.historyTracks
                 initializeViews()
                 initializeRecyclerViews()
-            }
+            }*/
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.foundTracks)
             is SearchState.Empty -> showStatusView(state.message, state.userRequest)
@@ -135,7 +141,7 @@ class SearchActivity : AppCompatActivity() {
     private fun initializeRecyclerViews() {
         trackRecycler = findViewById(R.id.trackRecycler)
         trackRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(this, songs, searchHistoryHandler)
+        trackAdapter = TrackAdapter(this, songs)
         searchHistoryView = findViewById(R.id.searchHistoryView)
         cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
 
@@ -143,7 +149,7 @@ class SearchActivity : AppCompatActivity() {
         historyRecycler.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         searchHistoryAdapter =
-            TrackAdapter(this, historyTracks, searchHistoryHandler)
+            TrackAdapter(this, historyTracks)
 
         progressBar = findViewById(R.id.progressBar)
 

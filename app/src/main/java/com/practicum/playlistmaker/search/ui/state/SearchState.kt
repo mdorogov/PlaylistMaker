@@ -12,5 +12,5 @@ sealed interface SearchState {
     data class Error(val errorMessage: String, val userRequest: String) : SearchState
 
     data class Empty(val message: String, val userRequest: String) : SearchState
-    data class providingSearchHistory(val searchHistory: SearchHistory) : SearchState
+    //data class providingSearchHistory(val searchHistory: SearchHistory) : SearchState
 }

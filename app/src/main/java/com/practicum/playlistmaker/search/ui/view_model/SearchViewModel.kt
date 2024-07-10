@@ -29,8 +29,9 @@ class SearchViewModel (application: Application,
     private val handler = Handler(Looper.getMainLooper())
 
    // private var tracksInteractor =  Creator.provideTracksInteractor(getApplication())
-    private var searchHistoryHandler = tracksInteractor.getSearchHistory()
-    private var stateLiveData = MutableLiveData<SearchState>(SearchState.providingSearchHistory(searchHistoryHandler))
+    //private var searchHistoryHandler = tracksInteractor.getSearchHistory()
+   private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor(getApplication())
+    private var stateLiveData = MutableLiveData<SearchState>()
     private var latestUserRequest: String? = null
 
 
@@ -91,7 +92,8 @@ loadTracksHistory()
                     }
                 }
             }
-        searchHistoryHandler.getSharedPrefs().registerOnSharedPreferenceChangeListener(sharedListener)
+        searchHistoryInteractor.getSharedPrefs().registerOnSharedPreferenceChangeListener(sharedListener)
+       // searchHistoryHandler.getSharedPrefs().
     }
 
 
@@ -101,15 +103,16 @@ loadTracksHistory()
     }
 
     fun loadTracksHistory() {
-renderState(SearchState.History(searchHistoryHandler.createTrackArrayListFromJson()))
+renderState(SearchState.History(searchHistoryInteractor.createTrackArrayListFromJson()))
     }
 
-    fun getSearchHistory(){
+   /* fun getSearchHistory(){
         renderState(SearchState.providingSearchHistory(searchHistoryHandler))
     }
-
+*/
     fun cleanHistory() {
-       searchHistoryHandler.cleanHistory()
+        searchHistoryInteractor.cleanHistory()
+       //searchHistoryHandler.cleanHistory()
         renderState(SearchState.History(emptyList()))
     }
 

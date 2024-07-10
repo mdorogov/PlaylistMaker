@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.player.data.impl
 
+import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 import com.practicum.playlistmaker.creator.Creator
@@ -7,7 +8,7 @@ import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 
 
-class TrackPlayerRepositoryImpl() : TrackPlayerRepository {
+class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepository {
     companion object {
         const val STATE_DEFAULT = "0"
         const val STATE_PREPARED = "1"
@@ -16,7 +17,7 @@ class TrackPlayerRepositoryImpl() : TrackPlayerRepository {
         const val PLAYBACK_TIME_UPDATE_DELAY = 500L
     }
 
-    private val mediaPlayer = Creator.provideMediaPlayer()
+    //private val mediaPlayer = Creator.provideMediaPlayer()
     private val handler = Handler(Looper.getMainLooper())
     private var playerState = STATE_DEFAULT
 

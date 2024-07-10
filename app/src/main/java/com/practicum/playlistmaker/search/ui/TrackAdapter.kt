@@ -17,7 +17,7 @@ import com.practicum.playlistmaker.databinding.TrackViewBinding
 class TrackAdapter(
     private val context: Context,
     private var tracks: ArrayList<Track>,
-    private val searchHistory: SearchHistory,
+   // private val searchHistory: SearchHistory,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
@@ -50,8 +50,8 @@ class TrackAdapter(
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
-            searchHistory.addTrackToArray(track)
-            notifyDataSetChanged()
+           // searchHistory.addTrackToArray(track)
+           // notifyDataSetChanged()
             val playerIntent = Intent(context, PlayerActivity::class.java)
             playerIntent.putExtra(Intent.EXTRA_SUBJECT, Gson().toJson(track))
             context.startActivity(playerIntent)

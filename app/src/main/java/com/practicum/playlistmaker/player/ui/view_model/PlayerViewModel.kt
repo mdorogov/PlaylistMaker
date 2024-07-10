@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.player.ui.view_model
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.creator.Creator.getApplication
 import com.practicum.playlistmaker.creator.Creator.getString
 import com.practicum.playlistmaker.main.ui.App
 import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
@@ -18,17 +21,20 @@ import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.search.data.models.Track
 
 class PlayerViewModel(
+    application: Application,
     private val jsonTrack: String,
     private val tracksPlayerInteractor: TracksPlayerInteractor,
     private val trackPlayer: TrackPlayerRepository,
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private var screenPlayerStateLiveData = MutableLiveData<PlayerState>()
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor(getApplication())
     private lateinit var trackModel: Track
 
 
     init {
         trackModel = tracksPlayerInteractor.loadPlayerData(jsonTrack)
+        searchHistoryInteractor.addTrackToArray(trackModel)
         screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel))
     }
 
@@ -38,10 +44,11 @@ class PlayerViewModel(
     companion object {
         fun getViewModelFactory(jsonTrack: String): ViewModelProvider.Factory = viewModelFactory {
             initializer {
+
                 val interactor = Creator.provideTracksPlayerInteractor()
                 val trackPlayer = Creator.provideTrackPlayer()
 
-                PlayerViewModel(jsonTrack, interactor, trackPlayer)
+                PlayerViewModel(this[APPLICATION_KEY] as App, jsonTrack, interactor, trackPlayer)
             }
         }
     }

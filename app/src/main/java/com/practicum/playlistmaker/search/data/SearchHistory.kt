@@ -3,17 +3,18 @@ package com.practicum.playlistmaker.search.data
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) {
+class SearchHistory(private val sharedPreferences: SharedPreferences) : SearchHistoryInteractor {
 
     val gson = Gson()
     var json = sharedPreferences.getString(JSON_HISTORY_KEY, null)
     var array = createTrackArrayListFromJson()
 
 
-    fun createTrackArrayListFromJson(): ArrayList<Track> {
+    override fun createTrackArrayListFromJson(): ArrayList<Track> {
         json = sharedPreferences.getString(JSON_HISTORY_KEY, null)
         if (!json.isNullOrEmpty()) {
             return Gson().fromJson(json, Array<Track>::class.java).toCollection(ArrayList())
@@ -21,17 +22,17 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
     }
 
 
-    fun createTrackListToJson(tracks: ArrayList<Track>): String {
+    private fun createTrackListToJson(tracks: ArrayList<Track>): String {
         return gson.toJson(tracks)
     }
 
-    fun saveToHistory(jsonHistory: String) {
+    private fun saveToHistory(jsonHistory: String) {
         sharedPreferences.edit()
             .putString(JSON_HISTORY_KEY, jsonHistory)
             .apply()
     }
 
-    fun addTrackToArray(track: Track) {
+    override fun addTrackToArray(track: Track) {
         if (array.isNullOrEmpty()) {
             array.add(track)
         } else {
@@ -50,12 +51,12 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) {
         saveToHistory(jsons)
     }
 
-    fun cleanHistory() {
+    override fun cleanHistory() {
         //array.clear()
         sharedPreferences.edit().clear().apply()
     }
 
-    fun getSharedPrefs(): SharedPreferences{
+    override fun getSharedPrefs(): SharedPreferences{
         return sharedPreferences
     }
 

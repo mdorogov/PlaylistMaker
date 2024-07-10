@@ -2,6 +2,7 @@ package com.practicum.playlistmaker.main.ui
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.player.data.impl.TrackPlayerRepositoryImpl
@@ -44,7 +45,7 @@ switchTheme(preference)
     }
 
     private fun getTracksPlayerImpl(): TrackPlayerRepository {
-return TrackPlayerRepositoryImpl()
+return TrackPlayerRepositoryImpl(MediaPlayer())
 
     }
     fun provideTracksPlayerInteractor(): TracksPlayerInteractor{

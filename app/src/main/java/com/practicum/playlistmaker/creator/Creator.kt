@@ -8,8 +8,10 @@ import com.practicum.playlistmaker.player.data.impl.TrackPlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor
 import com.practicum.playlistmaker.player.domain.impl.TracksPlayerInteractorImpl
+import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.TrackRepositoryImpl
+import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.practicum.playlistmaker.search.domain.api.TrackRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.domain.impl.TracksInteractorImpl
@@ -41,7 +43,7 @@ object Creator : AppCompatActivity() {
     }
 
     private fun getTrackPlayerRepository(): TrackPlayerRepository {
-        return TrackPlayerRepositoryImpl()
+        return TrackPlayerRepositoryImpl(MediaPlayer())
     }
 
     private fun getSharingInteractor(context: Context): SharingInteractorImpl {
@@ -75,6 +77,15 @@ return getMediaPlayer()
 
     private fun getMediaPlayer(): MediaPlayer {
         return MediaPlayer()
+    }
+
+    fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
+return getSearchHistoryInteractor(context)
+    }
+
+    private fun getSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
+        val prefs= context.getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
+return SearchHistory(prefs)
     }
 
 
