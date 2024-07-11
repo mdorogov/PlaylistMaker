@@ -30,7 +30,7 @@ class SearchViewModel (application: Application,
 
    // private var tracksInteractor =  Creator.provideTracksInteractor(getApplication())
     //private var searchHistoryHandler = tracksInteractor.getSearchHistory()
-   private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor(getApplication())
+   private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
     private var stateLiveData = MutableLiveData<SearchState>()
     private var latestUserRequest: String? = null
 
@@ -42,7 +42,7 @@ class SearchViewModel (application: Application,
         fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
-                    SearchViewModel(this[APPLICATION_KEY] as App,tracksInteractor = Creator.provideTracksInteractor(context))
+                    SearchViewModel(this[APPLICATION_KEY] as App,tracksInteractor = Creator.provideTracksInteractor())
                 }
             }
     }

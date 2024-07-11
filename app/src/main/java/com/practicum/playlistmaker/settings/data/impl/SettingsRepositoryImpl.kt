@@ -2,7 +2,6 @@ package com.practicum.playlistmaker.settings.data.impl
 
 import android.app.Application
 import android.content.Context
-import com.practicum.playlistmaker.creator.Creator.getSharedPreferences
 import com.practicum.playlistmaker.settings.domain.SettingsRepository
 import com.practicum.playlistmaker.settings.domain.model.ThemeSettings
 import com.practicum.playlistmaker.settings.ui.activity.NIGHT_THEME_CHECKED

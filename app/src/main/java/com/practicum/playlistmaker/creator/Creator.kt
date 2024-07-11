@@ -1,6 +1,8 @@
 package com.practicum.playlistmaker.creator
 
+import android.app.Application
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.media.MediaPlayer
 import android.provider.MediaStore.Audio.Media
 import androidx.appcompat.app.AppCompatActivity
@@ -23,19 +25,25 @@ import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
 
 const val SEARCH_TRACK_HISTORY = "search_track_history"
 const val JSON_HISTORY_KEY = "key_for_json_history"
-object Creator : AppCompatActivity() {
+object Creator {
 
-    private fun getTrackRepository(context: Context): TrackRepository {
-        val prefs= context.getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
+    private lateinit var application: Application
+    fun initApplication(app: Application){
+        application = app
+    }
+
+
+    private fun getTrackRepository(): TrackRepository {
+        val prefs= application.applicationContext.getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
         return TrackRepositoryImpl(RetrofitNetworkClient(), prefs)
     }
 
-    fun provideTracksInteractor(context: Context): TracksInteractor {
-        return  getTracksInteractor(context)
+    fun provideTracksInteractor(): TracksInteractor {
+        return  getTracksInteractor()
     }
 
-    private fun getTracksInteractor(context: Context): TracksInteractor {
-        return TracksInteractorImpl(getTrackRepository(context))
+    private fun getTracksInteractor(): TracksInteractor {
+        return TracksInteractorImpl(getTrackRepository())
     }
 
     fun provideTrackPlayer(): TrackPlayerRepository{
@@ -46,20 +54,20 @@ object Creator : AppCompatActivity() {
         return TrackPlayerRepositoryImpl(MediaPlayer())
     }
 
-    private fun getSharingInteractor(context: Context): SharingInteractorImpl {
-        return SharingInteractorImpl(ExternalNavigator(context))
+    private fun getSharingInteractor(): SharingInteractorImpl {
+        return SharingInteractorImpl(ExternalNavigator(application.applicationContext))
     }
 
-    fun provideSharingInteractor(context: Context): SharingInteractor {
-       return getSharingInteractor(context)
+    fun provideSharingInteractor(): SharingInteractor {
+       return getSharingInteractor()
     }
 
-    private fun getSettingsRepo(context: Context): SettingsRepositoryImpl {
-        return SettingsRepositoryImpl(context)
+    private fun getSettingsRepo(): SettingsRepositoryImpl {
+        return SettingsRepositoryImpl(application.applicationContext)
     }
 
-    fun provideSettingsRepo(context: Context): SettingsRepository{
-        return getSettingsRepo(context)
+    fun provideSettingsRepo(): SettingsRepository{
+        return getSettingsRepo()
     }
 
     fun provideTracksPlayerInteractor(): TracksPlayerInteractor {
@@ -79,12 +87,12 @@ return getMediaPlayer()
         return MediaPlayer()
     }
 
-    fun provideSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
-return getSearchHistoryInteractor(context)
+    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
+return getSearchHistoryInteractor()
     }
 
-    private fun getSearchHistoryInteractor(context: Context): SearchHistoryInteractor {
-        val prefs= context.getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
+    private fun getSearchHistoryInteractor(): SearchHistoryInteractor {
+        val prefs= application.applicationContext.getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
 return SearchHistory(prefs)
     }
 

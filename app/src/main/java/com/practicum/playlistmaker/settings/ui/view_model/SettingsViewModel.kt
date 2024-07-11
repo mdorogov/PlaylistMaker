@@ -20,8 +20,8 @@ class SettingsViewModel(
 ) : AndroidViewModel(application) {
 
 
-    private val sharingInteractor: SharingInteractor = Creator.provideSharingInteractor(getApplication<Application>())
-    private val settingsRepository: SettingsRepository = Creator.provideSettingsRepo(getApplication<Application>())
+    private val sharingInteractor: SharingInteractor = Creator.provideSharingInteractor()
+    private val settingsRepository: SettingsRepository = Creator.provideSettingsRepo()
 
     companion object{
         fun getViewModelFactory(): ViewModelProvider.Factory =

@@ -11,8 +11,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.creator.Creator.getApplication
-import com.practicum.playlistmaker.creator.Creator.getString
 import com.practicum.playlistmaker.main.ui.App
 import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor
@@ -28,7 +26,7 @@ class PlayerViewModel(
 ) : AndroidViewModel(application) {
 
     private var screenPlayerStateLiveData = MutableLiveData<PlayerState>()
-    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor(getApplication())
+    private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
     private lateinit var trackModel: Track
 
 

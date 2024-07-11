@@ -21,6 +21,7 @@ class App : Application() {
     private lateinit var sharedPrefs: SharedPreferences
     override fun onCreate(){
         super.onCreate()
+        Creator.initApplication(this)
 sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
         val preference = sharedPrefs.getString(NIGHT_THEME_CHECKED, "false").toBoolean()
 switchTheme(preference)
@@ -35,27 +36,6 @@ switchTheme(preference)
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-    }
-
-
-
-    fun provideTrackPlayer(): TrackPlayerRepository{
-
-        return getTracksPlayerImpl()
-    }
-
-    private fun getTracksPlayerImpl(): TrackPlayerRepository {
-return TrackPlayerRepositoryImpl(MediaPlayer())
-
-    }
-    fun provideTracksPlayerInteractor(): TracksPlayerInteractor{
-        return getTracksPlayerInteractor()
-    }
-
-
-    private fun getTracksPlayerInteractor(): TracksPlayerInteractor {
-return TracksPlayerInteractorImpl()
-
     }
 
 }
