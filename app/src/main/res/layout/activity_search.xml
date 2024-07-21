@@ -71,7 +71,7 @@
         android:layout_height="44dp"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/padding_140dp"
-        android:indeterminateTint="@color/blue_bar_color"
+        android:indeterminateTint="@color/progress_bar_color"
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
