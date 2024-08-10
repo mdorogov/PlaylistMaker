@@ -6,11 +6,14 @@ import android.content.Context.MODE_PRIVATE
 import android.media.MediaPlayer
 import android.provider.MediaStore.Audio.Media
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.practicum.playlistmaker.player.data.impl.TrackPlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor
 import com.practicum.playlistmaker.player.domain.impl.TracksPlayerInteractorImpl
+import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.SearchHistory
+import com.practicum.playlistmaker.search.data.network.ItunesApi
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.network.TrackRepositoryImpl
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
@@ -22,6 +25,8 @@ import com.practicum.playlistmaker.settings.domain.SettingsRepository
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 import com.practicum.playlistmaker.sharing.data.ExternalNavigator
 import com.practicum.playlistmaker.sharing.domain.impl.SharingInteractorImpl
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 const val SEARCH_TRACK_HISTORY = "search_track_history"
 const val JSON_HISTORY_KEY = "key_for_json_history"
@@ -35,8 +40,16 @@ object Creator {
 
     private fun getTrackRepository(): TrackRepository {
         val prefs= application.applicationContext.getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
-        return TrackRepositoryImpl(RetrofitNetworkClient(), prefs)
+        val itunes: ItunesApi = Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ItunesApi::class.java)
+
+        return TrackRepositoryImpl(RetrofitNetworkClient(itunes), prefs)
     }
+
+
 
     fun provideTracksInteractor(): TracksInteractor {
         return  getTracksInteractor()
@@ -87,12 +100,13 @@ return getMediaPlayer()
         return MediaPlayer()
     }
 
-    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
+   fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
 return getSearchHistoryInteractor()
     }
 
     private fun getSearchHistoryInteractor(): SearchHistoryInteractor {
         val prefs= application.applicationContext.getSharedPreferences(SEARCH_TRACK_HISTORY, MODE_PRIVATE)
+
 return SearchHistory(prefs)
     }
 

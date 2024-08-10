@@ -7,9 +7,9 @@ import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) : SearchHistoryInteractor {
+class SearchHistory(private val sharedPreferences: SharedPreferences
+) : SearchHistoryInteractor {
 
-    val gson = Gson()
     var json = sharedPreferences.getString(JSON_HISTORY_KEY, null)
     var array = createTrackArrayListFromJson()
 
@@ -23,7 +23,7 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) : SearchHi
 
 
     private fun createTrackListToJson(tracks: ArrayList<Track>): String {
-        return gson.toJson(tracks)
+        return Gson().toJson(tracks)
     }
 
     private fun saveToHistory(jsonHistory: String) {

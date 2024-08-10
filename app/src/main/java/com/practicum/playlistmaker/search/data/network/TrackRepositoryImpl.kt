@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.data.network
 
 import android.content.SharedPreferences
+import com.google.gson.Gson
 import com.practicum.playlistmaker.creator.Resource
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.SearchHistory

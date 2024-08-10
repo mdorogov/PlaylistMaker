@@ -16,13 +16,15 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.main.ui.App
 import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.ui.state.SearchState
 
 
 class SearchViewModel (application: Application,
-    private val tracksInteractor: TracksInteractor
+    private val tracksInteractor: TracksInteractor,
+                       private val searchHistoryInteractor: SearchHistoryInteractor
     ) : AndroidViewModel(application) {
    // private var loadingObserver: ((Boolean) -> Unit)? = null
 
@@ -30,7 +32,7 @@ class SearchViewModel (application: Application,
 
    // private var tracksInteractor =  Creator.provideTracksInteractor(getApplication())
     //private var searchHistoryHandler = tracksInteractor.getSearchHistory()
-   private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
+  // private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
     private var stateLiveData = MutableLiveData<SearchState>()
     private var latestUserRequest: String? = null
 
@@ -39,12 +41,12 @@ class SearchViewModel (application: Application,
 
         private val SEARCH_REQUEST_TOKEN = Any()
         private const val AUTO_SEARCHING_DELAY = 2000L
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
+        /*fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
             viewModelFactory {
                 initializer {
                     SearchViewModel(this[APPLICATION_KEY] as App,tracksInteractor = Creator.provideTracksInteractor())
                 }
-            }
+            }*/
     }
 
 

@@ -25,6 +25,7 @@ import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.ui.state.SearchState
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 const val SEARCH_TRACK_HISTORY = "search_track_history"
@@ -33,7 +34,7 @@ const val JSON_HISTORY_KEY = "key_for_json_history"
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
     var inputSearchText: String? = null
     private lateinit var inputEditText: EditText
     private lateinit var trackRecycler: RecyclerView
@@ -63,10 +64,11 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(
+
+            /*ViewModelProvider(
             this,
             SearchViewModel.getViewModelFactory(this)
-        )[SearchViewModel::class.java]
+        )[SearchViewModel::class.java]*/
 
         viewModel.observeState().observe(this) {
             render(it)
