@@ -12,7 +12,7 @@ class TracksInteractorImpl(private val repository: TrackRepository) : TracksInte
 
     override fun searchTracks(expression: String, consumer: TracksInteractor.TracksConsumer) {
         executor.execute {
-            when(val resource = repository.searchTrack(expression)) {
+            when (val resource = repository.searchTrack(expression)) {
                 is Resource.Success -> {
                     consumer.consume(resource.data, null)
                 }

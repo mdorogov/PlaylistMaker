@@ -4,30 +4,21 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.settings.domain.SettingsRepository
+import com.practicum.playlistmaker.settings.domain.SettingsInteractor
 import com.practicum.playlistmaker.settings.ui.state.SettingsState
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 
 class SettingsViewModel(
     application: Application,
     private val sharingInteractor: SharingInteractor,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsInteractor,
 ) : AndroidViewModel(application) {
-
-
-    //private val sharingInteractor: SharingInteractor = Creator.provideSharingInteractor()
-    //private val settingsRepository: SettingsRepository = Creator.provideSettingsRepo()
-
 
 
     private val settingState = MutableLiveData<SettingsState>()
 
 
-    init{
+    init {
         updateThemeSwitcher()
     }
 
@@ -37,19 +28,20 @@ class SettingsViewModel(
         settingState.postValue(SettingsState(settingsRepository.getThemeSettings().isDarkModeON))
     }
 
-    fun saveThemePreference(checked: Boolean){
+    fun saveThemePreference(checked: Boolean) {
         settingsRepository.updateThemeSetting(checked)
-      settingState.postValue(SettingsState(checked))
+        settingState.postValue(SettingsState(checked))
     }
-    fun shareApp(){
+
+    fun shareApp() {
         sharingInteractor.shareApp()
     }
 
-    fun sendEmail(){
+    fun sendEmail() {
         sharingInteractor.sendEmail()
     }
 
-    fun showAgreement(){
+    fun showAgreement() {
         sharingInteractor.showAgreement()
     }
 

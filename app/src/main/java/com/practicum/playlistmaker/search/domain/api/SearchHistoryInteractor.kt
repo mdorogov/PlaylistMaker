@@ -7,6 +7,8 @@ interface SearchHistoryInteractor {
     fun addTrackToArray(track: Track)
     fun createTrackArrayListFromJson(): ArrayList<Track>
     fun cleanHistory()
-    fun getSharedPrefs(): SharedPreferences
+    fun createTrackListToJson(tracks: ArrayList<Track>): String
+    fun saveToHistory(jsonHistory: String)
+    fun setSharedPrefListener(sharedListener: SharedPreferences.OnSharedPreferenceChangeListener)
 
 }

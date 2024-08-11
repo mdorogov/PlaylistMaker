@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.settings.domain
 import com.practicum.playlistmaker.settings.domain.model.ThemeSettings
 
 
-interface SettingsRepository {
+interface SettingsInteractor {
     fun getThemeSettings(): ThemeSettings
     fun updateThemeSetting(settings: Boolean)
 }

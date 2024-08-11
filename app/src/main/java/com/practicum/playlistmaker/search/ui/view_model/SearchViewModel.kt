@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.main.ui.App
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
@@ -22,33 +21,22 @@ import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.ui.state.SearchState
 
 
-class SearchViewModel (application: Application,
+class SearchViewModel(
+    application: Application,
     private val tracksInteractor: TracksInteractor,
-                       private val searchHistoryInteractor: SearchHistoryInteractor
-    ) : AndroidViewModel(application) {
-   // private var loadingObserver: ((Boolean) -> Unit)? = null
-
+    private val searchHistoryInteractor: SearchHistoryInteractor,
+) : AndroidViewModel(application) {
     private val handler = Handler(Looper.getMainLooper())
 
-   // private var tracksInteractor =  Creator.provideTracksInteractor(getApplication())
-    //private var searchHistoryHandler = tracksInteractor.getSearchHistory()
-  // private val searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
     private var stateLiveData = MutableLiveData<SearchState>()
     private var latestUserRequest: String? = null
 
 
-    companion object{
+    companion object {
 
         private val SEARCH_REQUEST_TOKEN = Any()
         private const val AUTO_SEARCHING_DELAY = 2000L
-        /*fun getViewModelFactory(context: Context): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    SearchViewModel(this[APPLICATION_KEY] as App,tracksInteractor = Creator.provideTracksInteractor())
-                }
-            }*/
     }
-
 
 
     override fun onCleared() {
@@ -58,7 +46,7 @@ class SearchViewModel (application: Application,
 
     fun observeState(): LiveData<SearchState> = stateLiveData
 
-    fun searchTracks(userRequest: String){
+    fun searchTracks(userRequest: String) {
         if (userRequest.isNotEmpty()) {
             renderState(SearchState.Loading)
             tracksInteractor.searchTracks(userRequest, object : TracksInteractor.TracksConsumer {
@@ -71,10 +59,20 @@ class SearchViewModel (application: Application,
                         renderState(SearchState.Content(foundTracks = songs))
                     }
 
-                    if(errorMessage != null) {
-                        renderState(SearchState.Error(errorMessage = "No Connection", userRequest = userRequest))
-                    } else if(foundTracks.isNullOrEmpty()){
-                        renderState(SearchState.Empty(message = "Not Found", userRequest = userRequest))
+                    if (errorMessage != null) {
+                        renderState(
+                            SearchState.Error(
+                                errorMessage = "No Connection",
+                                userRequest = userRequest
+                            )
+                        )
+                    } else if (foundTracks.isNullOrEmpty()) {
+                        renderState(
+                            SearchState.Empty(
+                                message = "Not Found",
+                                userRequest = userRequest
+                            )
+                        )
                     }
 
                 }
@@ -82,44 +80,37 @@ class SearchViewModel (application: Application,
         }
     }
 
-    fun setHistorySharedPrefListener(){
+    fun setHistorySharedPrefListener() {
         var sharedListener =
             SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
                 if (key == JSON_HISTORY_KEY) {
                     val history = sharedPreferences?.getString(JSON_HISTORY_KEY, null)
                     if (history != null) {
-loadTracksHistory()
-//                        historyRecycler.adapter = searchHistoryAdapter
-//                        searchHistoryAdapter.notifyDataSetChanged()
+                        loadTracksHistory()
                     }
                 }
             }
-        searchHistoryInteractor.getSharedPrefs().registerOnSharedPreferenceChangeListener(sharedListener)
-       // searchHistoryHandler.getSharedPrefs().
+        searchHistoryInteractor.setSharedPrefListener(sharedListener)
+        //searchHistoryInteractor.getSharedPrefs().registerOnSharedPreferenceChangeListener(sharedListener)
     }
 
 
-
-    fun renderState(state: SearchState){
+    fun renderState(state: SearchState) {
         stateLiveData.postValue(state)
     }
 
     fun loadTracksHistory() {
-renderState(SearchState.History(searchHistoryInteractor.createTrackArrayListFromJson()))
+        renderState(SearchState.History(searchHistoryInteractor.createTrackArrayListFromJson()))
     }
 
-   /* fun getSearchHistory(){
-        renderState(SearchState.providingSearchHistory(searchHistoryHandler))
-    }
-*/
     fun cleanHistory() {
         searchHistoryInteractor.cleanHistory()
-       //searchHistoryHandler.cleanHistory()
+        //searchHistoryHandler.cleanHistory()
         renderState(SearchState.History(emptyList()))
     }
 
     fun searchTracksDebounce(currentUserRequest: String) {
-        if (latestUserRequest == currentUserRequest){
+        if (latestUserRequest == currentUserRequest) {
             return
         }
 
@@ -130,8 +121,6 @@ renderState(SearchState.History(searchHistoryInteractor.createTrackArrayListFrom
 
         val postTime = SystemClock.uptimeMillis() + AUTO_SEARCHING_DELAY
         handler.postAtTime(searchRunnable, SEARCH_REQUEST_TOKEN, postTime)
-       // handler.postDelayed(searchRunnable, AUTO_SEARCHING_DELAY)
-
 
     }
 

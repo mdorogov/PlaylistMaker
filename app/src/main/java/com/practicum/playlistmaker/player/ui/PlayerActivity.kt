@@ -48,8 +48,8 @@ class PlayerActivity() : AppCompatActivity() {
             intent.getStringExtra(Intent.EXTRA_SUBJECT)
             json = intent.getStringExtra(Intent.EXTRA_SUBJECT).toString()
         }
-         viewModel = getViewModel<PlayerViewModel>{
-parametersOf(json)
+        viewModel = getViewModel<PlayerViewModel> {
+            parametersOf(json)
         }
 
 
@@ -57,7 +57,10 @@ parametersOf(json)
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
                 is PlayerState.Content -> setPlayerContent(screenState.trackModel, true)
-                is PlayerState.PlayTime -> setPlayStatus(screenState.progress, screenState.isPlaying)
+                is PlayerState.PlayTime -> setPlayStatus(
+                    screenState.progress,
+                    screenState.isPlaying
+                )
             }
         }
 
@@ -67,7 +70,7 @@ parametersOf(json)
 
     }
 
-    fun setPlayStatus(progress: String, isPlaying: Boolean){
+    fun setPlayStatus(progress: String, isPlaying: Boolean) {
         changeButtonStyle(isPlaying)
         playtime.text = progress
     }

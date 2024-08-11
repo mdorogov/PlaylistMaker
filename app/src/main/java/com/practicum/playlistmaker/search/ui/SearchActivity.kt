@@ -14,13 +14,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnLayout
-import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.data.models.Track
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.ui.state.SearchState
@@ -63,20 +60,9 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-            /*ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(this)
-        )[SearchViewModel::class.java]*/
-
         viewModel.observeState().observe(this) {
             render(it)
         }
-
-
-
-
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -89,8 +75,6 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-      /*  initializeViews()
-        initializeRecyclerViews()*/
     }
 
     private fun showLoading() {
@@ -101,12 +85,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun render(state: SearchState?) {
         when (state) {
-            /*is SearchState.providingSearchHistory -> {
-               // searchHistoryHandler = state.searchHistory
-                historyTracks = state.historyTracks
-                initializeViews()
-                initializeRecyclerViews()
-            }*/
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.foundTracks)
             is SearchState.Empty -> showStatusView(state.message, state.userRequest)
@@ -210,7 +188,6 @@ class SearchActivity : AppCompatActivity() {
     private fun setOnClickCleanHistoryButton() {
         cleanHistoryButton.setOnClickListener {
             viewModel.cleanHistory()
-            //searchHistoryHandler.cleanHistory()
             searchHistoryAdapter.notifyDataSetChanged()
             searchHistoryView.visibility = View.GONE
 
@@ -225,7 +202,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showTracksHistory(hasFocus: Boolean) {
-        // viewModel.loadTracksHistory()
         trackRecycler.visibility = View.GONE
         searchHistoryView.visibility = if (hasFocus && inputEditText.text.isEmpty()) {
 

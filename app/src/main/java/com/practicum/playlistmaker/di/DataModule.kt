@@ -16,31 +16,29 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
 
-    val dataModule = module {
-single<ItunesApi>{
-    Retrofit.Builder()
-        .baseUrl("https://itunes.apple.com")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(ItunesApi::class.java)
-}
-
-        single {
-            androidContext()
-                .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
-        }
-
-        factory { Gson() }
-
-        single<SearchHistoryInteractor> {
-            SearchHistory(get())
-        }
-
-        single<NetworkClient>{
-            RetrofitNetworkClient(get())
-        }
-
-        single<MediaPlayer>{
-            MediaPlayer()
-        }
+val dataModule = module {
+    single<ItunesApi> {
+        Retrofit.Builder()
+            .baseUrl("https://itunes.apple.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ItunesApi::class.java)
     }
+
+    single {
+        androidContext()
+            .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
+    }
+
+    factory { Gson() }
+
+
+
+    single<NetworkClient> {
+        RetrofitNetworkClient(get())
+    }
+
+    factory {
+        MediaPlayer()
+    }
+}

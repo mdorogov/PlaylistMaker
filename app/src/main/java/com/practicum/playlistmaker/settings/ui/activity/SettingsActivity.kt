@@ -74,39 +74,6 @@ viewModel.getSettingsState().observe(this){settingsState ->
             }
         )
     }
-
-    /*private fun saveThemePreference(checked : Boolean) {
-        val sharedPrefs = getSharedPreferences(PLAYLIST_MAKER_PREFERENCES, MODE_PRIVATE)
-        sharedPrefs.edit().putString(NIGHT_THEME_CHECKED, checked.toString()).apply()
-    }*/
-
-   /* private fun showAgreement() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.agreement_link)))
-        startActivity(intent)
-    }
-
-    private fun shareApp() {
-        val shareButtonIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_link))
-            type = "text/html"
-        }
-        val intent = Intent.createChooser(shareButtonIntent, null)
-        startActivity(intent)
-    }*/
-
-  /*  private fun sendEmail() {
-        val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:")
-            val sendToEmail : Array<String> = arrayOf("dorogovmax@yandex.com")
-            putExtra(Intent.EXTRA_EMAIL, sendToEmail)
-            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject_support_mail) +
-                    " Playlist Maker")
-            putExtra(Intent.EXTRA_TEXT, getString(R.string.text_support_mail))
-
-        }
-            startActivity(intent)
-    }*/
 }
 
 
