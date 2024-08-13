@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.player.domain.api
 
-interface TrackPlayerInteractor {
+interface TrackPlayerRepository {
     fun play(previewUrl: String, statusObserver: StatusObserver)
     fun pause()
     fun seek(str: String)

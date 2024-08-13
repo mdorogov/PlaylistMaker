@@ -11,7 +11,7 @@ import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 class SettingsViewModel(
     application: Application,
     private val sharingInteractor: SharingInteractor,
-    private val settingsRepository: SettingsInteractor,
+    private val settingsInteractor: SettingsInteractor,
 ) : AndroidViewModel(application) {
 
 
@@ -25,11 +25,11 @@ class SettingsViewModel(
     fun getSettingsState(): LiveData<SettingsState> = settingState
 
     private fun updateThemeSwitcher() {
-        settingState.postValue(SettingsState(settingsRepository.getThemeSettings().isDarkModeON))
+        settingState.postValue(SettingsState(settingsInteractor.getThemeSettings().isDarkModeON))
     }
 
     fun saveThemePreference(checked: Boolean) {
-        settingsRepository.updateThemeSetting(checked)
+        settingsInteractor.updateThemeSetting(checked)
         settingState.postValue(SettingsState(checked))
     }
 

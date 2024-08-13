@@ -9,11 +9,11 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { (jsonStr: String) ->
-        PlayerViewModel(get(), jsonStr, get(), get(), get())
+        PlayerViewModel(get(), jsonStr, get(), get())
     }
 
     viewModel {
-        SearchViewModel(get(), get(), get())
+        SearchViewModel(get(), get())
     }
 
     viewModel {

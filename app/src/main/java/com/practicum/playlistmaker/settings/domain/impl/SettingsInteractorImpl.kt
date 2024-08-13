@@ -1,17 +1,19 @@
-package com.practicum.playlistmaker.settings.data.impl
+package com.practicum.playlistmaker.settings.domain.impl
 
 import android.content.SharedPreferences
 import com.practicum.playlistmaker.settings.domain.SettingsInteractor
+import com.practicum.playlistmaker.settings.domain.SettingsRepository
 import com.practicum.playlistmaker.settings.domain.model.ThemeSettings
 import com.practicum.playlistmaker.settings.ui.activity.NIGHT_THEME_CHECKED
 
-class SettingsInteractorImpl(var sharedPrefs: SharedPreferences) : SettingsInteractor {
+class SettingsInteractorImpl(var settingsRepository: SettingsRepository) : SettingsInteractor {
 
     override fun getThemeSettings(): ThemeSettings {
-        return ThemeSettings(sharedPrefs.getString(NIGHT_THEME_CHECKED, "false").toBoolean())
+        return  settingsRepository.getThemeSettings()
     }
 
     override fun updateThemeSetting(settings: Boolean) {
-        sharedPrefs.edit().putString(NIGHT_THEME_CHECKED, settings.toString()).apply()
+        settingsRepository.updateThemeSetting(settings)
+
     }
 }

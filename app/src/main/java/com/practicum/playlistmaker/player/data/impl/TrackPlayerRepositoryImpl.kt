@@ -3,11 +3,11 @@ package com.practicum.playlistmaker.player.data.impl
 import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
-import com.practicum.playlistmaker.player.domain.api.TrackPlayerInteractor
+import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 
 
-class TrackPlayerInteractorImpl(val mediaPlayer: MediaPlayer) : TrackPlayerInteractor {
+class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepository {
     companion object {
         const val STATE_DEFAULT = "0"
         const val STATE_PREPARED = "1"
@@ -21,7 +21,7 @@ class TrackPlayerInteractorImpl(val mediaPlayer: MediaPlayer) : TrackPlayerInter
 
 
     private lateinit var playbackTimer: Runnable
-    override fun play(previewUrl: String, statusObserver: TrackPlayerInteractor.StatusObserver) {
+    override fun play(previewUrl: String, statusObserver: TrackPlayerRepository.StatusObserver) {
         initializePlayer(previewUrl)
         if (playerState == STATE_PREPARED || playerState == STATE_PAUSED) {
             playerState = STATE_PLAYING

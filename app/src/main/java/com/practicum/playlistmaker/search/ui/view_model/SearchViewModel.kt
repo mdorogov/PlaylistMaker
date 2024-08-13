@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.search.ui.view_model
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
@@ -9,13 +8,8 @@ import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.main.ui.App
 import com.practicum.playlistmaker.search.data.models.Track
-import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.ui.state.SearchState
@@ -23,8 +17,7 @@ import com.practicum.playlistmaker.search.ui.state.SearchState
 
 class SearchViewModel(
     application: Application,
-    private val tracksInteractor: TracksInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor,
+    private val tracksInteractor: TracksInteractor
 ) : AndroidViewModel(application) {
     private val handler = Handler(Looper.getMainLooper())
 
@@ -90,8 +83,7 @@ class SearchViewModel(
                     }
                 }
             }
-        searchHistoryInteractor.setSharedPrefListener(sharedListener)
-        //searchHistoryInteractor.getSharedPrefs().registerOnSharedPreferenceChangeListener(sharedListener)
+        tracksInteractor.setSharedPrefListener(sharedListener)
     }
 
 
@@ -100,12 +92,11 @@ class SearchViewModel(
     }
 
     fun loadTracksHistory() {
-        renderState(SearchState.History(searchHistoryInteractor.createTrackArrayListFromJson()))
+        renderState(SearchState.History(tracksInteractor.createTrackArrayListFromJson()))
     }
 
     fun cleanHistory() {
-        searchHistoryInteractor.cleanHistory()
-        //searchHistoryHandler.cleanHistory()
+        tracksInteractor.cleanHistory()
         renderState(SearchState.History(emptyList()))
     }
 

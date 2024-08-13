@@ -9,7 +9,6 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import com.google.gson.Gson
-import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.databinding.TrackViewBinding

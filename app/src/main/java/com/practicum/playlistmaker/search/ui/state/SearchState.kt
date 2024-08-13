@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.search.ui.state
 
-import com.practicum.playlistmaker.search.data.SearchHistory
 import com.practicum.playlistmaker.search.data.models.Track
 
 sealed interface SearchState {
