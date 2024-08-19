@@ -12,24 +12,18 @@ import com.practicum.playlistmaker.search.data.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackViewHolder(private val binding: TrackViewBinding) : RecyclerView.ViewHolder(binding.root) {
+class TrackViewHolder(private val binding: TrackViewBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
-
-    /*private val trackName: TextView = itemView.findViewById(R.id.track_title)
-    private val artistName: TextView = itemView.findViewById(R.id.artist_name)
-    private val trackDuration: TextView = itemView.findViewById(R.id.track_duration)*/
     private val artwork: ImageView = itemView.findViewById(R.id.artwork)
 
 
     fun bind(model: Track) {
         binding.trackTitle.text = model.trackName
         binding.artistName.text = model.artistName
-        binding.trackDuration.text = MillisConverter.millisToMinutesAndSeconds(model.trackTimeMillis)
+        binding.trackDuration.text =
+            MillisConverter.millisToMinutesAndSeconds(model.trackTimeMillis)
         setArtwork(model.artworkUrl100)
-//        trackName.text = model.trackName
-//        artistName.text = model.artistName
-//        trackDuration.text = MillisConverter.millisToMinutesAndSeconds(model.trackTimeMillis)
-//        setArtwork(model.artworkUrl100)
 
     }
 

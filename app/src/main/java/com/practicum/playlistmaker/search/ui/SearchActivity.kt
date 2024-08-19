@@ -14,17 +14,15 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.doOnLayout
-import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.data.models.Track
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.search.data.SearchHistory
+import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
 import com.practicum.playlistmaker.search.ui.state.SearchState
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 const val SEARCH_TRACK_HISTORY = "search_track_history"
@@ -33,7 +31,7 @@ const val JSON_HISTORY_KEY = "key_for_json_history"
 
 class SearchActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel by viewModel<SearchViewModel>()
     var inputSearchText: String? = null
     private lateinit var inputEditText: EditText
     private lateinit var trackRecycler: RecyclerView
@@ -44,7 +42,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var updateButton: Button
 
     private lateinit var trackAdapter: TrackAdapter
-    private lateinit var searchHistoryHandler: SearchHistory
+    private lateinit var searchHistoryHandler: SearchHistoryRepositoryImpl
     private lateinit var searchHistoryView: LinearLayout
     private lateinit var historyRecycler: RecyclerView
     private lateinit var cleanHistoryButton: Button
@@ -62,19 +60,9 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(this)
-        )[SearchViewModel::class.java]
-
         viewModel.observeState().observe(this) {
             render(it)
         }
-
-
-
-
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -87,8 +75,6 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-      /*  initializeViews()
-        initializeRecyclerViews()*/
     }
 
     private fun showLoading() {
@@ -99,12 +85,6 @@ class SearchActivity : AppCompatActivity() {
 
     private fun render(state: SearchState?) {
         when (state) {
-            /*is SearchState.providingSearchHistory -> {
-               // searchHistoryHandler = state.searchHistory
-                historyTracks = state.historyTracks
-                initializeViews()
-                initializeRecyclerViews()
-            }*/
             is SearchState.Loading -> showLoading()
             is SearchState.Content -> showContent(state.foundTracks)
             is SearchState.Empty -> showStatusView(state.message, state.userRequest)
@@ -208,7 +188,6 @@ class SearchActivity : AppCompatActivity() {
     private fun setOnClickCleanHistoryButton() {
         cleanHistoryButton.setOnClickListener {
             viewModel.cleanHistory()
-            //searchHistoryHandler.cleanHistory()
             searchHistoryAdapter.notifyDataSetChanged()
             searchHistoryView.visibility = View.GONE
 
@@ -223,7 +202,6 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showTracksHistory(hasFocus: Boolean) {
-        // viewModel.loadTracksHistory()
         trackRecycler.visibility = View.GONE
         searchHistoryView.visibility = if (hasFocus && inputEditText.text.isEmpty()) {
 

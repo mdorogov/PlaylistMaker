@@ -1,15 +1,16 @@
-package com.practicum.playlistmaker.search.data
+package com.practicum.playlistmaker.search.data.impl
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.models.Track
-import com.practicum.playlistmaker.search.domain.api.SearchHistoryInteractor
+import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 
 
-class SearchHistory(private val sharedPreferences: SharedPreferences) : SearchHistoryInteractor {
+class SearchHistoryRepositoryImpl(
+    private val sharedPreferences: SharedPreferences,
+) : SearchHistoryRepository {
 
-    val gson = Gson()
     var json = sharedPreferences.getString(JSON_HISTORY_KEY, null)
     var array = createTrackArrayListFromJson()
 
@@ -22,11 +23,11 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) : SearchHi
     }
 
 
-    private fun createTrackListToJson(tracks: ArrayList<Track>): String {
-        return gson.toJson(tracks)
+    override fun createTrackListToJson(tracks: ArrayList<Track>): String {
+        return Gson().toJson(tracks)
     }
 
-    private fun saveToHistory(jsonHistory: String) {
+    override fun saveToHistory(jsonHistory: String) {
         sharedPreferences.edit()
             .putString(JSON_HISTORY_KEY, jsonHistory)
             .apply()
@@ -52,14 +53,11 @@ class SearchHistory(private val sharedPreferences: SharedPreferences) : SearchHi
     }
 
     override fun cleanHistory() {
-        //array.clear()
         sharedPreferences.edit().clear().apply()
     }
 
-    override fun getSharedPrefs(): SharedPreferences{
-        return sharedPreferences
+    override fun setSharedPrefListener (sharedListener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedListener)
     }
-
-
 
 }

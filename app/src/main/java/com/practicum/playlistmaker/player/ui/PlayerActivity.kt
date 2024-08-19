@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.search.mapper.DimensConverter
@@ -14,6 +13,8 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker.search.data.models.Track
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.core.parameter.parametersOf
 
 class PlayerActivity() : AppCompatActivity() {
     private lateinit var viewModel: PlayerViewModel
@@ -47,17 +48,19 @@ class PlayerActivity() : AppCompatActivity() {
             intent.getStringExtra(Intent.EXTRA_SUBJECT)
             json = intent.getStringExtra(Intent.EXTRA_SUBJECT).toString()
         }
+        viewModel = getViewModel<PlayerViewModel> {
+            parametersOf(json)
+        }
 
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getViewModelFactory(json)
-        )[PlayerViewModel::class.java]
 
         viewModel.getScreenStateLiveData().observe(this) { screenState ->
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
                 is PlayerState.Content -> setPlayerContent(screenState.trackModel, true)
-                is PlayerState.PlayTime -> setPlayStatus(screenState.progress, screenState.isPlaying)
+                is PlayerState.PlayTime -> setPlayStatus(
+                    screenState.progress,
+                    screenState.isPlaying
+                )
             }
         }
 
@@ -67,7 +70,7 @@ class PlayerActivity() : AppCompatActivity() {
 
     }
 
-    fun setPlayStatus(progress: String, isPlaying: Boolean){
+    fun setPlayStatus(progress: String, isPlaying: Boolean) {
         changeButtonStyle(isPlaying)
         playtime.text = progress
     }

@@ -1,63 +1,47 @@
 package com.practicum.playlistmaker.settings.ui.view_model
 
 import android.app.Application
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.practicum.playlistmaker.creator.Creator
-import com.practicum.playlistmaker.main.ui.App
-import com.practicum.playlistmaker.settings.domain.SettingsRepository
+import com.practicum.playlistmaker.settings.domain.SettingsInteractor
 import com.practicum.playlistmaker.settings.ui.state.SettingsState
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 
 class SettingsViewModel(
-    application: Application
+    application: Application,
+    private val sharingInteractor: SharingInteractor,
+    private val settingsInteractor: SettingsInteractor,
 ) : AndroidViewModel(application) {
 
-
-    private val sharingInteractor: SharingInteractor = Creator.provideSharingInteractor()
-    private val settingsRepository: SettingsRepository = Creator.provideSettingsRepo()
-
-    companion object{
-        fun getViewModelFactory(): ViewModelProvider.Factory =
-            viewModelFactory {
-                initializer {
-                    SettingsViewModel(this[APPLICATION_KEY] as Application)
-                }
-            }
-    }
 
     private val settingState = MutableLiveData<SettingsState>()
 
 
-    init{
+    init {
         updateThemeSwitcher()
     }
 
     fun getSettingsState(): LiveData<SettingsState> = settingState
 
     private fun updateThemeSwitcher() {
-        settingState.postValue(SettingsState(settingsRepository.getThemeSettings().isDarkModeON))
+        settingState.postValue(SettingsState(settingsInteractor.getThemeSettings().isDarkModeON))
     }
 
-    fun saveThemePreference(checked: Boolean){
-        settingsRepository.updateThemeSetting(checked)
-      settingState.postValue(SettingsState(checked))
+    fun saveThemePreference(checked: Boolean) {
+        settingsInteractor.updateThemeSetting(checked)
+        settingState.postValue(SettingsState(checked))
     }
-    fun shareApp(){
+
+    fun shareApp() {
         sharingInteractor.shareApp()
     }
 
-    fun sendEmail(){
+    fun sendEmail() {
         sharingInteractor.sendEmail()
     }
 
-    fun showAgreement(){
+    fun showAgreement() {
         sharingInteractor.showAgreement()
     }
 

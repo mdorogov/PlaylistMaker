@@ -5,14 +5,14 @@ interface TrackPlayerRepository {
     fun pause()
     fun seek(str: String)
     fun resume()
-fun release()
-fun initializePlayer(previewUrl: String)
+    fun release()
+    fun initializePlayer(previewUrl: String)
 
 
-interface StatusObserver {
-    fun onProgress(progress: String)
-    fun onStop()
-    fun onPlay()
-    fun onPause(progress: String)
-}
+    interface StatusObserver {
+        fun onProgress(progress: String)
+        fun onStop()
+        fun onPlay()
+        fun onPause(progress: String)
+    }
 }
