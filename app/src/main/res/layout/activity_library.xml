@@ -1,9 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".library.ui.LibraryActivity">
+    android:background="?attr/colorSecondary"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_12">
+
+        <ImageView
+            android:id="@+id/back_button"
+            style="@style/BackButton" />
+
+        <TextView
+            style="@style/ActivityText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/padding_12"
+            android:text="@string/library_text"
+            android:textColor="?attr/colorOnSecondary" />
+
+    </LinearLayout>
+
+   <com.google.android.material.tabs.TabLayout
+       style="@style/TabStyler"
+       android:id="@+id/libTabLayout"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/libViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+
+
+</LinearLayout>
