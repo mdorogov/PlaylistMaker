@@ -53,6 +53,7 @@ val interactorModule = module {
     }
     factory<PlaylistsInteractor>{
         PlaylistsInteractorImpl()
+
     }
 
 }
