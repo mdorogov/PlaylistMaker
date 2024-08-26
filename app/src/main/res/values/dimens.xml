@@ -28,4 +28,5 @@
     <dimen name="padding_9">9dp</dimen>
     <dimen name="padding_4dp">4dp</dimen>
     <dimen name="padding_140dp">140dp</dimen>
+    <dimen name="padding_46">46dp</dimen>
 </resources>
