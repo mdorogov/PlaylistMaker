@@ -1,10 +1,12 @@
-package com.practicum.playlistmaker.search.ui
+package com.practicum.playlistmaker.search.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -12,25 +14,21 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.doOnLayout
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
+import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.ui.TrackAdapter
 import com.practicum.playlistmaker.search.ui.state.SearchState
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-
-const val SEARCH_TRACK_HISTORY = "search_track_history"
-const val JSON_HISTORY_KEY = "key_for_json_history"
-
-
-class SearchActivity : AppCompatActivity() {
-
+class SearchFragment : Fragment() {
     private val viewModel by viewModel<SearchViewModel>()
     var inputSearchText: String? = null
     private lateinit var inputEditText: EditText
@@ -54,27 +52,22 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var progressBar: ProgressBar
 
+    private lateinit var binding : FragmentSearchBinding
 
-    private lateinit var binding: FragmentSearchBinding
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.observeState().observe(this) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
-
-        binding = FragmentSearchBinding.inflate(layoutInflater)
-        setContentView(binding.root)
         initializeViews()
         initializeRecyclerViews()
         viewModel.loadTracksHistory()
-
-        val backButton = findViewById<ImageView>(R.id.back_button)
-        backButton.setOnClickListener {
-            finish()
-        }
-
     }
 
     private fun showLoading() {
@@ -119,19 +112,19 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initializeRecyclerViews() {
-        trackRecycler = findViewById(R.id.trackRecycler)
-        trackRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(this, songs)
-        searchHistoryView = findViewById(R.id.searchHistoryView)
-        cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
+        trackRecycler = binding.trackRecycler
+        trackRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        trackAdapter = TrackAdapter(requireContext(), songs)
+        searchHistoryView = binding.searchHistoryView
+        cleanHistoryButton = binding.cleanHistoryButton
 
-        historyRecycler = findViewById(R.id.searchHistoryRecycler)
+        historyRecycler = binding.searchHistoryRecycler
         historyRecycler.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         searchHistoryAdapter =
-            TrackAdapter(this, historyTracks)
+            TrackAdapter(requireContext(), historyTracks)
 
-        progressBar = findViewById(R.id.progressBar)
+        progressBar = binding.progressBar
 
         viewModel.loadTracksHistory()
 
@@ -153,9 +146,9 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     deleteButton.visibility = View.GONE
-                    val inputMethodManager =
-                        getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                    inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+//                    val inputMethodManager =
+//                        getSystemService (Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+//                    inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
 
                     searchHistoryAdapter.notifyDataSetChanged()
                     inputEditText.clearFocus()
@@ -215,8 +208,10 @@ class SearchActivity : AppCompatActivity() {
 
 
     private fun initializeViews() {
-        cleanHistoryButton = findViewById(R.id.cleanHistoryButton)
-        statusView = findViewById(R.id.searchStatusLayout)
+        inputEditText = binding.searchEditText
+        deleteButton = binding.deleteButton
+        cleanHistoryButton = binding.cleanHistoryButton
+        statusView = binding.searchStatusLayout
         inputEditText.doOnLayout { inputEditText.hint }
         deleteButton.setOnClickListener {
             inputEditText.setText("")
@@ -228,9 +223,9 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showStatusView(typeOfMessage: String, inputUserText: String) {
-        statusImage = findViewById(R.id.searchStatusImage)
-        statusText = findViewById(R.id.searchStatusText)
-        updateButton = findViewById(R.id.updateButton)
+        statusImage = binding.searchStatusImage
+        statusText = binding.searchStatusText
+        updateButton = binding.updateButton
         setProgressBarVisibilityOff()
 
         when (typeOfMessage) {
@@ -271,30 +266,4 @@ class SearchActivity : AppCompatActivity() {
     private fun setProgressBarVisibilityOff() {
         progressBar.visibility = View.GONE
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(inputSearchText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        inputSearchText = savedInstanceState.getString(inputSearchText)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 }
-
-private fun Bundle.putString(inputSearchText: String?) {
-}
-
-
-
-
-
-
-
-
-

@@ -41,7 +41,7 @@
             android:src="@drawable/search_icon" />
 
         <EditText
-            android:id="@+id/search_edit_text"
+            android:id="@+id/searchEditText"
             style="@style/SearchHint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -54,10 +54,11 @@
             android:lines="1"
             android:singleLine="true"
             android:textColor="@color/black"
-            android:textCursorDrawable="@drawable/text_cursor" />
+            android:textCursorDrawable="@drawable/text_cursor"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageView
-            android:id="@+id/delete_button"
+            android:id="@+id/deleteButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/padding_10dp"

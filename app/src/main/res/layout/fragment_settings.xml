@@ -12,9 +12,7 @@
         android:orientation="horizontal"
         android:padding="@dimen/padding_12">
 
-        <ImageView
-            android:id="@+id/back_button"
-            style="@style/BackButton"/>
+
 
         <TextView
             style="@style/ActivityText"
@@ -38,7 +36,7 @@
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <FrameLayout
-        android:id="@+id/share_button"
+        android:id="@+id/shareButton"
         style="@style/FrameLayoutStyle">
 
         <TextView
@@ -54,7 +52,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/support_button"
+        android:id="@+id/supportButton"
         style="@style/FrameLayoutStyle">
 
         <TextView
@@ -69,7 +67,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/agreement_button"
+        android:id="@+id/agreementButton"
         style="@style/FrameLayoutStyle">
 
         <TextView
