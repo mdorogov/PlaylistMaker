@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:paddingTop="@dimen/frame_padding_24">
+    android:paddingTop="@dimen/frame_padding_24"
+    tools:context=".library.ui.fragments.PlaylistsFragment">
 
     <Button
         style="@style/UpdateButton"

@@ -4,17 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".search.ui.fragment.SearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/padding_12">
-
-        <ImageView
-            android:id="@+id/back_button"
-            style="@style/BackButton" />
 
         <TextView
             style="@style/ActivityText"

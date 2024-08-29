@@ -8,8 +8,6 @@ import com.practicum.playlistmaker.di.interactorModule
 import com.practicum.playlistmaker.di.repositoryModule
 import com.practicum.playlistmaker.di.viewModelModule
 import com.practicum.playlistmaker.main.domain.ThemeInteractor
-import com.practicum.playlistmaker.settings.ui.activity.NIGHT_THEME_CHECKED
-import com.practicum.playlistmaker.settings.ui.activity.PLAYLIST_MAKER_PREFERENCES
 import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin

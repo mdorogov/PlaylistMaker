@@ -9,9 +9,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.data.network.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
-import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.ui.state.SearchState
 
 

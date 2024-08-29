@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:paddingTop="@dimen/padding_100dp">
+    android:paddingTop="@dimen/padding_100dp"
+    tools:context=".library.ui.fragments.FavoriteTracksFragment">
 
     <ImageView
         android:id="@+id/ic_favorite_tracks_empty"
