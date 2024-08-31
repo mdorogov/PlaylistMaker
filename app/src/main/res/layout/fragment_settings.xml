@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
-    tools:context=".settings.ui.fragment.SettingsFragment" >
+    tools:context=".settings.ui.fragment.SettingsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,27 +14,26 @@
         android:padding="@dimen/padding_12">
 
 
-
         <TextView
             style="@style/ActivityText"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/padding_12"
             android:text="@string/settings_text"
-            android:textColor="?attr/colorOnSecondary"/>
+            android:textColor="?attr/colorOnSecondary" />
     </LinearLayout>
 
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/themeSwitcher"
-            style="@style/SwitchTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/frame_padding_16"
-            android:paddingVertical="@dimen/frame_padding_20"
-            android:layout_marginEnd="6dp"
-            android:text="@string/dark_theme_text"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
+        style="@style/SwitchTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:paddingVertical="@dimen/frame_padding_20"
+        android:paddingStart="@dimen/frame_padding_16"
+        android:text="@string/dark_theme_text"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <FrameLayout
         android:id="@+id/shareButton"
@@ -42,7 +41,7 @@
 
         <TextView
             style="@style/SettingsView"
-            android:text="@string/sharing_text"/>
+            android:text="@string/sharing_text" />
 
         <ImageView
             style="@style/SettingsIcon"

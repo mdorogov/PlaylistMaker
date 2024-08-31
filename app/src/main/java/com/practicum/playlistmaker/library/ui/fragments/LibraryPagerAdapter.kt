@@ -16,7 +16,6 @@ class LibraryPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle
         return when(position) {
             0 -> FavoriteTracksFragment.newInstance()
             else -> PlaylistsFragment.newInstance()
-            //else -> FavoriteTracksFragment()
         }
         }
     }

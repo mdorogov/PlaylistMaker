@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.ui.fragment
 
 import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.FragmentLibraryBinding
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.models.Track
@@ -40,7 +42,6 @@ class SearchFragment : Fragment() {
     private lateinit var updateButton: Button
 
     private lateinit var trackAdapter: TrackAdapter
-    private lateinit var searchHistoryHandler: SearchHistoryRepositoryImpl
     private lateinit var searchHistoryView: LinearLayout
     private lateinit var historyRecycler: RecyclerView
     private lateinit var cleanHistoryButton: Button
@@ -52,11 +53,15 @@ class SearchFragment : Fragment() {
 
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var binding : FragmentSearchBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,6 +73,11 @@ class SearchFragment : Fragment() {
         initializeViews()
         initializeRecyclerViews()
         viewModel.loadTracksHistory()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun showLoading() {
@@ -113,7 +123,8 @@ class SearchFragment : Fragment() {
 
     private fun initializeRecyclerViews() {
         trackRecycler = binding.trackRecycler
-        trackRecycler.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        trackRecycler.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         trackAdapter = TrackAdapter(requireContext(), songs)
         searchHistoryView = binding.searchHistoryView
         cleanHistoryButton = binding.cleanHistoryButton
@@ -130,7 +141,6 @@ class SearchFragment : Fragment() {
 
         historyRecycler.adapter = searchHistoryAdapter
 
-        //СЭТ ФОКУС ИНПУТА
         setOnFocusUserInput()
         viewModel.setHistorySharedPrefListener()
         setOnClickCleanHistoryButton()
@@ -146,9 +156,10 @@ class SearchFragment : Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     deleteButton.visibility = View.GONE
-//                    val inputMethodManager =
-//                        getSystemService (Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-//                    inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+
+                    val inputMethodManager =
+                        context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
 
                     searchHistoryAdapter.notifyDataSetChanged()
                     inputEditText.clearFocus()

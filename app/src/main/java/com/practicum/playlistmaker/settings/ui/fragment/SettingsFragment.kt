@@ -10,12 +10,15 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
 import com.practicum.playlistmaker.settings.ui.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment(){
-    private lateinit var binding: FragmentSettingsBinding
+
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
     private val viewModel by viewModel<SettingsViewModel>()
     private lateinit var themeSwitcher: SwitchMaterial
 
@@ -24,7 +27,7 @@ class SettingsFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
    return binding.root
     }
 
@@ -38,11 +41,7 @@ class SettingsFragment : Fragment(){
 
 
         viewModel.getSettingsState().observe(viewLifecycleOwner){settingsState ->
-            if (settingsState.isDarkModeOn){
-                themeSwitcher.isChecked = true
-            } else false
-
-            changeThemeMode(settingsState.isDarkModeOn)
+                themeSwitcher.isChecked = settingsState.isDarkModeOn
         }
 
 
@@ -69,6 +68,10 @@ class SettingsFragment : Fragment(){
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun changeThemeMode(checked: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
             if (checked){

@@ -21,19 +21,11 @@ class RootActivity : AppCompatActivity() {
         binding = ActivityRootBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.rootFragmentContainerView) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.rootFragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
 
         val bottomNavView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavView.setupWithNavController(navController)
-
-
-        /*if (savedInstanceState == null) {
-            supportFragmentManager.commit {
-                this.add(R.id.rootFragmentContainerView, SearchFragment())
-                this.add(R.id.rootFragmentContainerView, SettingsFragment())
-                this.add(R.id.rootFragmentContainerView, LibraryFragment())
-            }
-        }*/
     }
 }

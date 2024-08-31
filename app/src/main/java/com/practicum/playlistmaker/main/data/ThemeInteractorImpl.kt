@@ -3,10 +3,12 @@ package com.practicum.playlistmaker.main.data
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.main.domain.ThemeInteractor
-const val NIGHT_THEME_CHECKED = "key_for_theme_switcher"
+
 
 class ThemeInteractorImpl(var sharedPrefs: SharedPreferences) : ThemeInteractor {
-
+    companion object{
+        const val NIGHT_THEME_CHECKED = "key_for_theme_switcher"
+    }
 
 
     override fun switchTheme() {

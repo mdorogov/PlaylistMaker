@@ -3,16 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/searchFragment">
+    app:startDestination="@id/libraryFragment">
 
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.practicum.playlistmaker.search.ui.fragment.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
-        <action
-            android:id="@+id/action_searchFragment_to_libraryFragment"
-            app:destination="@id/libraryFragment" />
         <action
             android:id="@+id/action_searchFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
@@ -23,8 +20,8 @@
         android:label="fragment_library"
         tools:layout="@layout/fragment_library" >
         <action
-            android:id="@+id/action_libraryFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            android:id="@+id/action_libraryFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
