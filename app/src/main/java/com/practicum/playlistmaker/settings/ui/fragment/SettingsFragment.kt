@@ -41,7 +41,8 @@ class SettingsFragment : Fragment(){
 
 
         viewModel.getSettingsState().observe(viewLifecycleOwner){settingsState ->
-                themeSwitcher.isChecked = settingsState.isDarkModeOn
+            themeSwitcher.isChecked = settingsState.isDarkModeOn
+            changeThemeMode(settingsState.isDarkModeOn)
         }
 
 
