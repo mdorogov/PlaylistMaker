@@ -3,8 +3,8 @@ package com.practicum.playlistmaker.search.data.impl
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.data.network.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
-import com.practicum.playlistmaker.search.ui.JSON_HISTORY_KEY
 
 
 class SearchHistoryRepositoryImpl(

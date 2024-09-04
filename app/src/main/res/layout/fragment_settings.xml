@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".settings.ui.fragment.SettingsFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,9 +13,6 @@
         android:orientation="horizontal"
         android:padding="@dimen/padding_12">
 
-        <ImageView
-            android:id="@+id/back_button"
-            style="@style/BackButton"/>
 
         <TextView
             style="@style/ActivityText"
@@ -22,28 +20,28 @@
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/padding_12"
             android:text="@string/settings_text"
-            android:textColor="?attr/colorOnSecondary"/>
+            android:textColor="?attr/colorOnSecondary" />
     </LinearLayout>
 
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/themeSwitcher"
-            style="@style/SwitchTheme"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/frame_padding_16"
-            android:paddingVertical="@dimen/frame_padding_20"
-            android:layout_marginEnd="6dp"
-            android:text="@string/dark_theme_text"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/themeSwitcher"
+        style="@style/SwitchTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="6dp"
+        android:paddingVertical="@dimen/frame_padding_20"
+        android:paddingStart="@dimen/frame_padding_16"
+        android:text="@string/dark_theme_text"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <FrameLayout
-        android:id="@+id/share_button"
+        android:id="@+id/shareButton"
         style="@style/FrameLayoutStyle">
 
         <TextView
             style="@style/SettingsView"
-            android:text="@string/sharing_text"/>
+            android:text="@string/sharing_text" />
 
         <ImageView
             style="@style/SettingsIcon"
@@ -54,7 +52,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/support_button"
+        android:id="@+id/supportButton"
         style="@style/FrameLayoutStyle">
 
         <TextView
@@ -69,7 +67,7 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/agreement_button"
+        android:id="@+id/agreementButton"
         style="@style/FrameLayoutStyle">
 
         <TextView
