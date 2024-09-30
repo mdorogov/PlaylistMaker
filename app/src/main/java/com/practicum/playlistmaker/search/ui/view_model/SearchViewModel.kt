@@ -8,11 +8,15 @@ import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.data.network.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.ui.state.SearchState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class SearchViewModel(
@@ -23,6 +27,7 @@ class SearchViewModel(
 
     private var stateLiveData = MutableLiveData<SearchState>()
     private var latestUserRequest: String? = null
+    var searchDebounceJob: Job? = null
 
 
     companion object {
@@ -42,34 +47,37 @@ class SearchViewModel(
     fun searchTracks(userRequest: String) {
         if (userRequest.isNotEmpty()) {
             renderState(SearchState.Loading)
-            tracksInteractor.searchTracks(userRequest, object : TracksInteractor.TracksConsumer {
-                override fun consume(foundTracks: List<Track>?, errorMessage: String?) {
-                    val songs = mutableListOf<Track>()
-                    // Создание MoviesState
-                    if (foundTracks != null) {
-                        songs.clear()
-                        songs.addAll(foundTracks)
-                        renderState(SearchState.Content(foundTracks = songs))
+            viewModelScope.launch {
+                tracksInteractor.searchTracks(userRequest)
+                    .collect{ pair ->
+                        processResult(pair.first, pair.second, userRequest)
                     }
+            }
+        }
+    }
 
-                    if (errorMessage != null) {
-                        renderState(
-                            SearchState.Error(
-                                errorMessage = "No Connection",
-                                userRequest = userRequest
-                            )
-                        )
-                    } else if (foundTracks.isNullOrEmpty()) {
-                        renderState(
-                            SearchState.Empty(
-                                message = "Not Found",
-                                userRequest = userRequest
-                            )
-                        )
-                    }
+    private fun processResult(foundTracks: List<Track>?, errorMessage: String?, userRequest: String) {
+        val songs = mutableListOf<Track>()
+        if (foundTracks != null) {
+            songs.clear()
+            songs.addAll(foundTracks)
+            renderState(SearchState.Content(foundTracks = songs))
+        }
 
-                }
-            })
+        if (errorMessage != null) {
+            renderState(
+                SearchState.Error(
+                    errorMessage = "No Connection",
+                    userRequest = userRequest
+                )
+            )
+        } else if (foundTracks.isNullOrEmpty()) {
+            renderState(
+                SearchState.Empty(
+                    message = "Not Found",
+                    userRequest = userRequest
+                )
+            )
         }
     }
 
@@ -106,13 +114,11 @@ class SearchViewModel(
         }
 
         this.latestUserRequest = currentUserRequest
-        handler.removeCallbacksAndMessages(SEARCH_REQUEST_TOKEN)
-
-        val searchRunnable = Runnable { searchTracks(currentUserRequest) }
-
-        val postTime = SystemClock.uptimeMillis() + AUTO_SEARCHING_DELAY
-        handler.postAtTime(searchRunnable, SEARCH_REQUEST_TOKEN, postTime)
-
+        searchDebounceJob?.cancel()
+        searchDebounceJob = viewModelScope.launch {
+            delay(SystemClock.uptimeMillis() + AUTO_SEARCHING_DELAY)
+            searchTracks(currentUserRequest)
+        }
     }
 
 

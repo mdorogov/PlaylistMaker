@@ -53,14 +53,13 @@ class PlayerActivity() : AppCompatActivity() {
         }
 
 
-        viewModel.getScreenStateLiveData().observe(this) { screenState ->
+        viewModel.getScreenStateLiveData().observe(this) {
+            screenState ->
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
                 is PlayerState.Content -> setPlayerContent(screenState.trackModel, true)
-                is PlayerState.PlayTime -> setPlayStatus(
-                    screenState.progress,
-                    screenState.isPlaying
-                )
+                is PlayerState.PlayTime -> setPlayStatus(screenState.progress, true)
+                is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
             }
         }
 
