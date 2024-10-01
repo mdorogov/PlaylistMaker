@@ -10,7 +10,7 @@ interface TracksPlayerInteractor {
     fun release()
     fun getPlayingStatus(): Boolean
     fun getCurrentPlayingPosition(): String
-    fun play1(previewUrl: String, statusObserver: TrackPlayerRepository.StatusObserver)
+    fun getIsSongPlayed(): Boolean
 
 
 }

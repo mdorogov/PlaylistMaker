@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.player.domain.api
 
 interface TrackPlayerRepository {
-    fun play1(previewUrl: String, statusObserver: StatusObserver)
     fun play(previewUrl: String)
     fun pause()
     fun seek(str: String)
@@ -10,6 +9,7 @@ interface TrackPlayerRepository {
     fun initializePlayer(previewUrl: String)
     fun getPlayingStatus(): Boolean
     fun updateCurrentPlaybackTime(): String
+    fun getIsSongPlayed(): Boolean
 
 
     interface StatusObserver {

@@ -5,8 +5,6 @@ import com.practicum.playlistmaker.search.data.dto.ItunesRequest
 import com.practicum.playlistmaker.search.data.dto.Response
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitNetworkClient(
     private val itunesService: ItunesApi

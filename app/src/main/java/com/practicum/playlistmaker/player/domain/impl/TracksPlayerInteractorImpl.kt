@@ -18,9 +18,6 @@ class TracksPlayerInteractorImpl(private val trackPlayerRepository: TrackPlayerR
         trackPlayerRepository.resume()
     }
 
-    override fun play1(previewUrl: String, statusObserver: TrackPlayerRepository.StatusObserver) {
-       trackPlayerRepository.play1(previewUrl,statusObserver)
-    }
     override fun play(previewUrl: String) {
         trackPlayerRepository.play(previewUrl)
     }
@@ -34,5 +31,9 @@ class TracksPlayerInteractorImpl(private val trackPlayerRepository: TrackPlayerR
     }
     override fun getCurrentPlayingPosition(): String{
         return trackPlayerRepository.updateCurrentPlaybackTime()
+    }
+
+    override fun getIsSongPlayed(): Boolean {
+        return trackPlayerRepository.getIsSongPlayed()
     }
 }

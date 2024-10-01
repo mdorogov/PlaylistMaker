@@ -21,6 +21,9 @@ class TrackAdapter(
     private val context: Context,
     private var tracks: ArrayList<Track>,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+    companion object{
+        private const val SEARCHING_DELAY = 2000L
+    }
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -49,7 +52,7 @@ class TrackAdapter(
             playerIntent.putExtra(Intent.EXTRA_SUBJECT, Gson().toJson(track))
             context.startActivity(playerIntent)
             CoroutineScope(Dispatchers.IO).launch {
-delay(2000L)
+                delay(SEARCHING_DELAY)
                 isClickAllowed = true
             }
         }

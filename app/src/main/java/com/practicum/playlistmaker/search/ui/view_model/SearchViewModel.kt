@@ -15,6 +15,7 @@ import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.ui.state.SearchState
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -27,7 +28,7 @@ class SearchViewModel(
 
     private var stateLiveData = MutableLiveData<SearchState>()
     private var latestUserRequest: String? = null
-    var searchDebounceJob: Job? = null
+    private var searchDebounceJob: Job? = null
 
 
     companion object {
@@ -53,6 +54,8 @@ class SearchViewModel(
                         processResult(pair.first, pair.second, userRequest)
                     }
             }
+        } else {
+            renderState(SearchState.Error("Not Found", userRequest))
         }
     }
 
@@ -112,11 +115,10 @@ class SearchViewModel(
         if (latestUserRequest == currentUserRequest) {
             return
         }
-
         this.latestUserRequest = currentUserRequest
         searchDebounceJob?.cancel()
         searchDebounceJob = viewModelScope.launch {
-            delay(SystemClock.uptimeMillis() + AUTO_SEARCHING_DELAY)
+            delay(AUTO_SEARCHING_DELAY)
             searchTracks(currentUserRequest)
         }
     }
