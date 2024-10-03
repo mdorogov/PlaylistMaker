@@ -1,26 +1,43 @@
 package com.practicum.playlistmaker.player.ui.view_model
 
 import android.app.Application
+import android.content.res.Resources
+import android.os.Looper
+import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Resource
 import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.player.domain.api.TracksPlayerInteractor
 import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.logging.Handler
 
 class PlayerViewModel(
     application: Application,
     private val jsonTrack: String,
     private val tracksPlayerInteractor: TracksPlayerInteractor,
-    //private val trackPlayer: TrackPlayerRepository,
     private val searchHistoryInteractor: TracksInteractor,
 ) : AndroidViewModel(application) {
 
+    companion object{
+        const val PLAYBACK_TIME_UPDATE_DELAY = 300L
+        const val WAIT_FOR_PREPARED_PLAYER_TIME_DELAY = 500L
+    }
+
     private var screenPlayerStateLiveData = MutableLiveData<PlayerState>()
     private lateinit var trackModel: Track
+
+    private var timerJob: Job? = null
+    private var playerStatusJob: Job? = null
 
 
     init {
@@ -32,42 +49,39 @@ class PlayerViewModel(
 
     fun getLoadingLiveData(): LiveData<PlayerState> = screenPlayerStateLiveData
 
-    companion object {
+
+    fun play(){
+        tracksPlayerInteractor.play(trackModel.previewUrl)
+        playerStatusJob?.cancel()
+       playerStatusJob = viewModelScope.launch {
+           delay(WAIT_FOR_PREPARED_PLAYER_TIME_DELAY)
+           PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
+           startTimer()
+       }
     }
 
-    fun play() {
-        tracksPlayerInteractor.play(
-            trackModel.previewUrl,
-            statusObserver = object : TrackPlayerRepository.StatusObserver {
-                override fun onProgress(progress: String) {
-                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
-                        progress = progress,
-                        isPlaying = true
-                    )
-                }
+    private suspend fun startTimer(){
+        timerJob = viewModelScope.launch {
+            while(tracksPlayerInteractor.getPlayingStatus()) {
+                delay(PLAYBACK_TIME_UPDATE_DELAY)
+                screenPlayerStateLiveData.postValue(
+                    PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
+                )
+                checkOnStop()
+            }
+            }
 
-                override fun onStop() {
-                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
-                        progress = trackModel.getPlayerTrackTime(),
-                        isPlaying = false
-                    )
-                }
+        /*playerStatusJob?.cancel()
+        playerStatusJob = viewModelScope.launch {
+            checkOnStop()
+        }*/
 
-                override fun onPlay() {
-                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
-                        progress = "00:00",
-                        isPlaying = true
-                    )
-                }
+    }
 
-                override fun onPause(progress: String) {
-                    screenPlayerStateLiveData.value = PlayerState.PlayTime(
-                        progress = progress,
-                        isPlaying = false
-                    )
-                }
-            },
-        )
+    fun checkOnStop(){
+        if(tracksPlayerInteractor.getIsSongPlayed()) {
+            screenPlayerStateLiveData.postValue(PlayerState.PlayingStopped("00:00"))
+        }
     }
 
     fun resume() {
@@ -76,6 +90,9 @@ class PlayerViewModel(
 
     fun pause() {
         tracksPlayerInteractor.pause()
+        timerJob?.cancel()
+        screenPlayerStateLiveData.postValue(PlayerState.
+        PlayTimePaused(tracksPlayerInteractor.getCurrentPlayingPosition()))
     }
 
     fun releasePlayer() {

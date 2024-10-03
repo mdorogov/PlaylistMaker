@@ -12,11 +12,18 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.databinding.TrackViewBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class TrackAdapter(
     private val context: Context,
     private var tracks: ArrayList<Track>,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+    companion object{
+        private const val SEARCHING_DELAY = 2000L
+    }
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -44,7 +51,10 @@ class TrackAdapter(
             val playerIntent = Intent(context, PlayerActivity::class.java)
             playerIntent.putExtra(Intent.EXTRA_SUBJECT, Gson().toJson(track))
             context.startActivity(playerIntent)
-            handler.postDelayed({ isClickAllowed = true }, 2000L)
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(SEARCHING_DELAY)
+                isClickAllowed = true
+            }
         }
     }
 

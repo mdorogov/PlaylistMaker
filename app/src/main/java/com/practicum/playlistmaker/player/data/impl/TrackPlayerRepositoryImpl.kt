@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.search.mapper.MillisConverter
+import kotlinx.coroutines.Job
 
 
 class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepository {
@@ -19,31 +20,18 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
     private val handler = Handler(Looper.getMainLooper())
     private var playerState = STATE_DEFAULT
 
-
     private lateinit var playbackTimer: Runnable
-    override fun play(previewUrl: String, statusObserver: TrackPlayerRepository.StatusObserver) {
+
+    override fun play(previewUrl: String){
         initializePlayer(previewUrl)
         if (playerState == STATE_PREPARED || playerState == STATE_PAUSED) {
             playerState = STATE_PLAYING
             mediaPlayer.start()
         }
+    }
 
-        statusObserver.onPlay()
-        playbackTimer = object : Runnable {
-            override fun run() {
-                statusObserver.onProgress(updateCurrentPlaybackTime())
-                handler.postDelayed(this, PLAYBACK_TIME_UPDATE_DELAY)
-
-                if (playerState == STATE_PAUSED) {
-                    statusObserver.onPause(updateCurrentPlaybackTime())
-                    handler.removeCallbacks(playbackTimer)
-                } else if (playerState == STATE_PREPARED) {
-                    statusObserver.onStop()
-                    handler.removeCallbacks(playbackTimer)
-                }
-            }
-        }
-        autoPlaybackTimer()
+    override fun getPlayingStatus(): Boolean{
+        return mediaPlayer.isPlaying
     }
 
     private fun autoPlaybackTimer() {
@@ -91,7 +79,13 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
         mediaPlayer.start()
     }
 
-    private fun updateCurrentPlaybackTime(): String {
+    override fun updateCurrentPlaybackTime(): String {
         return MillisConverter.millisToMinutesAndSeconds(mediaPlayer.currentPosition.toString())
+    }
+
+    override fun getIsSongPlayed(): Boolean {
+        if (playerState == STATE_PREPARED) {
+            return true
+        } else return false
     }
 }

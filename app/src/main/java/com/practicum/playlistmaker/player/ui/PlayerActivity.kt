@@ -29,6 +29,7 @@ class PlayerActivity() : AppCompatActivity() {
     private lateinit var playtime: TextView
 
     private var isTrackPlaying = false
+    private var isActivityReady = false
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -53,14 +54,14 @@ class PlayerActivity() : AppCompatActivity() {
         }
 
 
-        viewModel.getScreenStateLiveData().observe(this) { screenState ->
+        viewModel.getScreenStateLiveData().observe(this) {
+            screenState ->
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
                 is PlayerState.Content -> setPlayerContent(screenState.trackModel, true)
-                is PlayerState.PlayTime -> setPlayStatus(
-                    screenState.progress,
-                    screenState.isPlaying
-                )
+                is PlayerState.PlayTime -> setPlayStatus(screenState.progress, true)
+                is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
+                is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
             }
         }
 
@@ -102,6 +103,9 @@ class PlayerActivity() : AppCompatActivity() {
     }
 
     private fun setPlayerContent(trackModel: Track, isContentVisible: Boolean) {
+        if (isActivityReady) {
+            return
+        }
         val artwork = findViewById<ImageView>(R.id.artwork_player)
         val artistName =
             findViewById<TextView>(R.id.artist_name_player).setText(trackModel.artistName)
@@ -117,7 +121,9 @@ class PlayerActivity() : AppCompatActivity() {
             findViewById<TextView>(R.id.year_text).setText(setReleaseYear(trackModel.releaseDate))
         playtime.setText(trackModel.getPlayerTrackTime())
         setArtwork(trackModel.getPlayerArtwork(), artwork)
+
         setPlayButtonOnListener()
+        isActivityReady = true
 
     }
 
