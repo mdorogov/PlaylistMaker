@@ -2,8 +2,10 @@ package com.practicum.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.NetworkClient
+import com.practicum.playlistmaker.search.data.db.FavoriteTracksDatabase
 import com.practicum.playlistmaker.search.data.network.ItunesApi
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import org.koin.android.ext.koin.androidContext
@@ -24,6 +26,11 @@ val dataModule = module {
     single {
         androidContext()
             .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), FavoriteTracksDatabase::class.java,
+            "favtracksdatabase.db").build()
     }
 
     factory { Gson() }

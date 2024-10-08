@@ -16,6 +16,7 @@ import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
+import com.practicum.playlistmaker.search.domain.db.FavoriteTracksDbInteractor
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ class PlayerViewModel(
     private val jsonTrack: String,
     private val tracksPlayerInteractor: TracksPlayerInteractor,
     private val searchHistoryInteractor: TracksInteractor,
+    private val favoriteTracksDbInteractor: FavoriteTracksDbInteractor
 ) : AndroidViewModel(application) {
 
     companion object{
@@ -44,6 +46,18 @@ class PlayerViewModel(
         trackModel = tracksPlayerInteractor.loadPlayerData(jsonTrack)
         searchHistoryInteractor.addTrackToArray(trackModel)
         screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel))
+    }
+
+    private suspend fun isTrackFavorite(trackId: Int) : Boolean{
+return favoriteTracksDbInteractor.isTrackFavorite(trackId)
+    }
+
+    private suspend fun addTrackToFavorites(track: Track) {
+        favoriteTracksDbInteractor.insertFavTrack(track)
+    }
+
+    private suspend fun deleteTrackFromFavorites(track: Track) {
+        favoriteTracksDbInteractor.deleteFavTrack(track)
     }
 
 

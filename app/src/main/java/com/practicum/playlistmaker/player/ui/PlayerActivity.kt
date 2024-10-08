@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,6 +28,7 @@ class PlayerActivity() : AppCompatActivity() {
     private lateinit var json: String
     private lateinit var playButton: ImageView
     private lateinit var playtime: TextView
+    private lateinit var favoriteTrackIcon: ImageView
 
     private var isTrackPlaying = false
     private var isActivityReady = false
@@ -62,8 +64,13 @@ class PlayerActivity() : AppCompatActivity() {
                 is PlayerState.PlayTime -> setPlayStatus(screenState.progress, true)
                 is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
                 is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
+                is PlayerState.FavoriteTrackChanged -> setFavoriteTrackIconPressed(screenState.isTrackFavorite)
             }
         }
+
+    }
+
+    private fun setFavoriteTrackIconPressed(trackFavorite: Boolean) {
 
     }
 
@@ -96,6 +103,8 @@ class PlayerActivity() : AppCompatActivity() {
         playButton = findViewById(R.id.play_button)
         playtime = findViewById(R.id.current_playtime_view)
 
+
+
         backButton.setOnClickListener {
             finish()
             viewModel.releasePlayer()
@@ -123,6 +132,7 @@ class PlayerActivity() : AppCompatActivity() {
         setArtwork(trackModel.getPlayerArtwork(), artwork)
 
         setPlayButtonOnListener()
+        setFavoriteTrackIconViewAndListener()
         isActivityReady = true
 
     }
@@ -130,6 +140,12 @@ class PlayerActivity() : AppCompatActivity() {
     private fun setPlayButtonOnListener() {
         playButton.setOnClickListener {
             playerControl(isTrackPlaying)
+        }
+    }
+
+    private fun setFavoriteTrackIconViewAndListener(){
+        favoriteTrackIcon.setOnClickListener{
+
         }
     }
 
