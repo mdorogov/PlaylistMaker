@@ -11,15 +11,15 @@ import com.practicum.playlistmaker.search.data.db.entity.TrackEntity
 interface TrackDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTrackEntity(track: TrackEntity)
+    fun insertTrackEntity(track: TrackEntity)
 
     @Query("SELECT * FROM favorite_tracks")
-    suspend fun getFavTracks(): List<TrackEntity>
+    fun getFavTracks(): List<TrackEntity>
 
     @Delete(entity = TrackEntity::class)
-    suspend fun deleteTrackEntity(trackEntity: TrackEntity)
+    fun deleteTrackEntity(trackEntity: TrackEntity)
 
     @Query("SELECT * FROM favorite_tracks WHERE trackId = :trackId")
-    suspend fun isThereTrack(trackId : Int) : Int
+    fun isThereTrack(trackId : Int) : Int
 
 }

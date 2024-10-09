@@ -60,11 +60,11 @@ class PlayerActivity() : AppCompatActivity() {
             screenState ->
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
-                is PlayerState.Content -> setPlayerContent(screenState.trackModel, true)
+                is PlayerState.Content -> setPlayerContent(screenState.trackModel, true, screenState.isTrackFavorite)
                 is PlayerState.PlayTime -> setPlayStatus(screenState.progress, true)
                 is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
                 is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
-                is PlayerState.FavoriteTrackChanged -> setFavoriteTrackIconPressed(screenState.isTrackFavorite)
+                is PlayerState.FavoriteTrackChanged -> setFavoriteTrackIcon(screenState.isTrackFavorite)
             }
         }
 
@@ -102,6 +102,7 @@ class PlayerActivity() : AppCompatActivity() {
         val countryView = findViewById<TextView>(R.id.country_view)
         playButton = findViewById(R.id.play_button)
         playtime = findViewById(R.id.current_playtime_view)
+       favoriteTrackIcon = findViewById<ImageView>(R.id.add_to_favorite_button)
 
 
 
@@ -111,7 +112,7 @@ class PlayerActivity() : AppCompatActivity() {
         }
     }
 
-    private fun setPlayerContent(trackModel: Track, isContentVisible: Boolean) {
+    private fun setPlayerContent(trackModel: Track, isContentVisible: Boolean, isTrackFavorite: Boolean) {
         if (isActivityReady) {
             return
         }
@@ -132,7 +133,8 @@ class PlayerActivity() : AppCompatActivity() {
         setArtwork(trackModel.getPlayerArtwork(), artwork)
 
         setPlayButtonOnListener()
-        setFavoriteTrackIconViewAndListener()
+        setFavoriteTrackIcon(isTrackFavorite)
+        setFavoriteTrackIconOnListener()
         isActivityReady = true
 
     }
@@ -143,9 +145,17 @@ class PlayerActivity() : AppCompatActivity() {
         }
     }
 
-    private fun setFavoriteTrackIconViewAndListener(){
+    private fun setFavoriteTrackIconOnListener() {
         favoriteTrackIcon.setOnClickListener{
+            viewModel.favoriteTrackIconIsPressed()
+        }
+    }
 
+    private fun setFavoriteTrackIcon(isTrackFavorite: Boolean){
+        if (isTrackFavorite) {
+favoriteTrackIcon.setImageResource(R.drawable.favorite_true_icon)
+        } else {
+            favoriteTrackIcon.setImageResource(R.drawable.favorite_false_icon)
         }
     }
 

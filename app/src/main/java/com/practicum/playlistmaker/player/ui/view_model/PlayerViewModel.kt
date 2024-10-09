@@ -37,27 +37,44 @@ class PlayerViewModel(
 
     private var screenPlayerStateLiveData = MutableLiveData<PlayerState>()
     private lateinit var trackModel: Track
+    private var isTrackFavorite: Boolean = false
 
     private var timerJob: Job? = null
     private var playerStatusJob: Job? = null
 
 
     init {
+
+
         trackModel = tracksPlayerInteractor.loadPlayerData(jsonTrack)
         searchHistoryInteractor.addTrackToArray(trackModel)
-        screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel))
+        postPlayerContent()
+
     }
 
-    private suspend fun isTrackFavorite(trackId: Int) : Boolean{
+    private fun postPlayerContent() {
+        viewModelScope.launch {
+            isTrackFavorite = favoriteTracksDbInteractor
+                .isTrackFavorite(trackModel.trackId)
+            screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel, isTrackFavorite))
+        }
+    }
+    private suspend fun isTrackFavoriteTEST(trackId: Int) : Boolean{
 return favoriteTracksDbInteractor.isTrackFavorite(trackId)
     }
 
-    private suspend fun addTrackToFavorites(track: Track) {
-        favoriteTracksDbInteractor.insertFavTrack(track)
+    private fun addTrackToFavorites() {
+        viewModelScope.launch {
+            favoriteTracksDbInteractor.insertFavTrack(trackModel)
+        }
+        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(true))
     }
 
-    private suspend fun deleteTrackFromFavorites(track: Track) {
-        favoriteTracksDbInteractor.deleteFavTrack(track)
+    private fun deleteTrackFromFavorites() {
+        viewModelScope.launch {
+            favoriteTracksDbInteractor.deleteFavTrack(trackModel)
+        }
+        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(false))
     }
 
 
@@ -119,5 +136,13 @@ return favoriteTracksDbInteractor.isTrackFavorite(trackId)
     }
 
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenPlayerStateLiveData
+
+    fun favoriteTrackIconIsPressed() {
+        if (isTrackFavorite){
+            deleteTrackFromFavorites()
+        } else {
+            addTrackToFavorites()
+        }
+    }
 
 }

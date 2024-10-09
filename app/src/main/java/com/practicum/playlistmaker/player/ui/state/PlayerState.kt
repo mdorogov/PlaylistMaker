@@ -7,6 +7,7 @@ sealed class PlayerState {
 
     data class Content(
         val trackModel: Track,
+        val isTrackFavorite: Boolean
     ) : PlayerState()
 
     data class FavoriteTrackChanged(val isTrackFavorite: Boolean) : PlayerState()
