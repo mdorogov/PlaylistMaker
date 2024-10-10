@@ -3,11 +3,11 @@ package com.practicum.playlistmaker.search.data.models
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 
 data class Track(
+    val trackId: Int,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,
     val artworkUrl100: String,
-    val trackId: Int,
     val collectionName: String,
     val primaryGenreName: String,
     val country: String,

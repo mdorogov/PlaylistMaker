@@ -26,7 +26,8 @@ class FavoriteTracksRepositoryImpl(
     }
 
     override suspend fun insertFavTrack(favTrack: Track) {
-        favoriteTracksDatabase.trackDao().insertTrackEntity(trackDbConverter.map(favTrack))
+        val favTrackEntity = trackDbConverter.map(favTrack)
+        favoriteTracksDatabase.trackDao().insertTrackEntity(favTrackEntity)
     }
 
     override suspend fun isTrackFavorite(trackId: Int): Boolean {

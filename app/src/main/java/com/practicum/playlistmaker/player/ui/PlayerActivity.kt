@@ -181,7 +181,7 @@ favoriteTrackIcon.setImageResource(R.drawable.favorite_true_icon)
     }
 
     private fun setReleaseYear(str: String): String {
-        return str.substring(0, 4)
+        return str.substring(0, 3)
     }
 
     private fun setArtwork(imageUrl: String, artworkView: ImageView) {

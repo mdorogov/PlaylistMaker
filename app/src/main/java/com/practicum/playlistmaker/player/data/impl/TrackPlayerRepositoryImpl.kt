@@ -20,8 +20,6 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
     private val handler = Handler(Looper.getMainLooper())
     private var playerState = STATE_DEFAULT
 
-    private lateinit var playbackTimer: Runnable
-
     override fun play(previewUrl: String){
         initializePlayer(previewUrl)
         if (playerState == STATE_PREPARED || playerState == STATE_PAUSED) {
@@ -32,10 +30,6 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
 
     override fun getPlayingStatus(): Boolean{
         return mediaPlayer.isPlaying
-    }
-
-    private fun autoPlaybackTimer() {
-        handler.postDelayed(playbackTimer, PLAYBACK_TIME_UPDATE_DELAY)
     }
 
     override fun pause() {
@@ -49,7 +43,6 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
 
     override fun release() {
         if (playerState != STATE_DEFAULT) {
-            handler.removeCallbacks(playbackTimer)
             mediaPlayer.release()
         }
     }

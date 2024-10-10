@@ -24,7 +24,7 @@ class TrackSearchInteractorImpl(private val networkClient: NetworkClient) :
             200 -> {
                 with(response as ItunesResponse) {
                     val data = results.map {
-                        Track(it.trackName, it.artistName, it.trackTimeMillis, it.artworkUrl100,it.trackId,
+                        Track(it.trackId,it.trackName, it.artistName, it.trackTimeMillis, it.artworkUrl100,
                             it.collectionName, it.primaryGenreName, it.country, it.releaseDate, it.previewUrl)
                     }
                     emit(Resource.Success(data))

@@ -12,6 +12,7 @@ import com.practicum.playlistmaker.library.ui.state.PlaylistsState
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.domain.db.FavoriteTracksDbInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(private val favoriteTracksInteractor: FavoriteTracksDbInteractor
@@ -20,7 +21,7 @@ class FavoriteTracksViewModel(private val favoriteTracksInteractor: FavoriteTrac
     fun observeState(): LiveData<FavoriteTracksState> = stateLiveData
 
     fun loadData() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksInteractor
                 .favoriteTracks()
                 .collect { tracks ->

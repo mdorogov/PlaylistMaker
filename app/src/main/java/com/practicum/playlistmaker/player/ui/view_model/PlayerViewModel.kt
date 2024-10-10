@@ -17,6 +17,7 @@ import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.domain.db.FavoriteTracksDbInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -53,7 +54,7 @@ class PlayerViewModel(
     }
 
     private fun postPlayerContent() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             isTrackFavorite = favoriteTracksDbInteractor
                 .isTrackFavorite(trackModel.trackId)
             screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel, isTrackFavorite))
@@ -64,14 +65,14 @@ return favoriteTracksDbInteractor.isTrackFavorite(trackId)
     }
 
     private fun addTrackToFavorites() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksDbInteractor.insertFavTrack(trackModel)
         }
         screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(true))
     }
 
     private fun deleteTrackFromFavorites() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksDbInteractor.deleteFavTrack(trackModel)
         }
         screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(false))

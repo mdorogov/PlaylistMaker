@@ -99,6 +99,7 @@ class FavoriteTracksFragment : Fragment() {
         tracks.clear()
         tracks.addAll(favTracks)
         trackRecycler.visibility = View.VISIBLE
+        statusView.visibility = View.GONE
 
         trackRecycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
