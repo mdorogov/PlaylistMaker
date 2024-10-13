@@ -56,7 +56,7 @@ class SearchHistoryRepositoryImpl(
         sharedPreferences.edit().clear().apply()
     }
 
-    override fun setSharedPrefListener (sharedListener: SharedPreferences.OnSharedPreferenceChangeListener) {
+    override fun setSharedPrefListener(sharedListener: SharedPreferences.OnSharedPreferenceChangeListener) {
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedListener)
     }
 

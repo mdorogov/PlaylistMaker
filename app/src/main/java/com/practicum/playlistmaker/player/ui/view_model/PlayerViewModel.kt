@@ -45,18 +45,17 @@ class PlayerViewModel(
 
 
     init {
-
-
-        trackModel = tracksPlayerInteractor.loadPlayerData(jsonTrack)
-        searchHistoryInteractor.addTrackToArray(trackModel)
         postPlayerContent()
-
     }
 
     private fun postPlayerContent() {
+        trackModel = tracksPlayerInteractor.loadPlayerData(jsonTrack)
         viewModelScope.launch(Dispatchers.IO) {
             isTrackFavorite = favoriteTracksDbInteractor
                 .isTrackFavorite(trackModel.trackId)
+            if (!isTrackFavorite){
+                searchHistoryInteractor.addTrackToArray(trackModel)
+            }
             screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel, isTrackFavorite))
         }
     }
@@ -65,6 +64,7 @@ return favoriteTracksDbInteractor.isTrackFavorite(trackId)
     }
 
     private fun addTrackToFavorites() {
+        trackModel.setTimeStamp()
         viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksDbInteractor.insertFavTrack(trackModel)
         }
@@ -83,9 +83,10 @@ return favoriteTracksDbInteractor.isTrackFavorite(trackId)
 
 
     fun play(){
-        tracksPlayerInteractor.play(trackModel.previewUrl)
+       // tracksPlayerInteractor.play(trackModel.previewUrl)
         playerStatusJob?.cancel()
        playerStatusJob = viewModelScope.launch {
+           tracksPlayerInteractor.play(trackModel.previewUrl)
            delay(WAIT_FOR_PREPARED_PLAYER_TIME_DELAY)
            PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
            startTimer()
@@ -129,12 +130,16 @@ return favoriteTracksDbInteractor.isTrackFavorite(trackId)
 
     fun releasePlayer() {
         tracksPlayerInteractor.release()
+        playerStatusJob?.cancel()
+        timerJob?.cancel()
     }
 
     override fun onCleared() {
         super.onCleared()
         releasePlayer()
     }
+
+
 
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenPlayerStateLiveData
 

@@ -4,7 +4,7 @@ import com.practicum.playlistmaker.search.data.models.Track
 
 interface TracksPlayerInteractor {
     fun loadPlayerData(json: String): Track
-    fun play(previewUrl: String)
+    suspend fun play(previewUrl: String)
     fun pause()
     fun resume()
     fun release()

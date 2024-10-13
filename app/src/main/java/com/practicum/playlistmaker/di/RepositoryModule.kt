@@ -21,8 +21,8 @@ val repositoryModule = module {
         ExternalNavigator(get())
     }
 
-    single<TrackPlayerRepository>{
-        TrackPlayerRepositoryImpl(get())
+    factory<TrackPlayerRepository>{
+        TrackPlayerRepositoryImpl()
     }
 
     single<FavoriteTracksRepository> {

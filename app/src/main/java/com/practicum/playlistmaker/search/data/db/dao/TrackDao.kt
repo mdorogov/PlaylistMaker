@@ -13,13 +13,13 @@ interface TrackDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTrackEntity(track: TrackEntity)
 
-    @Query("SELECT * FROM favorite_tracks")
+    @Query("SELECT * FROM favorite_tracks ORDER BY timeStamp desc")
     fun getFavTracks(): List<TrackEntity>
 
     @Delete(entity = TrackEntity::class)
     fun deleteTrackEntity(trackEntity: TrackEntity)
 
-    @Query("SELECT * FROM favorite_tracks WHERE trackId = :trackId")
-    fun isThereTrack(trackId : Int) : Int
+    @Query("SELECT * FROM favorite_tracks WHERE track_Id = :trackId")
+    fun isThereTrack(trackId : String) : Int
 
 }

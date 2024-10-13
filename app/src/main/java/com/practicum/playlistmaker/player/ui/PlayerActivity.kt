@@ -40,9 +40,11 @@ class PlayerActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
         setPlayerViews()
+
 
         if (savedInstanceState != null) {
             json = savedInstanceState.getString(SHOWN_TRACK, SHOWN_DEF)
@@ -56,11 +58,16 @@ class PlayerActivity() : AppCompatActivity() {
         }
 
 
-        viewModel.getScreenStateLiveData().observe(this) {
-            screenState ->
+
+        viewModel.getScreenStateLiveData().observe(this) { screenState ->
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
-                is PlayerState.Content -> setPlayerContent(screenState.trackModel, true, screenState.isTrackFavorite)
+                is PlayerState.Content -> setPlayerContent(
+                    screenState.trackModel,
+                    true,
+                    screenState.isTrackFavorite
+                )
+
                 is PlayerState.PlayTime -> setPlayStatus(screenState.progress, true)
                 is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
                 is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
@@ -70,12 +77,7 @@ class PlayerActivity() : AppCompatActivity() {
 
     }
 
-    private fun setFavoriteTrackIconPressed(trackFavorite: Boolean) {
-
-    }
-
     private fun changeContentVisibility(isVisible: Boolean) {
-
     }
 
     fun setPlayStatus(progress: String, isPlaying: Boolean) {
@@ -102,7 +104,7 @@ class PlayerActivity() : AppCompatActivity() {
         val countryView = findViewById<TextView>(R.id.country_view)
         playButton = findViewById(R.id.play_button)
         playtime = findViewById(R.id.current_playtime_view)
-       favoriteTrackIcon = findViewById<ImageView>(R.id.add_to_favorite_button)
+        favoriteTrackIcon = findViewById<ImageView>(R.id.add_to_favorite_button)
 
 
 
@@ -112,7 +114,11 @@ class PlayerActivity() : AppCompatActivity() {
         }
     }
 
-    private fun setPlayerContent(trackModel: Track, isContentVisible: Boolean, isTrackFavorite: Boolean) {
+    private fun setPlayerContent(
+        trackModel: Track,
+        isContentVisible: Boolean,
+        isTrackFavorite: Boolean
+    ) {
         if (isActivityReady) {
             return
         }
@@ -146,14 +152,14 @@ class PlayerActivity() : AppCompatActivity() {
     }
 
     private fun setFavoriteTrackIconOnListener() {
-        favoriteTrackIcon.setOnClickListener{
+        favoriteTrackIcon.setOnClickListener {
             viewModel.favoriteTrackIconIsPressed()
         }
     }
 
-    private fun setFavoriteTrackIcon(isTrackFavorite: Boolean){
+    private fun setFavoriteTrackIcon(isTrackFavorite: Boolean) {
         if (isTrackFavorite) {
-favoriteTrackIcon.setImageResource(R.drawable.favorite_true_icon)
+            favoriteTrackIcon.setImageResource(R.drawable.favorite_true_icon)
         } else {
             favoriteTrackIcon.setImageResource(R.drawable.favorite_false_icon)
         }
@@ -181,7 +187,7 @@ favoriteTrackIcon.setImageResource(R.drawable.favorite_true_icon)
     }
 
     private fun setReleaseYear(str: String): String {
-        return str.substring(0, 3)
+        return str.substring(0, 4)
     }
 
     private fun setArtwork(imageUrl: String, artworkView: ImageView) {

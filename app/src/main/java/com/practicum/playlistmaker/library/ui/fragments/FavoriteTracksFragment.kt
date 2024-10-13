@@ -28,18 +28,21 @@ class FavoriteTracksFragment : Fragment() {
 
     companion object {
         fun newInstance() = FavoriteTracksFragment().apply {
-            arguments = Bundle().apply {  }
+            arguments = Bundle().apply { }
         }
     }
 
     private var _binding: FragmentFavoriteTracksBinding? = null
     private val binding get() = _binding!!
 
-    private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel{
+    private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel {
         parametersOf()
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        favoriteTracksViewModel.loadData()
+    }
 
 
     override fun onCreateView(
@@ -86,11 +89,12 @@ class FavoriteTracksFragment : Fragment() {
     }
 
     private fun showError(stringRes: Int) {
-        when(stringRes) {
+        when (stringRes) {
             1 -> {
                 statusView.visibility = View.VISIBLE
                 _binding!!.favTracksErrorTxt.setText(R.string.fav_tracks_not_found_txt)
             }
+
             else -> {}
         }
     }
@@ -104,7 +108,6 @@ class FavoriteTracksFragment : Fragment() {
         trackRecycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
     }
-
 
 
 }

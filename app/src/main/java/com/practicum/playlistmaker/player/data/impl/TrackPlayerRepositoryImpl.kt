@@ -5,10 +5,9 @@ import android.os.Handler
 import android.os.Looper
 import com.practicum.playlistmaker.player.domain.api.TrackPlayerRepository
 import com.practicum.playlistmaker.search.mapper.MillisConverter
-import kotlinx.coroutines.Job
 
 
-class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepository {
+class TrackPlayerRepositoryImpl() : TrackPlayerRepository {
     companion object {
         const val STATE_DEFAULT = "0"
         const val STATE_PREPARED = "1"
@@ -17,23 +16,25 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
         const val PLAYBACK_TIME_UPDATE_DELAY = 500L
     }
 
+    private var mediaPlayer: MediaPlayer? = null
+
     private val handler = Handler(Looper.getMainLooper())
     private var playerState = STATE_DEFAULT
 
-    override fun play(previewUrl: String){
+    override fun play(previewUrl: String) {
         initializePlayer(previewUrl)
         if (playerState == STATE_PREPARED || playerState == STATE_PAUSED) {
             playerState = STATE_PLAYING
-            mediaPlayer.start()
+            mediaPlayer?.start()
         }
     }
 
-    override fun getPlayingStatus(): Boolean{
-        return mediaPlayer.isPlaying
+    override fun getPlayingStatus(): Boolean {
+        return mediaPlayer!!.isPlaying
     }
 
     override fun pause() {
-        mediaPlayer.pause()
+        mediaPlayer?.pause()
         playerState = STATE_PAUSED
 
     }
@@ -41,39 +42,44 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
     override fun seek(str: String) {
     }
 
-    override fun release() {
-        if (playerState != STATE_DEFAULT) {
-            mediaPlayer.release()
-        }
+    override fun releasePlayer() {
+        mediaPlayer?.release()
+        mediaPlayer = null
+        playerState = STATE_DEFAULT
     }
 
     override fun initializePlayer(previewUrl: String) {
-
         if (playerState == STATE_DEFAULT) {
-            mediaPlayer.setDataSource(previewUrl)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
-                playerState = STATE_PLAYING
-                mediaPlayer.start()
-            }
-            mediaPlayer.setOnCompletionListener {
-                playerState = STATE_PREPARED
+            mediaPlayer = MediaPlayer().apply {
+                setDataSource(previewUrl)
+                prepareAsync()
+
+
+                setOnPreparedListener {
+                    playerState = STATE_PLAYING
+                    start()
+                }
+                setOnCompletionListener {
+                    playerState = STATE_PREPARED
+                    releasePlayer()
+                }
+
+                setOnErrorListener { mp, what, extra ->
+                    true
+                }
             }
 
-            mediaPlayer.setOnErrorListener { mp, what, extra ->
-                true
-            }
         } else {
-            mediaPlayer.start()
+            mediaPlayer?.start()
         }
     }
 
     override fun resume() {
-        mediaPlayer.start()
+        mediaPlayer?.start()
     }
 
     override fun updateCurrentPlaybackTime(): String {
-        return MillisConverter.millisToMinutesAndSeconds(mediaPlayer.currentPosition.toString())
+        return MillisConverter.millisToMinutesAndSeconds(mediaPlayer?.currentPosition.toString())
     }
 
     override fun getIsSongPlayed(): Boolean {
@@ -81,4 +87,5 @@ class TrackPlayerRepositoryImpl(val mediaPlayer: MediaPlayer) : TrackPlayerRepos
             return true
         } else return false
     }
+
 }

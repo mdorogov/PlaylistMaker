@@ -17,7 +17,7 @@ class FavoriteTracksRepositoryImpl(
         emit(convertFromTrackEntityToList(favTracks))
     }
 
-    private fun convertFromTrackEntityToList(favTracks: List<TrackEntity>): List<Track>{
+    private fun convertFromTrackEntityToList(favTracks: List<TrackEntity>): List<Track> {
         return favTracks.map { trackEntity -> trackDbConverter.map(trackEntity) }
     }
 
@@ -27,11 +27,12 @@ class FavoriteTracksRepositoryImpl(
 
     override suspend fun insertFavTrack(favTrack: Track) {
         val favTrackEntity = trackDbConverter.map(favTrack)
+        favTrackEntity.timeStamp = System.currentTimeMillis().toString()
         favoriteTracksDatabase.trackDao().insertTrackEntity(favTrackEntity)
     }
 
     override suspend fun isTrackFavorite(trackId: Int): Boolean {
-        if(favoriteTracksDatabase.trackDao().isThereTrack(trackId = trackId) == 0) {
+        if (favoriteTracksDatabase.trackDao().isThereTrack(trackId = trackId.toString()) == 0) {
             return false
         } else return true
     }

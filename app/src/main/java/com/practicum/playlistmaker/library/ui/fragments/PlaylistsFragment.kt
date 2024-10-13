@@ -14,19 +14,18 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class PlaylistsFragment : Fragment() {
-    companion object{
+    companion object {
         fun newInstance() = PlaylistsFragment().apply {
-            arguments = Bundle().apply {  }
+            arguments = Bundle().apply { }
         }
     }
 
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
 
-    private val playlistViewModel: PlaylistsViewModel by viewModel{
+    private val playlistViewModel: PlaylistsViewModel by viewModel {
         parametersOf()
     }
-
 
 
     override fun onCreateView(
@@ -61,11 +60,12 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun showError(stringRes: Int) {
-        when(stringRes) {
+        when (stringRes) {
             1 -> {
                 _binding!!.playlistsStatusLayout.visibility = View.VISIBLE
-            _binding!!.playlistsErrorTxt.setText(R.string.fragment_list_not_found_text)
+                _binding!!.playlistsErrorTxt.setText(R.string.fragment_list_not_found_text)
             }
+
             else -> {}
         }
     }

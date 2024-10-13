@@ -5,7 +5,7 @@ interface TrackPlayerRepository {
     fun pause()
     fun seek(str: String)
     fun resume()
-    fun release()
+    fun releasePlayer()
     fun initializePlayer(previewUrl: String)
     fun getPlayingStatus(): Boolean
     fun updateCurrentPlaybackTime(): String

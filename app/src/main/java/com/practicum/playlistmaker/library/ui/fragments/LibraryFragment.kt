@@ -26,14 +26,17 @@ class LibraryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.libViewPager.adapter = LibraryPagerAdapter(fragmentManager = childFragmentManager,
-            lifecycle)
-        tabMediator = TabLayoutMediator(binding.libTabLayout, binding.libViewPager){tab, position ->
-            when(position) {
-                0 -> tab.text = "Избранные треки"
-                1 -> tab.text = "Плейлисты"
+        binding.libViewPager.adapter = LibraryPagerAdapter(
+            fragmentManager = childFragmentManager,
+            lifecycle
+        )
+        tabMediator =
+            TabLayoutMediator(binding.libTabLayout, binding.libViewPager) { tab, position ->
+                when (position) {
+                    0 -> tab.text = "Избранные треки"
+                    1 -> tab.text = "Плейлисты"
+                }
             }
-        }
         tabMediator.attach()
     }
 

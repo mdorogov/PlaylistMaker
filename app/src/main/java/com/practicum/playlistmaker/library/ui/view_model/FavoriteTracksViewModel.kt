@@ -15,8 +15,9 @@ import com.practicum.playlistmaker.search.domain.db.FavoriteTracksDbInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FavoriteTracksViewModel(private val favoriteTracksInteractor: FavoriteTracksDbInteractor
-) : ViewModel()  {
+class FavoriteTracksViewModel(
+    private val favoriteTracksInteractor: FavoriteTracksDbInteractor
+) : ViewModel() {
     private var stateLiveData = MutableLiveData<FavoriteTracksState>()
     fun observeState(): LiveData<FavoriteTracksState> = stateLiveData
 
@@ -32,10 +33,10 @@ class FavoriteTracksViewModel(private val favoriteTracksInteractor: FavoriteTrac
     }
 
     private fun processResult(tracks: List<Track>) {
-if (tracks.isEmpty()){
-    stateLiveData.postValue(FavoriteTracksState.ContentNotFound(1))
-} else {
-    stateLiveData.postValue(FavoriteTracksState.Content(tracks))
-}
+        if (tracks.isEmpty()) {
+            stateLiveData.postValue(FavoriteTracksState.ContentNotFound(1))
+        } else {
+            stateLiveData.postValue(FavoriteTracksState.Content(tracks))
+        }
     }
 }

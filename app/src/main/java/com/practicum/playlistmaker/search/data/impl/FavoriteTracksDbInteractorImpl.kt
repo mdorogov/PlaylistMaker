@@ -19,7 +19,7 @@ class FavoriteTracksDbInteractorImpl(private val favoriteTracksRepository: Favor
         favoriteTracksRepository.insertFavTrack(favTrack)
     }
 
-    override suspend fun isTrackFavorite(trackId: Int) : Boolean{
+    override suspend fun isTrackFavorite(trackId: Int): Boolean {
         return favoriteTracksRepository.isTrackFavorite(trackId)
     }
 }

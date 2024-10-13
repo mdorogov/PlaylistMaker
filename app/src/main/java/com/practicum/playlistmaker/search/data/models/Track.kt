@@ -13,11 +13,16 @@ data class Track(
     val country: String,
     val releaseDate: String,
     val previewUrl: String,
+    val timeStamp: String
 ) {
     fun getPlayerArtwork(): String {
         return artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
     }
     fun getPlayerTrackTime(): String{
         return MillisConverter.millisToMinutesAndSeconds(trackTimeMillis)
+    }
+
+    fun setTimeStamp(): String {
+        return System.currentTimeMillis().toString()
     }
 }
