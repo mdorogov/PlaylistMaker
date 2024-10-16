@@ -18,12 +18,12 @@ class TracksPlayerInteractorImpl(private val trackPlayerRepository: TrackPlayerR
         trackPlayerRepository.resume()
     }
 
-    override fun play(previewUrl: String) {
+    override suspend fun play(previewUrl: String) {
         trackPlayerRepository.play(previewUrl)
     }
 
     override fun release() {
-        trackPlayerRepository.release()
+        trackPlayerRepository.releasePlayer()
     }
 
     override fun getPlayingStatus(): Boolean {

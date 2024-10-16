@@ -1,9 +1,7 @@
 package com.practicum.playlistmaker.search.domain.impl
 
-
 import android.content.SharedPreferences
 import com.practicum.playlistmaker.creator.Resource
-import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TrackSearchInteractor
@@ -14,7 +12,6 @@ import kotlinx.coroutines.flow.map
 
 class TracksInteractorImpl(private val trackSearcher: TrackSearchInteractor,
                            private val searchHistoryRepository: SearchHistoryRepository) : TracksInteractor {
-    private val executor = Executors.newCachedThreadPool()
 
     override fun searchTracks(expression: String): Flow<Pair<List<Track>?, String?>> {
         return trackSearcher.searchTrack(expression).map { result ->

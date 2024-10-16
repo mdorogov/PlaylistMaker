@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
     viewModel { (jsonStr: String) ->
-        PlayerViewModel(get(), jsonStr, get(), get())
+        PlayerViewModel(get(), jsonStr, get(), get(), get())
     }
 
     viewModel {

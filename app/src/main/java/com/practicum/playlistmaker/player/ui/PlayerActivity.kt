@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.content.Intent
+import android.media.Image
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,6 +28,7 @@ class PlayerActivity() : AppCompatActivity() {
     private lateinit var json: String
     private lateinit var playButton: ImageView
     private lateinit var playtime: TextView
+    private lateinit var favoriteTrackIcon: ImageView
 
     private var isTrackPlaying = false
     private var isActivityReady = false
@@ -38,9 +40,11 @@ class PlayerActivity() : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
         setPlayerViews()
+
 
         if (savedInstanceState != null) {
             json = savedInstanceState.getString(SHOWN_TRACK, SHOWN_DEF)
@@ -54,21 +58,26 @@ class PlayerActivity() : AppCompatActivity() {
         }
 
 
-        viewModel.getScreenStateLiveData().observe(this) {
-            screenState ->
+
+        viewModel.getScreenStateLiveData().observe(this) { screenState ->
             when (screenState) {
                 is PlayerState.Loading -> changeContentVisibility(isVisible = true)
-                is PlayerState.Content -> setPlayerContent(screenState.trackModel, true)
+                is PlayerState.Content -> setPlayerContent(
+                    screenState.trackModel,
+                    true,
+                    screenState.isTrackFavorite
+                )
+
                 is PlayerState.PlayTime -> setPlayStatus(screenState.progress, true)
                 is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
                 is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
+                is PlayerState.FavoriteTrackChanged -> setFavoriteTrackIcon(screenState.isTrackFavorite)
             }
         }
 
     }
 
     private fun changeContentVisibility(isVisible: Boolean) {
-
     }
 
     fun setPlayStatus(progress: String, isPlaying: Boolean) {
@@ -95,6 +104,9 @@ class PlayerActivity() : AppCompatActivity() {
         val countryView = findViewById<TextView>(R.id.country_view)
         playButton = findViewById(R.id.play_button)
         playtime = findViewById(R.id.current_playtime_view)
+        favoriteTrackIcon = findViewById<ImageView>(R.id.add_to_favorite_button)
+
+
 
         backButton.setOnClickListener {
             finish()
@@ -102,7 +114,11 @@ class PlayerActivity() : AppCompatActivity() {
         }
     }
 
-    private fun setPlayerContent(trackModel: Track, isContentVisible: Boolean) {
+    private fun setPlayerContent(
+        trackModel: Track,
+        isContentVisible: Boolean,
+        isTrackFavorite: Boolean
+    ) {
         if (isActivityReady) {
             return
         }
@@ -123,6 +139,8 @@ class PlayerActivity() : AppCompatActivity() {
         setArtwork(trackModel.getPlayerArtwork(), artwork)
 
         setPlayButtonOnListener()
+        setFavoriteTrackIcon(isTrackFavorite)
+        setFavoriteTrackIconOnListener()
         isActivityReady = true
 
     }
@@ -130,6 +148,20 @@ class PlayerActivity() : AppCompatActivity() {
     private fun setPlayButtonOnListener() {
         playButton.setOnClickListener {
             playerControl(isTrackPlaying)
+        }
+    }
+
+    private fun setFavoriteTrackIconOnListener() {
+        favoriteTrackIcon.setOnClickListener {
+            viewModel.favoriteTrackIconIsPressed()
+        }
+    }
+
+    private fun setFavoriteTrackIcon(isTrackFavorite: Boolean) {
+        if (isTrackFavorite) {
+            favoriteTrackIcon.setImageResource(R.drawable.favorite_true_icon)
+        } else {
+            favoriteTrackIcon.setImageResource(R.drawable.favorite_false_icon)
         }
     }
 

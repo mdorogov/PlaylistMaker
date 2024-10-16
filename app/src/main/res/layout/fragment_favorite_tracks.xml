@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    tools:context=".library.ui.fragments.FavoriteTracksFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favoriteTrackRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
+
+<LinearLayout
     android:id="@+id/favTracksStatusLayout"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
     android:paddingTop="@dimen/padding_100dp"
-    tools:context=".library.ui.fragments.FavoriteTracksFragment">
-
+    >
     <ImageView
         android:id="@+id/ic_favorite_tracks_empty"
         android:layout_width="wrap_content"
@@ -23,6 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
+</LinearLayout>
 </LinearLayout>
 
 

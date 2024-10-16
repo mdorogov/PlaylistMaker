@@ -16,6 +16,8 @@ import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
+import com.practicum.playlistmaker.search.domain.db.FavoriteTracksDbInteractor
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,6 +28,7 @@ class PlayerViewModel(
     private val jsonTrack: String,
     private val tracksPlayerInteractor: TracksPlayerInteractor,
     private val searchHistoryInteractor: TracksInteractor,
+    private val favoriteTracksDbInteractor: FavoriteTracksDbInteractor
 ) : AndroidViewModel(application) {
 
     companion object{
@@ -35,15 +38,44 @@ class PlayerViewModel(
 
     private var screenPlayerStateLiveData = MutableLiveData<PlayerState>()
     private lateinit var trackModel: Track
+    private var isTrackFavorite: Boolean = false
 
     private var timerJob: Job? = null
     private var playerStatusJob: Job? = null
 
 
     init {
+        postPlayerContent()
+    }
+
+    private fun postPlayerContent() {
         trackModel = tracksPlayerInteractor.loadPlayerData(jsonTrack)
-        searchHistoryInteractor.addTrackToArray(trackModel)
-        screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel))
+        viewModelScope.launch(Dispatchers.IO) {
+            isTrackFavorite = favoriteTracksDbInteractor
+                .isTrackFavorite(trackModel.trackId)
+            if (!isTrackFavorite){
+                searchHistoryInteractor.addTrackToArray(trackModel)
+            }
+            screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel, isTrackFavorite))
+        }
+    }
+    private suspend fun isTrackFavoriteTEST(trackId: Int) : Boolean{
+return favoriteTracksDbInteractor.isTrackFavorite(trackId)
+    }
+
+    private fun addTrackToFavorites() {
+        trackModel.setTimeStamp()
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteTracksDbInteractor.insertFavTrack(trackModel)
+        }
+        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(true))
+    }
+
+    private fun deleteTrackFromFavorites() {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteTracksDbInteractor.deleteFavTrack(trackModel)
+        }
+        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(false))
     }
 
 
@@ -51,9 +83,10 @@ class PlayerViewModel(
 
 
     fun play(){
-        tracksPlayerInteractor.play(trackModel.previewUrl)
+       // tracksPlayerInteractor.play(trackModel.previewUrl)
         playerStatusJob?.cancel()
        playerStatusJob = viewModelScope.launch {
+           tracksPlayerInteractor.play(trackModel.previewUrl)
            delay(WAIT_FOR_PREPARED_PLAYER_TIME_DELAY)
            PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
            startTimer()
@@ -97,6 +130,8 @@ class PlayerViewModel(
 
     fun releasePlayer() {
         tracksPlayerInteractor.release()
+        playerStatusJob?.cancel()
+        timerJob?.cancel()
     }
 
     override fun onCleared() {
@@ -104,6 +139,16 @@ class PlayerViewModel(
         releasePlayer()
     }
 
+
+
     fun getScreenStateLiveData(): LiveData<PlayerState> = screenPlayerStateLiveData
+
+    fun favoriteTrackIconIsPressed() {
+        if (isTrackFavorite){
+            deleteTrackFromFavorites()
+        } else {
+            addTrackToFavorites()
+        }
+    }
 
 }
