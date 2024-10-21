@@ -56,26 +56,24 @@
         app:layout_constraintVertical_chainStyle="spread"
         />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
         android:id="@+id/playlist_name_edit"
         style="@style/CreatePlaylistHintStyle"
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:layout_marginTop="32dp"
-
+        android:hint="Название*"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintStart_toEndOf="@id/leftBorder"
         app:layout_constraintTop_toBottomOf="@id/playlistArtwork"
         app:layout_constraintVertical_chainStyle="spread"
-        android:background="@drawable/rounded_corners_solid">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="0dp"
-            android:layout_height="54dp"
-            android:hint="Название*" />
+        android:background="@drawable/rounded_corners_solid"
+        />
 
 
-</com.google.android.material.textfield.TextInputLayout>
+
+
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/playlist_description_edit"
         style="@style/CreatePlaylistHintStyle"
@@ -87,11 +85,16 @@
         app:layout_constraintTop_toBottomOf="@id/playlist_name_edit"
         app:layout_constraintVertical_chainStyle="spread"
         android:background="@drawable/rounded_corners_solid">
+
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="0dp"
             android:layout_height="54dp"
-            android:hint="Описание" />
+            android:hint="hintввввв" />
+
+
 </com.google.android.material.textfield.TextInputLayout>
+
+
 
 
     <Button

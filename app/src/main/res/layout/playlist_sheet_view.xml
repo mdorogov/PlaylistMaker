@@ -38,7 +38,7 @@
                 android:textStyle="bold"
                 android:ellipsize="end"
                 android:maxLines="1"
-                tools:text="Track Name" />
+                tools:text="U2 greatest hits" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,31 +47,15 @@
 
                 <TextView
                     android:id="@+id/artist_name"
-                    style="@style/ArtistDurationTrackView"
+                    style="@style/PlaylistSheetView"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:layout_weight="1"
                     android:paddingLeft="@dimen/padding_8"
-                    tools:text="Track Name" />
+                    tools:text="99 треков" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/dot" />
-
-                <TextView
-                    android:id="@+id/track_duration"
-                    style="@style/ArtistDurationTrackView"
-                    android:layout_gravity="end"
-                    tools:text="0:00" />
             </LinearLayout>
-
-
         </LinearLayout>
-
-        <ImageView
-            style="@style/ChosenTrackView"
-            android:src="@drawable/ic_forward" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

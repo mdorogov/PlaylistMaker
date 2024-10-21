@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_12">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rectangle_sheet"
+            android:layout_marginTop="@dimen/padding_8"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            style="@style/StatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/frame_padding_30"
+            android:layout_marginBottom="@dimen/frame_padding_16"
+            android:text="Добавить в плейлист" />
+
+        <Button
+            android:id="@+id/cleanHistoryButton"
+            style="@style/UpdateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Новый плейлист" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favoritePlaylistsSheetRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/frame_padding_24">
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

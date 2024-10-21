@@ -72,6 +72,7 @@ class PlayerActivity() : AppCompatActivity() {
                 is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
                 is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
                 is PlayerState.FavoriteTrackChanged -> setFavoriteTrackIcon(screenState.isTrackFavorite)
+              //  is PlayerState.AddToPlaylistFragment -> addToPlaylistFragment()
             }
         }
 
