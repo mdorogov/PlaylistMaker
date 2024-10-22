@@ -151,4 +151,8 @@ return favoriteTracksDbInteractor.isTrackFavorite(trackId)
         }
     }
 
+    fun addTrackToPlaylist() {
+        TODO("Not yet implemented")
+    }
+
 }

@@ -27,7 +27,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/track_title"
+                android:id="@+id/playlist_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_14"
@@ -46,7 +46,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/artist_name"
+                    android:id="@+id/num_of_tracks"
                     style="@style/PlaylistSheetView"
                     android:ellipsize="end"
                     android:maxLines="1"

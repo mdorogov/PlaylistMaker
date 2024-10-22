@@ -1,19 +1,29 @@
 package com.practicum.playlistmaker.player.ui
 
+import android.content.Context
 import android.content.Intent
 import android.media.Image
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.search.mapper.DimensConverter
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
+import com.practicum.playlistmaker.player.PlaylistAdapter
 import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.ui.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -33,6 +43,15 @@ class PlayerActivity() : AppCompatActivity() {
     private var isTrackPlaying = false
     private var isActivityReady = false
 
+    private lateinit var playlistRecycler: RecyclerView
+    private lateinit var playlistAdapter: PlaylistAdapter
+    val bottomSheetContainer = findViewById<LinearLayout>(R.id.add_to_playlist_bottom_sheet)
+    val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+
+
+
+
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SHOWN_TRACK, json)
@@ -44,6 +63,7 @@ class PlayerActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
         setPlayerViews()
+        setBottomSheet()
 
 
         if (savedInstanceState != null) {
@@ -72,9 +92,49 @@ class PlayerActivity() : AppCompatActivity() {
                 is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
                 is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
                 is PlayerState.FavoriteTrackChanged -> setFavoriteTrackIcon(screenState.isTrackFavorite)
-              //  is PlayerState.AddToPlaylistFragment -> addToPlaylistFragment()
+              is PlayerState.PlaylistChoosing -> openPlaylistsBottomSheet()
+                is PlayerState.NewPlaylistCreated -> openPlaylistCreatingFragment()
             }
         }
+
+    }
+
+    private fun openPlaylistCreatingFragment() {
+        playlistRecycler = findViewById<RecyclerView>(R.id.favoritePlaylistsSheetRecycler)
+        playlistRecycler.layoutManager =
+            LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+        playlistAdapter = PlaylistAdapter(applicationContext, playlists)
+    }
+
+    private fun openPlaylistsBottomSheet() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun setBottomSheet() {
+       bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback(){
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        loadPlaylists()
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+        } )
+    }
+
+    private fun loadPlaylists() {
+        TODO("Not yet implemented")
 
     }
 
@@ -112,6 +172,10 @@ class PlayerActivity() : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
             viewModel.releasePlayer()
+        }
+
+        addToPlaylistButton.setOnClickListener {
+            viewModel.addTrackToPlaylist()
         }
     }
 
