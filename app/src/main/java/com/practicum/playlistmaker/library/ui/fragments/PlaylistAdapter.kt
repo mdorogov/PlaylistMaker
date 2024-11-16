@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.player
+package com.practicum.playlistmaker.library.ui.fragments
 
 
 import android.annotation.SuppressLint
@@ -11,11 +11,10 @@ import android.os.Handler
 import android.os.Looper
 import com.google.gson.Gson
 import com.practicum.playlistmaker.databinding.PlaylistSheetViewBinding
-import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.player.ui.PlayerActivity
-import com.practicum.playlistmaker.databinding.TrackViewBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
-import com.practicum.playlistmaker.search.ui.TrackViewHolder
+import com.practicum.playlistmaker.library.ui.view_model.PlaylistViewHolder
+import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -24,10 +23,12 @@ import kotlinx.coroutines.launch
 class PlaylistAdapter(
     private val context: Context,
     private var playlists: ArrayList<Playlist>,
+    private var onClick: OnPlaylistClick
 ) : RecyclerView.Adapter<PlaylistViewHolder>() {
-    companion object{
+    companion object {
         private const val SEARCHING_DELAY = 2000L
     }
+
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -44,7 +45,8 @@ class PlaylistAdapter(
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(playlists[position])
         holder.itemView.setOnClickListener {
-            openPlayerDebounce(playlists[position])
+            onClick.onClick(position)
+            // openPlayerDebounce(playlists[position])
         }
     }
 

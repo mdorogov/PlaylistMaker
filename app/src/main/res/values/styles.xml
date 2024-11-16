@@ -36,11 +36,11 @@
         <item name="android:lineHeight">18.75dp</item>
     </style>
 
-    <style name="CreatePlaylistHintStyle" parent="@android:style/Widget.EditText">
+    <style name="CreatePlaylistHintStyle" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textSize">@dimen/text_size_16</item>
         <item name="android:textColorHint">?attr/colorOnSecondary</item>
-        <item name="android:paddingLeft">@dimen/frame_padding_16</item>
+
     </style>
 
     <style name="FrameLayoutStyle">
@@ -115,7 +115,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:textSize">11dp</item>
 
     </style>
@@ -156,7 +156,6 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:textAlignment">center</item>
         <item name="android:paddingTop">@dimen/padding_14</item>
-        <item name="android:paddingLeft">@dimen/padding_24dp</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/text_size_19</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>

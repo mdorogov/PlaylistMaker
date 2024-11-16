@@ -4,6 +4,8 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.google.gson.Gson
+import com.practicum.playlistmaker.library.data.db.PlaylistsDatabase
+import com.practicum.playlistmaker.library.data.db.SavedTracksDatabase
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.db.FavoriteTracksDatabase
 import com.practicum.playlistmaker.search.data.network.ItunesApi
@@ -29,8 +31,26 @@ val dataModule = module {
     }
 
     single {
-        Room.databaseBuilder(androidContext(), FavoriteTracksDatabase::class.java,
-            "favtracksdatabase.db").build()
+        Room.databaseBuilder(
+            androidContext(), FavoriteTracksDatabase::class.java,
+            "favtracksdatabase.db"
+        ).build()
+    }
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            PlaylistsDatabase::class.java,
+            "playlistsdatabase.db"
+        ).build()
+    }
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            SavedTracksDatabase::class.java,
+            "savedtracksdatabase.db"
+        ).build()
     }
 
     factory { Gson() }

@@ -1,10 +1,10 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cardView"
-    android:backgroundTint="?attr/colorSecondary"
+    android:id="@+id/playlistCardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:backgroundTint="?attr/colorSecondary">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,16 +28,15 @@
 
             <TextView
                 android:id="@+id/playlist_name"
+                style="@style/CreatePlaylistHintStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_14"
-                android:fontFamily="@font/ys_display_regular"
-                android:paddingLeft="@dimen/padding_8"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="@dimen/text_size_16"
-                android:textStyle="bold"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:paddingLeft="@dimen/padding_8"
+                android:textSize="@dimen/text_size_16"
+                android:textStyle="bold"
                 tools:text="U2 greatest hits" />
 
             <LinearLayout
@@ -48,9 +47,9 @@
                 <TextView
                     android:id="@+id/num_of_tracks"
                     style="@style/PlaylistSheetView"
+                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:layout_weight="1"
                     android:paddingLeft="@dimen/padding_8"
                     tools:text="99 треков" />
 

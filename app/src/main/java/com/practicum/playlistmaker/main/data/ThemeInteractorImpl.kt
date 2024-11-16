@@ -6,10 +6,9 @@ import com.practicum.playlistmaker.main.domain.ThemeInteractor
 
 
 class ThemeInteractorImpl(var sharedPrefs: SharedPreferences) : ThemeInteractor {
-    companion object{
+    companion object {
         const val NIGHT_THEME_CHECKED = "key_for_theme_switcher"
     }
-
 
     override fun switchTheme() {
         val darkThemeEnabled = sharedPrefs.getString(NIGHT_THEME_CHECKED, "false").toBoolean()

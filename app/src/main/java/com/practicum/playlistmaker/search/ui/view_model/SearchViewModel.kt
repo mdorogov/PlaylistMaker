@@ -4,18 +4,15 @@ import android.app.Application
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
-import android.os.SystemClock
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.data.network.JSON_HISTORY_KEY
-import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.api.TracksInteractor
 import com.practicum.playlistmaker.search.ui.state.SearchState
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -50,7 +47,7 @@ class SearchViewModel(
             renderState(SearchState.Loading)
             viewModelScope.launch {
                 tracksInteractor.searchTracks(userRequest)
-                    .collect{ pair ->
+                    .collect { pair ->
                         processResult(pair.first, pair.second, userRequest)
                     }
             }
@@ -59,7 +56,11 @@ class SearchViewModel(
         }
     }
 
-    private fun processResult(foundTracks: List<Track>?, errorMessage: String?, userRequest: String) {
+    private fun processResult(
+        foundTracks: List<Track>?,
+        errorMessage: String?,
+        userRequest: String
+    ) {
         val songs = mutableListOf<Track>()
         if (foundTracks != null) {
             songs.clear()

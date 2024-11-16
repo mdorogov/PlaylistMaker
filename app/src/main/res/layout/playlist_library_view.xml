@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/library_playlists_cardview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    card_view:cardBackgroundColor="?attr/colorSecondary"
+    card_view:cardElevation="5dp">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/frame_padding_16"
+        android:background="?attr/colorSecondary"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/library_playlist_artwork"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="@dimen/padding_10dp"
+            tools:src="@drawable/placeholder" />
+
+        <TextView
+            android:id="@+id/library_playlist_name"
+            style="@style/TextAppearanceBottomNav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            tools:text="Петра Марклунд. Лучшее" />
+
+        <TextView
+            android:id="@+id/library_playlist_num_of_tracks"
+            style="@style/TextAppearanceBottomNav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondary"
+            tools:text="100 Треков" />
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
