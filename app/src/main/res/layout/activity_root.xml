@@ -9,21 +9,32 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/rootFragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:navGraph="@navigation/nav_graph"
-        app:defaultNavHost="true" />
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
+
+
+    <ImageView
+        android:id="@+id/liner"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:src="@drawable/line_menu"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        style="@style/NavigationTheme"
+
         android:id="@+id/bottomNavigationView"
+        style="@style/NavigationTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:menu="@menu/bottom_nav_menu">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

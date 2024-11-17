@@ -29,4 +29,7 @@
     <dimen name="padding_4dp">4dp</dimen>
     <dimen name="padding_140dp">140dp</dimen>
     <dimen name="padding_46">46dp</dimen>
+    <dimen name="radius_8dp">8dp</dimen>
+    <dimen name="radius_2dp">2dp</dimen>
+    <dimen name="_0_5dp">0.5dp</dimen>
 </resources>

@@ -1,8 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="?attr/colorSecondary"
     android:orientation="vertical"
     tools:context=".library.ui.fragments.LibraryFragment">
@@ -24,19 +24,16 @@
 
     </LinearLayout>
 
-   <com.google.android.material.tabs.TabLayout
-       style="@style/TabStyler"
-       android:id="@+id/libTabLayout"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       />
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/libTabLayout"
+        style="@style/TabStyler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/libViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>

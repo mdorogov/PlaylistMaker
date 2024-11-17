@@ -1,23 +1,34 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.content.Intent
-import android.media.Image
 import android.os.Bundle
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.practicum.playlistmaker.search.mapper.DimensConverter
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.library.data.models.Playlist
+import com.practicum.playlistmaker.library.ui.fragments.PlaylistAdapter
+import com.practicum.playlistmaker.library.ui.fragments.PlaylistCreatingFragment
+import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker.search.data.models.Track
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity() : AppCompatActivity() {
+class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
     private lateinit var viewModel: PlayerViewModel
 
     companion object {
@@ -33,6 +44,14 @@ class PlayerActivity() : AppCompatActivity() {
     private var isTrackPlaying = false
     private var isActivityReady = false
 
+    private lateinit var playlistRecycler: RecyclerView
+    private lateinit var playlistAdapter: PlaylistAdapter
+
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
+    private var playlists = arrayListOf<Playlist>()
+
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SHOWN_TRACK, json)
@@ -44,6 +63,7 @@ class PlayerActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
         setPlayerViews()
+        setBottomSheet()
 
 
         if (savedInstanceState != null) {
@@ -56,6 +76,10 @@ class PlayerActivity() : AppCompatActivity() {
         viewModel = getViewModel<PlayerViewModel> {
             parametersOf(json)
         }
+
+        val navHostPlayerFragment =
+            supportFragmentManager.findFragmentById(R.id.playlist_creating_container_view) as NavHostFragment
+        val navPlayerController = navHostPlayerFragment.navController
 
 
 
@@ -72,7 +96,108 @@ class PlayerActivity() : AppCompatActivity() {
                 is PlayerState.PlayTimePaused -> setPlayStatus(screenState.progress, false)
                 is PlayerState.PlayingStopped -> setPlayStatus(screenState.progress, false)
                 is PlayerState.FavoriteTrackChanged -> setFavoriteTrackIcon(screenState.isTrackFavorite)
+                is PlayerState.PlaylistChoosing -> openPlaylistsBottomSheet(screenState.playlists)
+                is PlayerState.TrackIsAdded -> showTrackAddedToast(
+                    screenState.isTrackAdded,
+                    screenState.nameOfTrack,
+                    screenState.nameOfPlaylist
+                )
+
+                is PlayerState.NewPlaylistCreated -> openPlaylistCreatingFragment()
+                is PlayerState.PlaylistUpdate -> notifyAdapterOnUpdates(playlists)
             }
+        }
+
+    }
+
+    private fun notifyAdapterOnUpdates(playlists: ArrayList<Playlist>) {
+        this.playlists = playlists
+        if (this::playlistAdapter.isInitialized) {
+            playlistAdapter.notifyDataSetChanged()
+        }
+
+    }
+
+    private fun showTrackAddedToast(
+        isTrackAdded: Boolean,
+        trackName: String,
+        playlistName: String
+    ) {
+        if (isTrackAdded) {
+            Toast.makeText(this, trackName + " добавлен в " + playlistName, Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(
+                this,
+                trackName + " уже существует в подборке " + playlistName,
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun openPlaylistCreatingFragment() {
+
+
+    }
+
+    private fun openPlaylistsBottomSheet(playlists: ArrayList<Playlist>?) {
+
+        if (!playlists.isNullOrEmpty()) {
+            playlistRecycler = findViewById<RecyclerView>(R.id.favoritePlaylistsSheetRecycler)
+            playlistRecycler.layoutManager =
+                LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+            this.playlists = playlists
+
+            playlistAdapter = PlaylistAdapter(applicationContext, playlists, this)
+            playlistRecycler.adapter = playlistAdapter
+            playlistAdapter.notifyDataSetChanged()
+        }
+
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+
+        var createButton = findViewById<Button>(R.id.createPlaylistSheetButton).setOnClickListener {
+
+            val fragment = PlaylistCreatingFragment()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.playlist_creating_container_view, fragment)
+                .addToBackStack(null)
+                .commit()
+
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+    }
+
+    private fun setBottomSheet() {
+        val bottomSheetContainer = findViewById<LinearLayout>(R.id.add_to_playlist_bottom_sheet)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetContainer)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        val overlay = findViewById<View>(R.id.overlay)
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        overlay.visibility = View.VISIBLE
+                        loadPlaylists()
+                    }
+
+                    else -> {
+                        overlay.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+
+            }
+        })
+    }
+
+    private fun loadPlaylists() {
+        if (!playlists.isNullOrEmpty()) {
         }
 
     }
@@ -111,6 +236,10 @@ class PlayerActivity() : AppCompatActivity() {
         backButton.setOnClickListener {
             finish()
             viewModel.releasePlayer()
+        }
+
+        addToPlaylistButton.setOnClickListener {
+            viewModel.showBottomSheet()
         }
     }
 
@@ -170,6 +299,7 @@ class PlayerActivity() : AppCompatActivity() {
         viewModel.releasePlayer()
     }
 
+
     private fun playerControl(isPlaying: Boolean) {
         when (isPlaying) {
             false -> {
@@ -196,6 +326,12 @@ class PlayerActivity() : AppCompatActivity() {
             .placeholder(R.drawable.artwork_placeholder)
             .transform(RoundedCorners(DimensConverter.dpToPx(8f, artworkView)))
             .into(artworkView)
+    }
+
+    override fun onClick(int: Int) {
+        val playlistId = playlists[int].id
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        viewModel.addTrackToPlaylist(playlistId)
     }
 
 }
