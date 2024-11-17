@@ -220,6 +220,21 @@
 
     </style>
 
+    <style name="PlaylistFragmentName">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="PlaylistFragmentText">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">@dimen/text_size_18</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
 
 
 
@@ -227,4 +242,6 @@
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="padding_18">18dp</dimen>
     <dimen name="text_size12">12dp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_18">18sp</dimen>
 </resources>

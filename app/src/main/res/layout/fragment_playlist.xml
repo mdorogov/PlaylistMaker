@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/gray_search">
+
+    <ImageView
+        android:id="@+id/playlist_fragment_artwork"
+        android:layout_width="0dp"
+        android:layout_height="360dp"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/placeholder" />
+
+    <TextView
+        android:id="@+id/playlist_fragment_name"
+        style="@style/PlaylistFragmentName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_artwork"
+        android:paddingLeft="@dimen/frame_padding_16"
+        android:paddingTop="@dimen/frame_padding_24"
+        tools:text="U2. 18 Singles" />
+
+    <TextView
+        android:id="@+id/playlist_fragment_description"
+        style="@style/PlaylistFragmentText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_name"
+        android:paddingLeft="@dimen/frame_padding_16"
+        android:paddingTop="@dimen/padding_8"
+        tools:text="2005" />
+
+    <LinearLayout
+        android:id="@+id/playlist_fragment_linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_description">
+
+        <TextView
+            android:id="@+id/playlist_fragment_duration_text"
+            style="@style/PlaylistFragmentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_8"
+            android:paddingLeft="@dimen/frame_padding_16"
+            tools:text="555 minutes" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dot"
+            android:layout_gravity="bottom"
+            android:padding="@dimen/padding_5dp"/>
+
+        <TextView
+            android:id="@+id/playlist_fragment_tracks_quantity_text"
+            style="@style/PlaylistFragmentText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="98 songs" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/playlist_fragment_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_linear_layout"
+        android:paddingLeft="@dimen/frame_padding_16"
+        android:paddingTop="@dimen/padding_19dp">
+
+        <ImageView
+            android:id="@+id/playlist_fragment_share_button"
+            style="@style/SettingsIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_share" />
+
+        <ImageView
+            android:id="@+id/playlist_fragment_settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/frame_padding_16"
+            android:src="@drawable/ic_dots_menu" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

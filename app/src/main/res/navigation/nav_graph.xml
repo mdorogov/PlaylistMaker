@@ -45,7 +45,11 @@
         android:id="@+id/playlistsFragment"
         android:name="com.practicum.playlistmaker.library.ui.fragments.PlaylistsFragment"
         android:label="fragment_playlists"
-        tools:layout="@layout/fragment_playlists" />
+        tools:layout="@layout/fragment_playlists" >
+        <action
+            android:id="@+id/action_playlistsFragment_to_playlistFragment"
+            app:destination="@id/playlistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/favoriteTracksFragment"
         android:name="com.practicum.playlistmaker.library.ui.fragments.FavoriteTracksFragment"
@@ -55,4 +59,8 @@
             android:id="@+id/action_favoriteTracksFragment_to_playlistsFragment"
             app:destination="@id/playlistsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.practicum.playlistmaker.library.ui.fragments.PlaylistFragment"
+        android:label="PlaylistFragment" />
 </navigation>
