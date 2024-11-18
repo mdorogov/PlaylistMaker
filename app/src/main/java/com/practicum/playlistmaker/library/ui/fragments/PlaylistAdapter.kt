@@ -45,18 +45,16 @@ class PlaylistAdapter(
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(playlists[position])
         holder.itemView.setOnClickListener {
-            onClick.onClick(position)
-            // openPlayerDebounce(playlists[position])
+            openPlaylistDebounce(position)
         }
     }
 
-    private fun openPlayerDebounce(playlist: Playlist) {
-        val current = isClickAllowed
+    private fun openPlaylistDebounce(position: Int) {
         if (isClickAllowed) {
             isClickAllowed = false
-            val playerIntent = Intent(context, PlayerActivity::class.java)
-            playerIntent.putExtra(Intent.EXTRA_SUBJECT, Gson().toJson(playlist))
-            context.startActivity(playerIntent)
+
+
+            onClick.onClick(position)
             CoroutineScope(Dispatchers.IO).launch {
                 delay(SEARCHING_DELAY)
                 isClickAllowed = true

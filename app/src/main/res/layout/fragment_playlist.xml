@@ -1,99 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/gray_search">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/playlist_fragment_artwork"
-        android:layout_width="0dp"
-        android:layout_height="360dp"
-        app:layout_constraintEnd_toEndOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/placeholder" />
+        android:background="@color/gray_search">
 
-    <TextView
-        android:id="@+id/playlist_fragment_name"
-        style="@style/PlaylistFragmentName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_artwork"
-        android:paddingLeft="@dimen/frame_padding_16"
-        android:paddingTop="@dimen/frame_padding_24"
-        tools:text="U2. 18 Singles" />
+        <ImageView
+            android:id="@+id/playlist_fragment_back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/frame_padding_16"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/playlist_fragment_description"
-        style="@style/PlaylistFragmentText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_name"
-        android:paddingLeft="@dimen/frame_padding_16"
-        android:paddingTop="@dimen/padding_8"
-        tools:text="2005" />
-
-    <LinearLayout
-        android:id="@+id/playlist_fragment_linear_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_description">
+        <ImageView
+            android:id="@+id/playlist_fragment_artwork"
+            android:layout_width="360dp"
+            android:layout_height="360dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/placeholder" />
 
         <TextView
-            android:id="@+id/playlist_fragment_duration_text"
+            android:id="@+id/playlist_fragment_name"
+            style="@style/PlaylistFragmentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/frame_padding_16"
+            android:paddingTop="@dimen/frame_padding_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_artwork"
+            tools:text="U2. 18 Singles" />
+
+        <TextView
+            android:id="@+id/playlist_fragment_description"
             style="@style/PlaylistFragmentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/frame_padding_16"
             android:paddingTop="@dimen/padding_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_name"
+            tools:text="2005" />
+
+        <LinearLayout
+            android:id="@+id/playlist_fragment_linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_description">
+
+            <TextView
+                android:id="@+id/playlist_fragment_duration_text"
+                style="@style/PlaylistFragmentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/frame_padding_16"
+                android:paddingTop="@dimen/padding_8"
+                tools:text="555 minutes" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:padding="@dimen/padding_5dp"
+                android:src="@drawable/dot" />
+
+            <TextView
+                android:id="@+id/playlist_fragment_tracks_quantity_text"
+                style="@style/PlaylistFragmentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="98 songs" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/playlist_fragment_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:paddingLeft="@dimen/frame_padding_16"
-            tools:text="555 minutes" />
+            android:paddingTop="@dimen/padding_19dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_linear_layout">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/dot"
-            android:layout_gravity="bottom"
-            android:padding="@dimen/padding_5dp"/>
+            <ImageView
+                android:id="@+id/playlist_fragment_share_button"
+                style="@style/SettingsIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_share" />
 
-        <TextView
-            android:id="@+id/playlist_fragment_tracks_quantity_text"
-            style="@style/PlaylistFragmentText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="98 songs" />
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/playlist_fragment_settings_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/frame_padding_16"
+                android:src="@drawable/ic_dots_menu" />
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
-        android:id="@+id/playlist_fragment_menu"
-        android:layout_width="wrap_content"
+android:id="@+id/playlist_fragment_tracks_bottom_sheet"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="@drawable/rounded_sheetview"
+android:orientation="vertical"
+android:padding="@dimen/padding_12"
+app:behavior_hideable="true"
+app:behavior_peekHeight="200dp"
+app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/padding_8"
+            android:src="@drawable/rectangle_sheet" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlist_fragment_tracks_recycler"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playlist_fragment_linear_layout"
-        android:paddingLeft="@dimen/frame_padding_16"
-        android:paddingTop="@dimen/padding_19dp">
-
-        <ImageView
-            android:id="@+id/playlist_fragment_share_button"
-            style="@style/SettingsIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_share" />
-
-        <ImageView
-            android:id="@+id/playlist_fragment_settings_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/frame_padding_16"
-            android:src="@drawable/ic_dots_menu" />
-    </LinearLayout>
+        android:layout_marginTop="@dimen/frame_padding_24">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

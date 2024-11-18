@@ -82,8 +82,14 @@ class PlaylistsRepositoryImpl(
         return playlist.savedTracksIDs
     }
 
-    override suspend fun getSavedTracksByPlaylistID(playlistId: Long): List<Track> {
-        TODO("Not yet implemented")
+    override suspend fun getSavedTracksByPlaylistID(playlistId: Long): List<Track>? {
+
+        val playlistIDs = getPlaylistByPlaylistId(playlistId).savedTracksIDs
+        if (!playlistIDs.isNullOrEmpty()){
+            return savedTracksDbConverter.map(
+                savedTracksDatabase.savedTrackDao().getSavedTracks(playlistIDs))
+        } else return null
+
     }
 
     override suspend fun getPlaylistByPlaylistId(playlistId: Long): Playlist {

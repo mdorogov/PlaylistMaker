@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
@@ -15,10 +14,11 @@ import com.practicum.playlistmaker.library.ui.LibraryPlaylistAdapter
 import com.practicum.playlistmaker.library.ui.state.PlaylistsState
 import com.practicum.playlistmaker.library.ui.view_model.PlaylistsViewModel
 import com.practicum.playlistmaker.main.ui.RootActivity
+import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlaylistsFragment : Fragment() {
+class PlaylistsFragment : Fragment(), OnPlaylistClick {
     companion object {
         fun newInstance() = PlaylistsFragment().apply {
             arguments = Bundle().apply { }
@@ -28,10 +28,10 @@ class PlaylistsFragment : Fragment() {
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
 
-    private var playlists = arrayListOf<Playlist>()
+    private lateinit var playlists: List<Playlist>
 
 
-    private val playlistViewModel: PlaylistsViewModel by viewModel {
+    private val playlistsViewModel: PlaylistsViewModel by viewModel {
         parametersOf()
     }
 
@@ -47,22 +47,18 @@ class PlaylistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        playlistViewModel.observeState().observe(viewLifecycleOwner) {
+        playlistsViewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        playlistViewModel.loadData()
+        playlistsViewModel.loadData()
         binding.createPlaylistButtonFragment.setOnClickListener {
-
-
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.rootFragmentContainerView, PlaylistCreatingFragment())
                 ?.addToBackStack(null)
                 ?.commit()
 
             (activity as? RootActivity)?.setBottomNavigationView(false)
-
-
         }
 
 
@@ -100,6 +96,8 @@ class PlaylistsFragment : Fragment() {
     private fun showContent(playlists: List<Playlist>) {
         binding.playlistsStatusLayout.visibility = View.GONE
 
+        this.playlists = playlists
+
         val recyclerView = binding.allPlaylistsRecycler
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         var playlistAdapter = LibraryPlaylistAdapter(requireContext(), playlists)
@@ -107,6 +105,14 @@ class PlaylistsFragment : Fragment() {
         playlistAdapter.notifyDataSetChanged()
         recyclerView.visibility = View.VISIBLE
 
+    }
+
+    override fun onClick(int: Int) {
+        val playlistId = playlists[int].id
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playlistFragment,
+            PlaylistFragment.createArgs(playlistId)
+        )
     }
 
 

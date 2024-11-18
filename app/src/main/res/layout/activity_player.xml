@@ -291,7 +291,10 @@
             android:id="@+id/favoritePlaylistsSheetRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/frame_padding_24"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_marginTop="@dimen/frame_padding_24">
+
+
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </LinearLayout>
