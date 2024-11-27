@@ -192,6 +192,8 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
                 "В этом плейлисте нет списка треков, которым можно поделиться",
                 Toast.LENGTH_SHORT
             ).show()
+
+            bottomSettingsSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             playlistViewModel.sharePlaylist(playlist.id)
         }
