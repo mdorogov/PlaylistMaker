@@ -11,14 +11,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
-class PlaylistCreatingViewModel(
+open class PlaylistCreatingViewModel(
     private val playlistInteractor: PlaylistsDbInteractor
 ) : ViewModel() {
 
     private lateinit var artwork: Uri
 
-    private var stateLiveData = MutableLiveData<PlaylistCreatingState>()
-    fun observeState(): LiveData<PlaylistCreatingState> = stateLiveData
+    protected var stateLiveData = MutableLiveData<PlaylistCreatingState>()
+    open fun observeState(): LiveData<PlaylistCreatingState> = stateLiveData
 
     fun createPlaylist(artworkUri: String, playlistName: String, playlistDescription: String?) {
         viewModelScope.launch(Dispatchers.IO) {

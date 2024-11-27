@@ -25,4 +25,9 @@ data class Track(
     fun setTimeStamp(): String {
         return System.currentTimeMillis().toString()
     }
+
+    fun convertTrackToString(): String {
+        val trackDuration = MillisConverter.millisToMinutesAndSeconds(trackTimeMillis)
+        return "$artistName - $trackName ($trackDuration)"
+    }
 }

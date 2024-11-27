@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentLibraryBinding
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
+import com.practicum.playlistmaker.library.domain.api.OnLongTrackClick
 import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.ui.TrackAdapter
@@ -30,7 +31,7 @@ import com.practicum.playlistmaker.search.ui.state.SearchState
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), OnLongTrackClick {
     private val viewModel by viewModel<SearchViewModel>()
     var inputSearchText: String? = null
     private lateinit var inputEditText: EditText
@@ -125,7 +126,7 @@ class SearchFragment : Fragment() {
         trackRecycler = binding.trackRecycler
         trackRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(requireContext(), songs)
+        trackAdapter = TrackAdapter(requireContext(), songs, this)
         searchHistoryView = binding.searchHistoryView
         cleanHistoryButton = binding.cleanHistoryButton
 
@@ -133,7 +134,7 @@ class SearchFragment : Fragment() {
         historyRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         searchHistoryAdapter =
-            TrackAdapter(requireContext(), historyTracks)
+            TrackAdapter(requireContext(), historyTracks, this)
 
         progressBar = binding.progressBar
 
@@ -276,5 +277,8 @@ class SearchFragment : Fragment() {
 
     private fun setProgressBarVisibilityOff() {
         progressBar.visibility = View.GONE
+    }
+
+    override fun onLongClicker(int: Int) {
     }
 }

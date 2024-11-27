@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentFavoriteTracksBinding
+import com.practicum.playlistmaker.library.domain.api.OnLongTrackClick
 import com.practicum.playlistmaker.library.ui.state.FavoriteTracksState
 import com.practicum.playlistmaker.library.ui.state.PlaylistsState
 import com.practicum.playlistmaker.library.ui.view_model.FavoriteTracksViewModel
@@ -18,7 +19,7 @@ import com.practicum.playlistmaker.search.ui.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class FavoriteTracksFragment : Fragment() {
+class FavoriteTracksFragment : Fragment(), OnLongTrackClick {
 
     private lateinit var trackRecycler: RecyclerView
     private lateinit var trackAdapter: TrackAdapter
@@ -72,7 +73,7 @@ class FavoriteTracksFragment : Fragment() {
         statusView = binding.favTracksStatusLayout
         trackRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(requireContext(), tracks)
+        trackAdapter = TrackAdapter(requireContext(), tracks, this)
     }
 
     override fun onDestroyView() {
@@ -107,6 +108,10 @@ class FavoriteTracksFragment : Fragment() {
 
         trackRecycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
+    }
+
+    override fun onLongClicker(int: Int) {
+
     }
 
 

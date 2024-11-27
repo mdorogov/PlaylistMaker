@@ -24,4 +24,7 @@ interface SavedTrackDao {
 
     @Query("SELECT * FROM saved_tracks WHERE track_id IN (:savedIDs)")
     fun getSavedTracks(savedIDs: List<Int>): List<SavedTrackEntity>
+
+    @Query("DELETE FROM saved_tracks WHERE track_id = :trackId")
+    suspend fun deleteSavedTrackById(trackId: Int)
 }

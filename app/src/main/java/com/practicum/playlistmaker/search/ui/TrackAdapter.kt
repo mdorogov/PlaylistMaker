@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.databinding.TrackViewBinding
+import com.practicum.playlistmaker.library.domain.api.OnLongTrackClick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 class TrackAdapter(
     private val context: Context,
     private var tracks: ArrayList<Track>,
+    private var onLongTrackClick: OnLongTrackClick
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     companion object{
         private const val SEARCHING_DELAY = 2000L
@@ -42,7 +44,14 @@ class TrackAdapter(
         holder.itemView.setOnClickListener {
             openPlayerDebounce(tracks[position])
         }
+
+        holder.itemView.setOnLongClickListener {
+            onLongTrackClick.onLongClicker(tracks[position].trackId)
+            true
+        }
     }
+
+
 
     private fun openPlayerDebounce(track: Track) {
         val current = isClickAllowed
@@ -57,6 +66,8 @@ class TrackAdapter(
             }
         }
     }
+
+
 
     @SuppressLint("SuspiciousIndentation")
     fun update(tracks: ArrayList<Track>) {

@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface PlaylistsDbInteractor {
     fun getAllPlaylists(): Flow<List<Playlist>>
     suspend fun insertPlaylist(playlist: Playlist)
-    suspend fun deletePlaylist(playlist: Playlist)
+    suspend fun deletePlaylist(playlistId: Long)
     suspend fun addTrackToPlaylist(playlistId: Long, track: Track): Int
     suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: Int)
-    suspend fun getSavedTracksByPlaylistID(playlistId: Long)
+    suspend fun getSavedTracksByPlaylistID(playlistId: Long): Pair<List<Track>?, Long>
     suspend fun createPlaylist(
         artworkUri: String,
         playlistName: String,
@@ -18,4 +18,10 @@ interface PlaylistsDbInteractor {
     )
 
     suspend fun getPlaylistByPlaylistId(playlistId: Long): Playlist
+    suspend fun updatePlaylist(
+        playlist: Long,
+        playlistArtwork: String,
+        playlistName: String,
+        playlistDesctription: String
+    )
 }

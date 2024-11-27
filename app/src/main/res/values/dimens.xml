@@ -33,4 +33,5 @@
     <dimen name="radius_2dp">2dp</dimen>
     <dimen name="_0_5dp">0.5dp</dimen>
     <dimen name="padding_19dp">19dp</dimen>
+    <dimen name="padding_21dp">21dp</dimen>
 </resources>

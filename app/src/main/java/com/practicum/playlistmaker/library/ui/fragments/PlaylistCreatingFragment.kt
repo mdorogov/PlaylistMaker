@@ -44,7 +44,7 @@ import java.io.FileOutputStream
 import java.sql.Time
 import java.sql.Timestamp
 
-class PlaylistCreatingFragment : Fragment() {
+open class PlaylistCreatingFragment : Fragment() {
 
     companion object {
         fun newInstance() = PlaylistCreatingFragment().apply {
@@ -52,17 +52,17 @@ class PlaylistCreatingFragment : Fragment() {
         }
     }
 
-    private val viewModel: PlaylistCreatingViewModel by viewModel {
+    open val viewModel: PlaylistCreatingViewModel by viewModel {
         parametersOf()
     }
 
-    private lateinit var playlistArtwork: ImageView
-    private lateinit var playlistNameEditText: TextInputLayout
-    private lateinit var playlistDescriptionEditText: TextInputLayout
-    private lateinit var createPlaylistButton: Button
+    protected lateinit var playlistArtwork: ImageView
+    protected lateinit var playlistNameEditText: TextInputLayout
+    protected lateinit var playlistDescriptionEditText: TextInputLayout
+    protected lateinit var createPlaylistButton: Button
 
     private lateinit var artworkUri: Uri
-    private var isArtworkChosen: Boolean = false
+    protected var isArtworkChosen: Boolean = false
 
     var isPlaylistNameEmpty = true
 
@@ -132,6 +132,7 @@ class PlaylistCreatingFragment : Fragment() {
         playlistArtwork = binding.playlistArtwork
         playlistNameEditText = this.binding.playlistNameEdit
         playlistDescriptionEditText = this.binding.playlistDescriptionEdit
+        createPlaylistButton = this.binding.createPlaylistButton
 
         binding.playlistCreatingFragment.animation =
             android.view.animation.AnimationUtils.loadAnimation(
@@ -162,7 +163,7 @@ class PlaylistCreatingFragment : Fragment() {
     }
 
 
-    private fun openExitDialog() {
+    open fun openExitDialog() {
         if (!isPlaylistNameEmpty) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Завершить создание плейлиста?")
@@ -217,7 +218,7 @@ class PlaylistCreatingFragment : Fragment() {
         binding.playlistDescriptionEditCreating.setSelectAllOnFocus(true)
     }
 
-    private fun saveChosenArtwork(): String {
+    open fun saveChosenArtwork(): String {
 
         if (isArtworkChosen) {
             val filePath = File(
@@ -242,7 +243,7 @@ class PlaylistCreatingFragment : Fragment() {
 
     }
 
-    private fun createPlaylist() {
+    open fun createPlaylist() {
         viewModel.createPlaylist(
             saveChosenArtwork(),
             binding.playlistNameEditTextCreating.text.toString(),
@@ -266,4 +267,6 @@ class PlaylistCreatingFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import androidx.navigation.Navigation.findNavController
 import com.google.gson.Gson
 import com.practicum.playlistmaker.databinding.PlaylistSheetViewBinding
 import com.practicum.playlistmaker.player.ui.PlayerActivity
@@ -52,8 +53,6 @@ class PlaylistAdapter(
     private fun openPlaylistDebounce(position: Int) {
         if (isClickAllowed) {
             isClickAllowed = false
-
-
             onClick.onClick(position)
             CoroutineScope(Dispatchers.IO).launch {
                 delay(SEARCHING_DELAY)

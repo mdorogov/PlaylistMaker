@@ -16,8 +16,8 @@ class PlaylistsDbInteractorImpl(private val playlistsRepository: PlaylistsReposi
         playlistsRepository.insertPlaylist(playlist)
     }
 
-    override suspend fun deletePlaylist(playlist: Playlist) {
-        playlistsRepository.deletePlaylist(playlist)
+    override suspend fun deletePlaylist(playlistId: Long) {
+        playlistsRepository.deletePlaylist(playlistId)
     }
 
     override suspend fun addTrackToPlaylist(playlistId: Long, track: Track): Int {
@@ -28,8 +28,8 @@ class PlaylistsDbInteractorImpl(private val playlistsRepository: PlaylistsReposi
         playlistsRepository.deleteTrackFromPlaylist(playlistId, trackId)
     }
 
-    override suspend fun getSavedTracksByPlaylistID(playlistId: Long) {
-        playlistsRepository.getSavedTracksByPlaylistID(playlistId)
+    override suspend fun getSavedTracksByPlaylistID(playlistId: Long): Pair<List<Track>?, Long> {
+        return playlistsRepository.getSavedTracksByPlaylistID(playlistId)
     }
 
     override suspend fun createPlaylist(
@@ -42,5 +42,19 @@ class PlaylistsDbInteractorImpl(private val playlistsRepository: PlaylistsReposi
 
     override suspend fun getPlaylistByPlaylistId(playlistId: Long): Playlist {
         return playlistsRepository.getPlaylistByPlaylistId(playlistId)
+    }
+
+    override suspend fun updatePlaylist(
+        playlistId: Long,
+        playlistArtwork: String,
+        playlistName: String,
+        playlistDesctription: String
+    ) {
+        playlistsRepository.updatePlaylistData(
+            playlistId,
+            playlistArtwork,
+            playlistName,
+            playlistDesctription
+        )
     }
 }

@@ -32,8 +32,30 @@ class PlaylistsRepositoryImpl(
         playlistsDatabase.playlistDao().updatePlaylist(playlistDbConverter.map(playlist))
     }
 
-    override suspend fun deletePlaylist(playlist: Playlist) {
-        playlistsDatabase.playlistDao().deletePlaylistEntity(playlistDbConverter.map(playlist))
+    suspend fun updatePlaylist(playlist: PlaylistEntity) {
+        playlistsDatabase.playlistDao().updatePlaylist(playlist)
+    }
+
+
+    override suspend fun updatePlaylistData(
+        playlistId: Long,
+        playlistArtwork: String,
+        playlistName: String,
+        playlistDesctription: String
+    ) {
+        var playlist = playlistsDatabase.playlistDao().getPlaylistById(playlistId)
+        playlist.artwork = playlistArtwork
+        playlist.playlistName = playlistName
+        playlist.description = playlistDesctription
+
+        updatePlaylist(playlist)
+
+    }
+
+    override suspend fun deletePlaylist(playlistId: Long) {
+        val savedTracks: ArrayList<Int>? = getSavedTrackIDsOfPlaylist(playlistId)
+        playlistsDatabase.playlistDao().deletePlaylist(playlistId)
+        if (!savedTracks.isNullOrEmpty()) updateAllSavedTracks(savedTracks)
     }
 
     override suspend fun addTrackToPlaylist(playlistId: Long, track: Track): Int {
@@ -67,13 +89,52 @@ class PlaylistsRepositoryImpl(
         var playlist =
             playlistDbConverter.map(playlistsDatabase.playlistDao().getPlaylistById(playlistId))
         playlist.deleteTrackIDfromSavedTracksIDsArray(trackId)
+        savedTracksDatabase.savedTrackDao().deleteSavedTrackById(trackId)
+
         updatePlaylist(playlist)
+
+        updateSavedTracks(trackId)
     }
 
-    suspend fun getSavedTracksByPlaylistID(savedIDs: List<Int>): List<Track> {
-        return savedTracksDbConverter.map(
-            savedTracksDatabase.savedTrackDao().getSavedTracks(savedIDs)
-        )
+    private suspend fun updateSavedTracks(trackId: Int) {
+        var playlists = convertFromPlaylistEntity(playlistsDatabase.playlistDao().getPlaylists())
+        var isTrackSaved = false
+        for (playlist in playlists) {
+            if (!playlist.savedTracksIDs.isNullOrEmpty()) {
+                if (playlist.savedTracksIDs?.contains(trackId) == true) {
+                    isTrackSaved = true
+                    break
+                }
+            }
+        }
+
+        if (!isTrackSaved) savedTracksDatabase.savedTrackDao().deleteSavedTrackById(trackId)
+    }
+
+    private suspend fun updateAllSavedTracks(deletedPlaylistIDs: ArrayList<Int>) {
+        var playlists = convertFromPlaylistEntity(playlistsDatabase.playlistDao().getPlaylists())
+
+        for (trackId in deletedPlaylistIDs) {
+            var isTrackSaved = false
+
+            for (playlist in playlists) {
+                if (playlist.savedTracksIDs?.contains(trackId) == true) {
+                    isTrackSaved = true
+                    break;
+                }
+                if (isTrackSaved) break
+            }
+
+            if (!isTrackSaved) savedTracksDatabase.savedTrackDao().deleteSavedTrackById(trackId)
+        }
+    }
+
+    suspend fun getSavedTracksByPlaylistID(savedIDs: List<Int>) {
+        /*   : List<Track>
+         return savedTracksDbConverter.map(
+                savedTracksDatabase.savedTrackDao().getSavedTracks(savedIDs)
+            )*/
+
     }
 
     override suspend fun getSavedTrackIDsOfPlaylist(playlistId: Long): ArrayList<Int>? {
@@ -82,13 +143,14 @@ class PlaylistsRepositoryImpl(
         return playlist.savedTracksIDs
     }
 
-    override suspend fun getSavedTracksByPlaylistID(playlistId: Long): List<Track>? {
+    override suspend fun getSavedTracksByPlaylistID(playlistId: Long): Pair<List<Track>?, Long> {
 
         val playlistIDs = getPlaylistByPlaylistId(playlistId).savedTracksIDs
-        if (!playlistIDs.isNullOrEmpty()){
+        if (!playlistIDs.isNullOrEmpty()) {
             return savedTracksDbConverter.map(
-                savedTracksDatabase.savedTrackDao().getSavedTracks(playlistIDs))
-        } else return null
+                savedTracksDatabase.savedTrackDao().getSavedTracks(playlistIDs)
+            )
+        } else return Pair(listOf<Track>(), 0)
 
     }
 
@@ -109,4 +171,6 @@ class PlaylistsRepositoryImpl(
         )
         playlistsDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
     }
+
+
 }

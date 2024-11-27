@@ -100,7 +100,7 @@ class PlaylistsFragment : Fragment(), OnPlaylistClick {
 
         val recyclerView = binding.allPlaylistsRecycler
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        var playlistAdapter = LibraryPlaylistAdapter(requireContext(), playlists)
+        var playlistAdapter = LibraryPlaylistAdapter(requireContext(), playlists, this)
         recyclerView.adapter = playlistAdapter
         playlistAdapter.notifyDataSetChanged()
         recyclerView.visibility = View.VISIBLE
