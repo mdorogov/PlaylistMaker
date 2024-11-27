@@ -13,6 +13,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.PlaylistLibraryViewBinding
 import com.practicum.playlistmaker.databinding.TrackViewBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
+import com.practicum.playlistmaker.library.mapper.WordFormConverter
 import com.practicum.playlistmaker.search.mapper.DimensConverter
 
 class LibraryPlaylistsViewHolder(private val binding: PlaylistLibraryViewBinding) :
@@ -22,7 +23,7 @@ class LibraryPlaylistsViewHolder(private val binding: PlaylistLibraryViewBinding
 
     fun bind(model: Playlist) {
         binding.libraryPlaylistName.text = model.playlistName
-        binding.libraryPlaylistNumOfTracks.text = model.numOfTracks.toString()
+        binding.libraryPlaylistNumOfTracks.text = WordFormConverter.getTrackWordForm(model.numOfTracks)
         setArtwork(model.artwork)
 
 

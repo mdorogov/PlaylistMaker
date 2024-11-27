@@ -20,9 +20,6 @@ import org.koin.core.parameter.parametersOf
 class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
 
     companion object {
-        /*   fun newInstance() = PlaylistEditInfoFragment().apply {
-               arguments = Bundle().apply { }
-           }*/
         const val ARGS_PLAYLIST_EDIT = "ID"
         fun createArgs(playlistId: Long): Bundle = bundleOf(ARGS_PLAYLIST_EDIT to playlistId)
     }
@@ -58,8 +55,6 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
         playlistNameEditText.editText?.setText(playlist.playlistName)
         playlistDescriptionEditText.editText?.setText(playlist.description)
         createPlaylistButton.setText("Сохранить")
-
-
     }
 
     override fun createPlaylist() {

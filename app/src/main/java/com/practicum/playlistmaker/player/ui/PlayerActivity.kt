@@ -206,6 +206,7 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
     }
 
     fun setPlayStatus(progress: String, isPlaying: Boolean) {
+        isTrackPlaying = isPlaying
         changeButtonStyle(isPlaying)
         playtime.text = progress
     }

@@ -24,6 +24,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentLibraryBinding
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.library.domain.api.OnLongTrackClick
+import com.practicum.playlistmaker.main.ui.RootActivity
 import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.ui.TrackAdapter
@@ -157,6 +158,7 @@ class SearchFragment : Fragment(), OnLongTrackClick {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     deleteButton.visibility = View.GONE
+                    (activity as? RootActivity)?.setBottomNavigationView(false)
 
                     val inputMethodManager =
                         context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -201,8 +203,15 @@ class SearchFragment : Fragment(), OnLongTrackClick {
 
     private fun setOnFocusUserInput() {
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            statusView.visibility = View.GONE
-            showTracksHistory(hasFocus)
+            if (hasFocus){
+                statusView.visibility = View.GONE
+                showTracksHistory(hasFocus)
+                (activity as? RootActivity)?.setBottomNavigationView(false)
+            } else {
+                (activity as? RootActivity)?.setBottomNavigationView(true)
+            }
+
+
         }
     }
 

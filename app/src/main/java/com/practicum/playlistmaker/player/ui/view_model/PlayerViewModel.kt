@@ -53,6 +53,7 @@ class PlayerViewModel(
             }
             screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel, isTrackFavorite))
         }
+        tracksPlayerInteractor.initializePlayer(trackModel.previewUrl)
     }
 
     private suspend fun isTrackFavoriteTEST(trackId: Int): Boolean {
@@ -81,9 +82,9 @@ class PlayerViewModel(
     fun play() {
         playerStatusJob?.cancel()
         playerStatusJob = viewModelScope.launch {
-            tracksPlayerInteractor.play(trackModel.previewUrl)
-            delay(WAIT_FOR_PREPARED_PLAYER_TIME_DELAY)
-            PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
+            tracksPlayerInteractor.play()
+            //delay(300)
+            //PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
             startTimer()
         }
     }
@@ -102,6 +103,8 @@ class PlayerViewModel(
 
     fun checkOnStop() {
         if (tracksPlayerInteractor.getIsSongPlayed()) {
+            timerJob?.cancel()
+            playerStatusJob?.cancel()
             screenPlayerStateLiveData.postValue(PlayerState.PlayingStopped("00:00"))
         }
     }

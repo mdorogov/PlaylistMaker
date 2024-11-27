@@ -80,6 +80,14 @@
         <item name="tint">?attr/colorOnSurface</item>
     </style>
 
+    <style name="SettingsIconNoColorChange">
+        <item name="android:layout_height">@dimen/ic_size_24</item>
+        <item name="android:layout_width">@dimen/ic_size_24</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginEnd">@dimen/padding_12</item>
+        <item name="tint">@color/black</item>
+    </style>
+
     <style name="ActivityText">
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/text_size_22</item>
@@ -241,7 +249,7 @@
 
     <dimen name="text_size_14">14sp</dimen>
     <dimen name="padding_18">18dp</dimen>
-    <dimen name="text_size12">12dp</dimen>
+    <dimen name="text_size12">12sp</dimen>
     <dimen name="text_size_24">24sp</dimen>
     <dimen name="text_size_18">18sp</dimen>
 </resources>

@@ -43,12 +43,8 @@ class PlaylistsRepositoryImpl(
         playlistName: String,
         playlistDesctription: String
     ) {
-        var playlist = playlistsDatabase.playlistDao().getPlaylistById(playlistId)
-        playlist.artwork = playlistArtwork
-        playlist.playlistName = playlistName
-        playlist.description = playlistDesctription
-
-        updatePlaylist(playlist)
+        val playlist = PlaylistDbConverter().map(playlistsDatabase.playlistDao().getPlaylistById(playlistId))
+        updatePlaylist(Playlist(playlistId, playlistArtwork, playlistName, playlistDesctription, playlist.numOfTracks, playlist.savedTracksIDs))
 
     }
 
@@ -89,7 +85,7 @@ class PlaylistsRepositoryImpl(
         var playlist =
             playlistDbConverter.map(playlistsDatabase.playlistDao().getPlaylistById(playlistId))
         playlist.deleteTrackIDfromSavedTracksIDsArray(trackId)
-        savedTracksDatabase.savedTrackDao().deleteSavedTrackById(trackId)
+
 
         updatePlaylist(playlist)
 
@@ -127,14 +123,6 @@ class PlaylistsRepositoryImpl(
 
             if (!isTrackSaved) savedTracksDatabase.savedTrackDao().deleteSavedTrackById(trackId)
         }
-    }
-
-    suspend fun getSavedTracksByPlaylistID(savedIDs: List<Int>) {
-        /*   : List<Track>
-         return savedTracksDbConverter.map(
-                savedTracksDatabase.savedTrackDao().getSavedTracks(savedIDs)
-            )*/
-
     }
 
     override suspend fun getSavedTrackIDsOfPlaylist(playlistId: Long): ArrayList<Int>? {

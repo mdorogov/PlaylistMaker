@@ -38,4 +38,7 @@
     <string name="fragment_list_not_found_text">Вы не создали \n ни одного плейлиста</string>
     <string name="fav_tracks_not_found_txt">Ваша медиатека пуста</string>
     <string name="new_playlist_text">Новый плейлист</string>
+    <string name="save_edited_playlist_text">Сохранить</string>
+    <string name="sharing_email_subject_text">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="sharing_email_desc_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 </resources>

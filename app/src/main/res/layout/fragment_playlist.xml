@@ -82,7 +82,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:padding="@dimen/padding_5dp"
-                android:src="@drawable/dot" />
+                android:src="@drawable/dot"
+                app:tint="@color/black" />
 
             <TextView
                 android:id="@+id/playlist_fragment_tracks_quantity_text"
@@ -104,13 +105,14 @@
 
             <ImageView
                 android:id="@+id/playlist_fragment_share_button"
-                style="@style/SettingsIcon"
+                style="@style/SettingsIconNoColorChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_share" />
 
             <ImageView
                 android:id="@+id/playlist_fragment_settings_button"
+                style="@style/SettingsIconNoColorChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/frame_padding_16"
@@ -139,12 +141,22 @@
         app:behavior_peekHeight="266dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
+
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/padding_8"
             android:src="@drawable/rectangle_sheet" />
+
+        <TextView
+            android:id="@+id/playlist_fragment_tracks_status"
+            style="@style/StatusTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="В этом плейлисте нет треков"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlist_fragment_tracks_recycler"

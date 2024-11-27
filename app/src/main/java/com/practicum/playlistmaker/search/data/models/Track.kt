@@ -23,7 +23,7 @@ data class Track(
     }
 
     fun setTimeStamp(): String {
-        return System.currentTimeMillis().toString()
+        return System.nanoTime().toString()
     }
 
     fun convertTrackToString(): String {

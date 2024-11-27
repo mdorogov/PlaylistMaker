@@ -15,6 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
@@ -27,6 +32,7 @@ import com.practicum.playlistmaker.library.ui.view_model.PlaylistEditInfoViewMod
 import com.practicum.playlistmaker.library.ui.view_model.PlaylistViewModel
 import com.practicum.playlistmaker.main.ui.RootActivity
 import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.mapper.DimensConverter
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 import com.practicum.playlistmaker.search.ui.TrackAdapter
 import com.practicum.playlistmaker.sharing.data.ExternalNavigator
@@ -130,26 +136,29 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
         }
 
 
-        binding.playlistFragmentArtwork.setImageURI(playlist.artwork.toUri())
-        binding.playlistFragmentName.setText(playlist.playlistName)
-        binding.playlistFragmentDescription.setText(playlist.description)
-        binding.playlistFragmentDurationText.setText(
-            WordFormConverter.getDurationWordForm(
-                MillisConverter.millisToMinutes(tracksDuration)
-            )
-        )
-        binding.playlistFragmentTracksQuantityText.setText(
-            WordFormConverter.getTrackWordForm(
-                playlist.numOfTracks
-            )
-        )
+        with(binding) {
+            playlistFragmentArtwork.setImageURI(playlist.artwork.toUri())
+            playlistFragmentName.setText(playlist.playlistName)
+            playlistFragmentDescription.setText(playlist.description)
+            playlistFragmentDurationText.setText(
 
-        binding.playlistFragmentShareButton.setOnClickListener {
-            sharePlaylist(tracks.isNullOrEmpty())
-        }
+                WordFormConverter.getDurationWordForm(
+                    MillisConverter.millisToMinutes(tracksDuration)
+                )
+            )
+            playlistFragmentTracksQuantityText.setText(
+                WordFormConverter.getTrackWordForm(
+                    playlist.numOfTracks
+                )
+            )
 
-        binding.playlistFragmentMenu.setOnClickListener {
-            openBottomSheetMenu()
+            playlistFragmentShareButton.setOnClickListener {
+                sharePlaylist(tracks.isNullOrEmpty())
+            }
+
+            playlistFragmentMenu.setOnClickListener {
+                openBottomSheetMenu()
+            }
         }
 
         setSettingsBottomSheetView()
@@ -189,6 +198,10 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
     }
 
     private fun showPlaylistTracks() {
+
+        if (tracks.isNullOrEmpty()) {
+            binding.playlistFragmentTracksStatus.visibility = View.VISIBLE
+        }
         val tracksRecycler = binding.playlistFragmentTracksRecycler
         tracksRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -229,7 +242,8 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
         binding.playlistFragmentSettingsSheet.playlistName.setText(playlist.playlistName)
         binding.playlistFragmentSettingsSheet.numOfTracks.text =
             WordFormConverter.getTrackWordForm(playlist.numOfTracks)
-        binding.playlistFragmentSettingsSheet.artwork.setImageURI(playlist.artwork.toUri())
+        // binding.playlistFragmentSettingsSheet.artwork.setImageURI(playlist.artwork.toUri())
+        setArtwork(playlist.artwork)
 
         binding.playlistFragmentShareSheet.setOnClickListener {
             sharePlaylist(tracks.isNullOrEmpty())
@@ -245,6 +259,21 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
         binding.playlistFragmentDeleteSheet.setOnClickListener {
             showDeletePlaylistDialog()
         }
+    }
+
+    private fun setArtwork(uri: String) {
+        var artwork = binding.playlistFragmentArtwork
+        Glide.with(artwork)
+            .load(uri)
+            .placeholder(R.drawable.placeholder)
+            .apply(
+                RequestOptions().transform(
+                    MultiTransformation(
+                        CenterCrop()
+                    )
+                )
+            )
+            .into(artwork)
     }
 
     private fun showDeletePlaylistDialog() {

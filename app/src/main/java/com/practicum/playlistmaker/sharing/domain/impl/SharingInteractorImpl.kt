@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.sharing.domain.impl
 
+import android.provider.Settings.Global.getString
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.mapper.WordFormConverter
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.sharing.data.ExternalNavigator
@@ -32,26 +34,22 @@ class SharingInteractorImpl(
     private fun getSupportEmailData(): EmailData {
         return EmailData(
             arrayOf("dorogovmax@yandex.com"),
-            "Сообщение разработчикам и разработчицам приложения Playlist Maker",
-            "Спасибо разработчикам и разработчицам за крутое приложение!"
+            externalNavigator.getString(R.string.sharing_email_subject_text),
+            externalNavigator.getString(R.string.sharing_email_desc_text)
         )
     }
 
     private fun getShareAppLink(): String {
-        return "https://practicum.yandex.ru/learn/android-developer/"
-        //return getString(R.string.share_app_link)
+        return externalNavigator.getString(R.string.share_app_link)
     }
 
     private fun getTermsLink(): String {
-        return "https://yandex.ru/legal/practicum_offer/"
-        //return getString(R.string.agreement_link)
+        return externalNavigator.getString(R.string.agreement_link)
     }
 
     private fun getPlaylistData(playlistName: String, playlistDescription: String, playlistNumOfTracks: Int, tracks: List<Track>?) : String {
 
         val tracksData = getTracksData(tracks)
-        val numOfTracksString =
-
         return "$playlistName \n$playlistDescription \n" + WordFormConverter.getTrackWordForm(playlistNumOfTracks) + "\n$tracksData"
     }
 
