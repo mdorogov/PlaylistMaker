@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/frame_padding_16"
                 android:paddingTop="@dimen/padding_8"
-                tools:text="555 minutes" />
+                tools:text="555 минут" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -83,6 +83,7 @@
                 android:layout_gravity="bottom"
                 android:padding="@dimen/padding_5dp"
                 android:src="@drawable/dot"
+                android:scaleType="center"
                 app:tint="@color/black" />
 
             <TextView
@@ -90,7 +91,7 @@
                 style="@style/PlaylistFragmentText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="98 songs" />
+                tools:text="98 треков" />
         </LinearLayout>
 
         <LinearLayout

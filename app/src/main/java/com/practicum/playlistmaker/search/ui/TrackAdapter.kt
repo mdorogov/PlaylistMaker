@@ -12,7 +12,6 @@ import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.databinding.TrackViewBinding
-import com.practicum.playlistmaker.library.domain.api.OnLongTrackClick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,8 +20,7 @@ import kotlinx.coroutines.launch
 class TrackAdapter(
     private val context: Context,
     private var tracks: List<Track>,
-    private var onLongTrackClick: OnLongTrackClick
-) : RecyclerView.Adapter<TrackViewHolder>() {
+    private var onItemLongClicked: (Int) -> Unit) : RecyclerView.Adapter<TrackViewHolder>() {
     companion object {
         private const val SEARCHING_DELAY = 2000L
     }
@@ -47,7 +45,7 @@ class TrackAdapter(
         }
 
         holder.itemView.setOnLongClickListener {
-            onLongTrackClick.onLongClicker(tracks[position].trackId)
+            onItemLongClicked(this.tracks[position].trackId)
             true
         }
     }

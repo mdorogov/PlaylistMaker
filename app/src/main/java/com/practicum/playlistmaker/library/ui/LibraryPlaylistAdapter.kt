@@ -13,7 +13,6 @@ import com.practicum.playlistmaker.databinding.PlaylistLibraryViewBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.library.ui.fragments.PlaylistAdapter
 import com.practicum.playlistmaker.library.ui.fragments.PlaylistAdapter.Companion
-import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,7 +21,7 @@ import kotlinx.coroutines.launch
 class LibraryPlaylistAdapter(
     private val context: Context,
     private var playlists: List<Playlist>,
-    private var onClick: OnPlaylistClick
+    private var onItemClicked: (Int) -> Unit
 ) : RecyclerView.Adapter<LibraryPlaylistsViewHolder>() {
     companion object {
         private const val SEARCHING_DELAY = 2000L
@@ -55,13 +54,11 @@ class LibraryPlaylistAdapter(
     }
 
     private fun openPlayerDebounce(position: Int) {
-      //  val current = isClickAllowed
-
         if (isClickAllowed) {
             isClickAllowed = false
-            onClick.onClick(position)
+            onItemClicked(position)
             CoroutineScope(Dispatchers.IO).launch {
-                delay(LibraryPlaylistAdapter.SEARCHING_DELAY)
+                delay(SEARCHING_DELAY)
                 isClickAllowed = true
             }
         }

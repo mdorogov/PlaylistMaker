@@ -23,7 +23,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentLibraryBinding
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
-import com.practicum.playlistmaker.library.domain.api.OnLongTrackClick
 import com.practicum.playlistmaker.main.ui.RootActivity
 import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.models.Track
@@ -32,7 +31,7 @@ import com.practicum.playlistmaker.search.ui.state.SearchState
 import com.practicum.playlistmaker.search.ui.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment(), OnLongTrackClick {
+class SearchFragment : Fragment(){
     private val viewModel by viewModel<SearchViewModel>()
     var inputSearchText: String? = null
     private lateinit var inputEditText: EditText
@@ -86,6 +85,7 @@ class SearchFragment : Fragment(), OnLongTrackClick {
         searchHistoryView.visibility = View.GONE
         statusView.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
+        (activity as? RootActivity)?.setBottomNavigationView(true)
     }
 
     private fun render(state: SearchState?) {
@@ -121,13 +121,14 @@ class SearchFragment : Fragment(), OnLongTrackClick {
         statusView.visibility = View.GONE
         trackRecycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
+        (activity as? RootActivity)?.setBottomNavigationView(true)
     }
 
     private fun initializeRecyclerViews() {
         trackRecycler = binding.trackRecycler
         trackRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(requireContext(), songs, this)
+        trackAdapter = TrackAdapter(requireContext(), songs) {}
         searchHistoryView = binding.searchHistoryView
         cleanHistoryButton = binding.cleanHistoryButton
 
@@ -135,7 +136,7 @@ class SearchFragment : Fragment(), OnLongTrackClick {
         historyRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         searchHistoryAdapter =
-            TrackAdapter(requireContext(), historyTracks, this)
+            TrackAdapter(requireContext(), historyTracks){}
 
         progressBar = binding.progressBar
 
@@ -186,7 +187,6 @@ class SearchFragment : Fragment(), OnLongTrackClick {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                //
             }
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
@@ -210,8 +210,6 @@ class SearchFragment : Fragment(), OnLongTrackClick {
             } else {
                 (activity as? RootActivity)?.setBottomNavigationView(true)
             }
-
-
         }
     }
 
@@ -271,6 +269,7 @@ class SearchFragment : Fragment(), OnLongTrackClick {
     }
 
     private fun trackSearching() {
+        (activity as? RootActivity)?.setBottomNavigationView(false)
 
         var userRequest = inputEditText.text.toString()
 
@@ -286,8 +285,5 @@ class SearchFragment : Fragment(), OnLongTrackClick {
 
     private fun setProgressBarVisibilityOff() {
         progressBar.visibility = View.GONE
-    }
-
-    override fun onLongClicker(int: Int) {
     }
 }

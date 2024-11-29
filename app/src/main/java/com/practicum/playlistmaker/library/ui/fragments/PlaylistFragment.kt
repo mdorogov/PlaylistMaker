@@ -25,22 +25,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
-import com.practicum.playlistmaker.library.domain.api.OnLongTrackClick
 import com.practicum.playlistmaker.library.mapper.WordFormConverter
 import com.practicum.playlistmaker.library.ui.state.PlaylistState
-import com.practicum.playlistmaker.library.ui.view_model.PlaylistEditInfoViewModel
 import com.practicum.playlistmaker.library.ui.view_model.PlaylistViewModel
 import com.practicum.playlistmaker.main.ui.RootActivity
 import com.practicum.playlistmaker.search.data.models.Track
-import com.practicum.playlistmaker.search.mapper.DimensConverter
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 import com.practicum.playlistmaker.search.ui.TrackAdapter
-import com.practicum.playlistmaker.sharing.data.ExternalNavigator
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import org.w3c.dom.Text
 
-class PlaylistFragment : Fragment(), OnLongTrackClick {
+class PlaylistFragment : Fragment(){
 
     companion object {
         const val ARGS_PLAYLIST_ID = "ID"
@@ -207,7 +202,9 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
         val tracksRecycler = binding.playlistFragmentTracksRecycler
         tracksRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(requireContext(), this.tracks, this)
+        trackAdapter = TrackAdapter(requireContext(), this.tracks) {itemLongClickedId ->
+onLongClicker(itemLongClickedId)
+        }
         tracksRecycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
     }
@@ -244,7 +241,7 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
         binding.playlistFragmentSettingsSheet.playlistName.setText(playlist.playlistName)
         binding.playlistFragmentSettingsSheet.numOfTracks.text =
             WordFormConverter.getTrackWordForm(playlist.numOfTracks)
-        // binding.playlistFragmentSettingsSheet.artwork.setImageURI(playlist.artwork.toUri())
+       binding.playlistFragmentSettingsSheet.playlistArtwork.setImageURI(playlist.artwork.toUri())
         setArtwork(playlist.artwork)
 
         binding.playlistFragmentShareSheet.setOnClickListener {
@@ -285,12 +282,13 @@ class PlaylistFragment : Fragment(), OnLongTrackClick {
             }
             .setPositiveButton("Да") { dialog, which ->
                 playlistViewModel.deletePlaylist(playlist.id)
-                moveToLibraryFragment()
+                findNavController().navigateUp()
+
             }
             .show()
     }
 
-    override fun onLongClicker(trackId: Int) {
+    fun onLongClicker(trackId: Int) {
         showDeletedTrackDialog(trackId)
     }
 

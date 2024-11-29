@@ -21,14 +21,13 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.library.ui.fragments.PlaylistAdapter
 import com.practicum.playlistmaker.library.ui.fragments.PlaylistCreatingFragment
-import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker.search.data.models.Track
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
+class PlayerActivity() : AppCompatActivity() {
     private lateinit var viewModel: PlayerViewModel
 
     companion object {
@@ -148,7 +147,10 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
                 LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
             this.playlists = playlists
 
-            playlistAdapter = PlaylistAdapter(applicationContext, playlists, this)
+            playlistAdapter = PlaylistAdapter(applicationContext, playlists) { itemId ->
+                onClick(itemId)
+
+            }
             playlistRecycler.adapter = playlistAdapter
             playlistAdapter.notifyDataSetChanged()
         }
@@ -329,7 +331,7 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
             .into(artworkView)
     }
 
-    override fun onClick(int: Int) {
+    fun onClick(int: Int) {
         val playlistId = playlists[int].id
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         viewModel.addTrackToPlaylist(playlistId)

@@ -14,11 +14,10 @@ import com.practicum.playlistmaker.library.ui.LibraryPlaylistAdapter
 import com.practicum.playlistmaker.library.ui.state.PlaylistsState
 import com.practicum.playlistmaker.library.ui.view_model.PlaylistsViewModel
 import com.practicum.playlistmaker.main.ui.RootActivity
-import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class PlaylistsFragment : Fragment(), OnPlaylistClick {
+class PlaylistsFragment : Fragment() {
     companion object {
         fun newInstance() = PlaylistsFragment().apply {
             arguments = Bundle().apply { }
@@ -66,6 +65,7 @@ class PlaylistsFragment : Fragment(), OnPlaylistClick {
 
     override fun onResume() {
         super.onResume()
+        playlistsViewModel.loadData()
         (activity as? RootActivity)?.setBottomNavigationView(true)
     }
 
@@ -100,14 +100,17 @@ class PlaylistsFragment : Fragment(), OnPlaylistClick {
 
         val recyclerView = binding.allPlaylistsRecycler
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        var playlistAdapter = LibraryPlaylistAdapter(requireContext(), playlists, this)
+        var playlistAdapter = LibraryPlaylistAdapter(requireContext(), playlists){ itemId ->
+            onClick(itemId)
+        }
+
         recyclerView.adapter = playlistAdapter
         playlistAdapter.notifyDataSetChanged()
         recyclerView.visibility = View.VISIBLE
 
     }
 
-    override fun onClick(int: Int) {
+    fun onClick(int: Int) {
         val playlistId = playlists[int].id
         findNavController().navigate(
             R.id.action_libraryFragment_to_playlistFragment,

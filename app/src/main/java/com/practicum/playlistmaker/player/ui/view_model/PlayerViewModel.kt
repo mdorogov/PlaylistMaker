@@ -61,18 +61,22 @@ class PlayerViewModel(
     }
 
     private fun addTrackToFavorites() {
+        isTrackFavorite = true
         trackModel.setTimeStamp()
         viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksDbInteractor.insertFavTrack(trackModel)
+            screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(true))
         }
-        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(true))
+
     }
 
     private fun deleteTrackFromFavorites() {
+        isTrackFavorite = false
         viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksDbInteractor.deleteFavTrack(trackModel)
+            screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(false))
         }
-        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(false))
+
     }
 
 
@@ -83,8 +87,6 @@ class PlayerViewModel(
         playerStatusJob?.cancel()
         playerStatusJob = viewModelScope.launch {
             tracksPlayerInteractor.play()
-            //delay(300)
-            //PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
             startTimer()
         }
     }
