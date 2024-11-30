@@ -56,10 +56,6 @@ class PlayerViewModel(
         tracksPlayerInteractor.initializePlayer(trackModel.previewUrl)
     }
 
-    private suspend fun isTrackFavoriteTEST(trackId: Int): Boolean {
-        return favoriteTracksDbInteractor.isTrackFavorite(trackId)
-    }
-
     private fun addTrackToFavorites() {
         isTrackFavorite = true
         trackModel.setTimeStamp()

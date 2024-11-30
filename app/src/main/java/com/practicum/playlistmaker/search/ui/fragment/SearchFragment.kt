@@ -113,7 +113,6 @@ class SearchFragment : Fragment(){
     }
 
     private fun showContent(foundTracks: List<Track>) {
-
         songs.clear()
         songs.addAll(foundTracks)
         progressBar.visibility = View.GONE
@@ -197,7 +196,6 @@ class SearchFragment : Fragment(){
             viewModel.cleanHistory()
             searchHistoryAdapter.notifyDataSetChanged()
             searchHistoryView.visibility = View.GONE
-
         }
     }
 

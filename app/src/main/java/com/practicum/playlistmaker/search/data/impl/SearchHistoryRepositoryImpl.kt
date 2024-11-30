@@ -1,10 +1,13 @@
 package com.practicum.playlistmaker.search.data.impl
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.data.network.JSON_HISTORY_KEY
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
+import kotlin.math.truncate
 
 
 class SearchHistoryRepositoryImpl(
@@ -13,6 +16,20 @@ class SearchHistoryRepositoryImpl(
 
     var json = sharedPreferences.getString(JSON_HISTORY_KEY, null)
     var array = createTrackArrayListFromJson()
+
+    private val _historyChanged = MutableLiveData<Boolean>()
+    val historyChanged: LiveData<Boolean> get() = _historyChanged
+
+    private val sharedPrefListener = SharedPreferences.OnSharedPreferenceChangeListener{sharedPreferences,JSON_HISTORY_KEY ->
+        _historyChanged.postValue(true)
+    }
+    init {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPrefListener)
+    }
+
+    override fun getChangedHistoryLiveData(): LiveData<Boolean> {
+        return historyChanged
+    }
 
 
     override fun createTrackArrayListFromJson(): ArrayList<Track> {
@@ -55,9 +72,4 @@ class SearchHistoryRepositoryImpl(
     override fun cleanHistory() {
         sharedPreferences.edit().clear().apply()
     }
-
-    override fun setSharedPrefListener(sharedListener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedListener)
-    }
-
 }

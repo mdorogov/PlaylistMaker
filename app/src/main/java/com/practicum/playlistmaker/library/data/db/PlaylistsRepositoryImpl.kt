@@ -136,10 +136,9 @@ class PlaylistsRepositoryImpl(
         val playlistIDs = getPlaylistByPlaylistId(playlistId).savedTracksIDs
         if (!playlistIDs.isNullOrEmpty()) {
             return savedTracksDbConverter.map(
-                savedTracksDatabase.savedTrackDao().getSavedTracks(playlistIDs)
+                savedTracksDatabase.savedTrackDao().getSavedTracks(playlistIDs), playlistIDs
             )
         } else return Pair(listOf<Track>(), 0)
-
     }
 
     override suspend fun getPlaylistByPlaylistId(playlistId: Long): Playlist {

@@ -25,8 +25,6 @@ class LibraryPlaylistsViewHolder(private val binding: PlaylistLibraryViewBinding
         binding.libraryPlaylistName.text = model.playlistName
         binding.libraryPlaylistNumOfTracks.text = WordFormConverter.getTrackWordForm(model.numOfTracks)
         setArtwork(model.artwork)
-
-
     }
 
     private fun setArtwork(art: String) {

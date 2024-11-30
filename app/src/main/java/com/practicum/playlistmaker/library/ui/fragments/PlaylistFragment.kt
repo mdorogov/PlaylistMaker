@@ -30,6 +30,7 @@ import com.practicum.playlistmaker.library.ui.state.PlaylistState
 import com.practicum.playlistmaker.library.ui.view_model.PlaylistViewModel
 import com.practicum.playlistmaker.main.ui.RootActivity
 import com.practicum.playlistmaker.search.data.models.Track
+import com.practicum.playlistmaker.search.mapper.DimensConverter
 import com.practicum.playlistmaker.search.mapper.MillisConverter
 import com.practicum.playlistmaker.search.ui.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -181,14 +182,13 @@ class PlaylistFragment : Fragment(){
     }
 
     private fun sharePlaylist(isPlaylistEmpty: Boolean) {
+        bottomSettingsSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         if (isPlaylistEmpty) {
             Toast.makeText(
                 requireContext(),
                 "В этом плейлисте нет списка треков, которым можно поделиться",
                 Toast.LENGTH_SHORT
             ).show()
-
-            bottomSettingsSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             playlistViewModel.sharePlaylist(playlist.id)
         }
@@ -241,7 +241,7 @@ onLongClicker(itemLongClickedId)
         binding.playlistFragmentSettingsSheet.playlistName.setText(playlist.playlistName)
         binding.playlistFragmentSettingsSheet.numOfTracks.text =
             WordFormConverter.getTrackWordForm(playlist.numOfTracks)
-       binding.playlistFragmentSettingsSheet.playlistArtwork.setImageURI(playlist.artwork.toUri())
+        setSheetPlaylistArtwork(playlist.artwork)
         setArtwork(playlist.artwork)
 
         binding.playlistFragmentShareSheet.setOnClickListener {
@@ -269,6 +269,22 @@ onLongClicker(itemLongClickedId)
                 RequestOptions().transform(
                     MultiTransformation(
                         CenterCrop()
+                    )
+                )
+            )
+            .into(artwork)
+    }
+
+    private fun setSheetPlaylistArtwork(art: String) {
+        var artwork = binding.playlistFragmentSettingsSheet.playlistArtwork
+        Glide.with(artwork)
+            .load(art)
+            .placeholder(R.drawable.placeholder)
+            .apply(
+                RequestOptions().transform(
+                    MultiTransformation(
+                        CenterCrop(),
+                        (RoundedCorners(DimensConverter.dpToPx(2f, artwork)))
                     )
                 )
             )

@@ -114,7 +114,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorTertiary</item>
         <item name="android:textSize">@dimen/text_size_13</item>
     </style>
 
@@ -123,7 +123,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textFontWeight">400</item>
-        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textColor">?attr/colorTertiary</item>
         <item name="android:textSize">11dp</item>
 
     </style>
@@ -241,6 +241,17 @@
         <item name="android:textSize">@dimen/text_size_18</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="SingleTrackViewStyle">
+        <item name="android:layout_marginTop">@dimen/padding_14</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:paddingLeft">@dimen/padding_8</item>
+        <item name="android:textColor">?attr/colorOnSecondary</item>
+        <item name="android:textSize">@dimen/text_size_16</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 

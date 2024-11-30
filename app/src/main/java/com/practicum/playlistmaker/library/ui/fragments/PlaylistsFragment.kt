@@ -85,8 +85,9 @@ class PlaylistsFragment : Fragment() {
     private fun showError(stringRes: Int) {
         when (stringRes) {
             1 -> {
-                _binding!!.playlistsStatusLayout.visibility = View.VISIBLE
-                _binding!!.playlistsErrorTxt.setText(R.string.fragment_list_not_found_text)
+                binding!!.playlistsStatusLayout.visibility = View.VISIBLE
+                binding.allPlaylistsRecycler.visibility = View.GONE
+                binding!!.playlistsErrorTxt.setText(R.string.fragment_list_not_found_text)
             }
 
             else -> {}
@@ -95,6 +96,7 @@ class PlaylistsFragment : Fragment() {
 
     private fun showContent(playlists: List<Playlist>) {
         binding.playlistsStatusLayout.visibility = View.GONE
+        binding.allPlaylistsRecycler.visibility = View.VISIBLE
 
         this.playlists = playlists
 
@@ -117,6 +119,4 @@ class PlaylistsFragment : Fragment() {
             PlaylistFragment.createArgs(playlistId)
         )
     }
-
-
 }

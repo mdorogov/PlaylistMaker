@@ -114,7 +114,6 @@ class PlayerActivity() : AppCompatActivity() {
         if (this::playlistAdapter.isInitialized) {
             playlistAdapter.notifyDataSetChanged()
         }
-
     }
 
     private fun showTrackAddedToast(
@@ -135,8 +134,6 @@ class PlayerActivity() : AppCompatActivity() {
     }
 
     private fun openPlaylistCreatingFragment() {
-
-
     }
 
     private fun openPlaylistsBottomSheet(playlists: ArrayList<Playlist>?) {
@@ -183,7 +180,6 @@ class PlayerActivity() : AppCompatActivity() {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         overlay.visibility = View.VISIBLE
-                        loadPlaylists()
                     }
 
                     else -> {
@@ -196,12 +192,6 @@ class PlayerActivity() : AppCompatActivity() {
 
             }
         })
-    }
-
-    private fun loadPlaylists() {
-        if (!playlists.isNullOrEmpty()) {
-        }
-
     }
 
     private fun changeContentVisibility(isVisible: Boolean) {
