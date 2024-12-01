@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.library.domain.db
 
+import android.net.Uri
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.search.data.models.Track
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,7 @@ interface PlaylistsRepository {
     suspend fun updatePlaylist(playlist: Playlist)
     suspend fun updatePlaylistData(
         playlistId: Long,
-        playlistArtwork: String,
+        playlistArtwork: Uri?,
         playlistName: String,
         playlistDesctription: String
     )
@@ -22,7 +23,7 @@ interface PlaylistsRepository {
     suspend fun getSavedTrackIDsOfPlaylist(playlistId: Long): ArrayList<Int>?
     suspend fun getSavedTracksByPlaylistID(playlistId: Long): Pair<List<Track>?, Long>
     suspend fun createPlaylist(
-        artworkUri: String,
+        artworkUri: Uri?,
         playlistName: String,
         playlistDescription: String?
     )

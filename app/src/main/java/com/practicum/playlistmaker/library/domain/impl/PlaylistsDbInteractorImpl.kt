@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.library.domain.impl
 
+import android.net.Uri
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.library.domain.db.PlaylistsDbInteractor
 import com.practicum.playlistmaker.library.domain.db.PlaylistsRepository
@@ -33,7 +34,7 @@ class PlaylistsDbInteractorImpl(private val playlistsRepository: PlaylistsReposi
     }
 
     override suspend fun createPlaylist(
-        artworkUri: String,
+        artworkUri: Uri?,
         playlistName: String,
         playlistDescription: String?
     ) {
@@ -46,7 +47,7 @@ class PlaylistsDbInteractorImpl(private val playlistsRepository: PlaylistsReposi
 
     override suspend fun updatePlaylist(
         playlistId: Long,
-        playlistArtwork: String,
+        playlistArtwork: Uri?,
         playlistName: String,
         playlistDesctription: String
     ) {

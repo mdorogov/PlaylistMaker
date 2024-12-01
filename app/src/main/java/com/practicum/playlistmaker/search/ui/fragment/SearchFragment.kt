@@ -54,7 +54,6 @@ class SearchFragment : Fragment(){
 
     private lateinit var progressBar: ProgressBar
 
-
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
@@ -71,6 +70,7 @@ class SearchFragment : Fragment(){
         viewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
+        (activity as? RootActivity)?.setBottomNavigationView(true)
         initializeViews()
         initializeRecyclerViews()
         viewModel.loadTracksHistory()
@@ -81,11 +81,21 @@ class SearchFragment : Fragment(){
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+          inputEditText.clearFocus()
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+   // (activity as? RootActivity)?.setBottomNavigationView(true)
+    }
+
     private fun showLoading() {
         searchHistoryView.visibility = View.GONE
         statusView.visibility = View.GONE
         progressBar.visibility = View.VISIBLE
-        (activity as? RootActivity)?.setBottomNavigationView(true)
     }
 
     private fun render(state: SearchState?) {
@@ -120,7 +130,6 @@ class SearchFragment : Fragment(){
         statusView.visibility = View.GONE
         trackRecycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
-        (activity as? RootActivity)?.setBottomNavigationView(true)
     }
 
     private fun initializeRecyclerViews() {
@@ -150,20 +159,17 @@ class SearchFragment : Fragment(){
     }
 
     private fun setTextWatcher() {
+        val inputMethodManager =
+            requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //
             }
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (s.isNullOrEmpty()) {
                     deleteButton.visibility = View.GONE
-                    (activity as? RootActivity)?.setBottomNavigationView(false)
-
-                    val inputMethodManager =
-                        context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
-
+                   // (activity as? RootActivity)?.setBottomNavigationView(false)
                     searchHistoryAdapter.notifyDataSetChanged()
                     inputEditText.clearFocus()
                 } else {
@@ -173,8 +179,8 @@ class SearchFragment : Fragment(){
                     inputSearchText = s.toString()
                     trackRecycler.visibility = View.GONE
 
-                    viewModel.searchTracksDebounce(s.toString())
 
+                    viewModel.searchTracksDebounce(s.toString())
                     deleteButton.setOnClickListener {
                         statusView.visibility = View.GONE
                         inputEditText.setText("")
@@ -204,9 +210,10 @@ class SearchFragment : Fragment(){
             if (hasFocus){
                 statusView.visibility = View.GONE
                 showTracksHistory(hasFocus)
-                (activity as? RootActivity)?.setBottomNavigationView(false)
+               // (activity as? RootActivity)?.setBottomNavigationView(false)
+
             } else {
-                (activity as? RootActivity)?.setBottomNavigationView(true)
+                //(activity as? RootActivity)?.setBottomNavigationView(true)
             }
         }
     }
@@ -267,7 +274,7 @@ class SearchFragment : Fragment(){
     }
 
     private fun trackSearching() {
-        (activity as? RootActivity)?.setBottomNavigationView(false)
+
 
         var userRequest = inputEditText.text.toString()
 

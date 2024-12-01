@@ -58,9 +58,8 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
     }
 
     override fun createPlaylist() {
-        isArtworkChosen = true
         viewModel.updatePlaylist(
-            playlistId, saveChosenArtwork(),
+            playlistId, artworkUri,
             playlistNameEditText.editText?.text.toString(),
             playlistDescriptionEditText.editText?.text.toString()
         )

@@ -61,8 +61,7 @@ open class PlaylistCreatingFragment : Fragment() {
     protected lateinit var playlistDescriptionEditText: TextInputLayout
     protected lateinit var createPlaylistButton: Button
 
-    private lateinit var artworkUri: Uri
-    protected var isArtworkChosen: Boolean = false
+    protected var artworkUri: Uri? = null
 
     var isPlaylistNameEmpty = true
 
@@ -87,7 +86,6 @@ open class PlaylistCreatingFragment : Fragment() {
                 )
                 .into(playlistArtwork)
             artworkUri = uri
-            isArtworkChosen = true
         }
     }
 
@@ -155,7 +153,6 @@ open class PlaylistCreatingFragment : Fragment() {
         binding.createPlaylistButton.setOnClickListener {
             if (!isPlaylistNameEmpty) {
                 createPlaylist()
-                saveChosenArtwork()
             }
         }
 
@@ -218,34 +215,9 @@ open class PlaylistCreatingFragment : Fragment() {
         binding.playlistDescriptionEditCreating.setSelectAllOnFocus(true)
     }
 
-    open fun saveChosenArtwork(): String {
-
-        if (isArtworkChosen) {
-            val filePath = File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "artworks"
-            )
-
-            if (!filePath.exists()) {
-                filePath.mkdirs()
-            }
-
-            val file = File(filePath, "art_" + System.currentTimeMillis().toString())
-            val inputStream = requireActivity().contentResolver.openInputStream(artworkUri)
-            val outputStream = FileOutputStream(file)
-            BitmapFactory.decodeStream(inputStream)
-                .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-
-            return file.absolutePath
-        } else {
-            return "android.resource://com.practicum.playlistmaker/drawable/artwork_placeholder"
-        }
-
-    }
-
     open fun createPlaylist() {
         viewModel.createPlaylist(
-            saveChosenArtwork(),
+            artworkUri,
             binding.playlistNameEditTextCreating.text.toString(),
             binding.playlistDescriptionEditCreating.text?.toString()
         )

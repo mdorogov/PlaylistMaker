@@ -124,6 +124,7 @@ class PlayerActivity() : AppCompatActivity() {
         if (isTrackAdded) {
             Toast.makeText(this, trackName + " добавлен в " + playlistName, Toast.LENGTH_SHORT)
                 .show()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             Toast.makeText(
                 this,
@@ -161,7 +162,6 @@ class PlayerActivity() : AppCompatActivity() {
                 .add(R.id.playlist_creating_container_view, fragment)
                 .addToBackStack(null)
                 .commit()
-
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -323,7 +323,6 @@ class PlayerActivity() : AppCompatActivity() {
 
     fun onClick(int: Int) {
         val playlistId = playlists[int].id
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         viewModel.addTrackToPlaylist(playlistId)
     }
 

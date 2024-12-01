@@ -1,15 +1,25 @@
-package com.practicum.playlistmaker.library.data.db
+package com.practicum.playlistmaker.library.data.impl
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Environment
 import com.practicum.playlistmaker.library.data.converters.PlaylistDbConverter
 import com.practicum.playlistmaker.library.data.converters.SavedTrackDbConverter
+import com.practicum.playlistmaker.library.data.db.PlaylistsDatabase
+import com.practicum.playlistmaker.library.data.db.SavedTracksDatabase
 import com.practicum.playlistmaker.library.data.db.entity.PlaylistEntity
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.library.domain.db.PlaylistsRepository
 import com.practicum.playlistmaker.search.data.models.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.io.File
+import java.io.FileOutputStream
 
 class PlaylistsRepositoryImpl(
+    private val context: Context,
     private val playlistsDatabase: PlaylistsDatabase,
     private val savedTracksDatabase: SavedTracksDatabase,
     private val savedTracksDbConverter: SavedTrackDbConverter,
@@ -39,12 +49,13 @@ class PlaylistsRepositoryImpl(
 
     override suspend fun updatePlaylistData(
         playlistId: Long,
-        playlistArtwork: String,
+        playlistArtwork: Uri?,
         playlistName: String,
         playlistDesctription: String
     ) {
+        val finalUri = getFinalStringUri(playlistArtwork)
         val playlist = PlaylistDbConverter().map(playlistsDatabase.playlistDao().getPlaylistById(playlistId))
-        updatePlaylist(Playlist(playlistId, playlistArtwork, playlistName, playlistDesctription, playlist.numOfTracks, playlist.savedTracksIDs))
+        updatePlaylist(Playlist(playlistId, finalUri, playlistName, playlistDesctription, playlist.numOfTracks, playlist.savedTracksIDs))
 
     }
 
@@ -148,15 +159,41 @@ class PlaylistsRepositoryImpl(
     }
 
     override suspend fun createPlaylist(
-        artworkUri: String,
+        artworkUri: Uri?,
         playlistName: String,
         playlistDescription: String?
     ) {
+
+        val finalUri = getFinalStringUri(artworkUri)
+
         var playlist: Playlist = Playlist(
-            0, artworkUri, playlistName,
+            0, finalUri, playlistName,
             playlistDescription.toString(), 0, null
         )
         playlistsDatabase.playlistDao().insertPlaylist(playlistDbConverter.map(playlist))
+    }
+
+    private fun getFinalStringUri(artworkUri: Uri?): String {
+        if (artworkUri != null) {
+            val filePath = File(
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "artworks"
+            )
+
+            if (!filePath.exists()) {
+                filePath.mkdirs()
+            }
+
+            val file = File(filePath, "art_" + System.currentTimeMillis().toString())
+            val inputStream = context.contentResolver.openInputStream(artworkUri)
+            val outputStream = FileOutputStream(file)
+            BitmapFactory.decodeStream(inputStream)
+                .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
+
+            return file.absolutePath
+        } else {
+            return "android.resource://com.practicum.playlistmaker/drawable/artwork_placeholder"
+        }
     }
 
 

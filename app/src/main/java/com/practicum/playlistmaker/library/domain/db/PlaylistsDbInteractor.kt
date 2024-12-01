@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.library.domain.db
 
+import android.net.Uri
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.search.data.models.Track
 import kotlinx.coroutines.flow.Flow
@@ -12,7 +13,7 @@ interface PlaylistsDbInteractor {
     suspend fun deleteTrackFromPlaylist(playlistId: Long, trackId: Int)
     suspend fun getSavedTracksByPlaylistID(playlistId: Long): Pair<List<Track>?, Long>
     suspend fun createPlaylist(
-        artworkUri: String,
+        artworkUri: Uri?,
         playlistName: String,
         playlistDescription: String?
     )
@@ -20,7 +21,7 @@ interface PlaylistsDbInteractor {
     suspend fun getPlaylistByPlaylistId(playlistId: Long): Playlist
     suspend fun updatePlaylist(
         playlist: Long,
-        playlistArtwork: String,
+        playlistArtwork: Uri?,
         playlistName: String,
         playlistDesctription: String
     )

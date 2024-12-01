@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.library.ui.view_model
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.library.domain.db.PlaylistsDbInteractor
 import com.practicum.playlistmaker.library.ui.state.PlaylistCreatingState
@@ -21,7 +22,7 @@ class PlaylistEditInfoViewModel(private val playlistInteractor: PlaylistsDbInter
 
     fun updatePlaylist(
         playlistId: Long,
-        playlistArtwork: String,
+        playlistArtwork: Uri?,
         playlistName: String,
         playlistDesctription: String
     ) {

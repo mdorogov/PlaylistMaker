@@ -20,7 +20,8 @@ open class PlaylistCreatingViewModel(
     protected var stateLiveData = MutableLiveData<PlaylistCreatingState>()
     open fun observeState(): LiveData<PlaylistCreatingState> = stateLiveData
 
-    fun createPlaylist(artworkUri: String, playlistName: String, playlistDescription: String?) {
+    fun createPlaylist(artworkUri: Uri?, playlistName: String, playlistDescription: String?) {
+
         viewModelScope.launch(Dispatchers.IO) {
             playlistInteractor.createPlaylist(artworkUri, playlistName, playlistDescription)
             stateLiveData.postValue(PlaylistCreatingState.PlaylistCreated(playlistName))
