@@ -53,8 +53,11 @@ class PlaylistsRepositoryImpl(
         playlistName: String,
         playlistDesctription: String
     ) {
-        val finalUri = getFinalStringUri(playlistArtwork)
+        var finalUri = ""
         val playlist = PlaylistDbConverter().map(playlistsDatabase.playlistDao().getPlaylistById(playlistId))
+        if (playlist.artwork.equals(playlistArtwork.toString())){
+            finalUri = playlistArtwork.toString()
+        } else finalUri = getFinalStringUri(playlistArtwork)
         updatePlaylist(Playlist(playlistId, finalUri, playlistName, playlistDesctription, playlist.numOfTracks, playlist.savedTracksIDs))
 
     }

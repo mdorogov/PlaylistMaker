@@ -1,7 +1,10 @@
 package com.practicum.playlistmaker.library.ui.fragments
 
 import android.health.connect.datatypes.units.Length
+import android.media.Image
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -44,13 +48,14 @@ class PlaylistFragment : Fragment(){
         fun createArgs(playlistId: Long): Bundle = bundleOf(ARGS_PLAYLIST_ID to playlistId)
     }
 
-    private var savedId: Long? = null
 
     private var _binding: FragmentPlaylistBinding? = null
     private val binding get() = _binding!!
+    private var isInitialized = false
 
 
     private lateinit var playlist: Playlist
+    private var savedId: Long? = null
     private var tracks = ArrayList<Track>()
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var bottomSettingsSheetBehavior: BottomSheetBehavior<View>
@@ -67,7 +72,7 @@ class PlaylistFragment : Fragment(){
         _binding = FragmentPlaylistBinding.inflate(inflater, container, false)
 
         savedInstanceState?.let {
-            var savedId = it.getString("SAVED_ID")
+            savedId = it.getString("SAVED_ID")?.toLong()
         }
         return binding.root
     }
@@ -80,8 +85,10 @@ class PlaylistFragment : Fragment(){
             render(it)
         }
 
-        val playlistId = requireArguments().getLong(ARGS_PLAYLIST_ID)
-        playlistViewModel.loadData(playlistId)
+        savedId = requireArguments().getLong(ARGS_PLAYLIST_ID)
+
+         playlistViewModel.loadData(savedId!!)
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -89,11 +96,15 @@ class PlaylistFragment : Fragment(){
         outState.putLong("SAVED_ID", playlist.id)
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+
+    }
+
     override fun onResume() {
         super.onResume()
-
         if (savedId?.equals(null) == false) {
-            playlistViewModel.loadData(savedId!!)
+          playlistViewModel.loadData(savedId!!)
         }
 
     }
@@ -101,11 +112,13 @@ class PlaylistFragment : Fragment(){
 
     private fun render(state: PlaylistState?) {
         when (state) {
-            is PlaylistState.Content -> showContent(
-                state.playlist,
-                state.tracks,
-                state.tracksDuration
-            )
+            is PlaylistState.Content -> {
+                showContent(
+                    state.playlist,
+                    state.tracks,
+                    state.tracksDuration
+                )
+            }
 
             is PlaylistState.TrackIsDeleted -> showTrackIsDeletedToast()
             is PlaylistState.PlaylistIsDeleted -> moveToLibraryFragment()
@@ -126,14 +139,13 @@ class PlaylistFragment : Fragment(){
 
     private fun showContent(playlist: Playlist, tracks: List<Track>?, tracksDuration: Long) {
         this.playlist = playlist
+        savedId = playlist.id
         if (tracks != null) {
             this.tracks.clear()
             this.tracks.addAll(tracks)
         }
-
-
+setArtwork(playlist.artwork)
         with(binding) {
-            playlistFragmentArtwork.setImageURI(playlist.artwork.toUri())
             playlistFragmentName.setText(playlist.playlistName)
             playlistFragmentDescription.setText(playlist.description)
             playlistFragmentDurationText.setText(
@@ -154,6 +166,10 @@ class PlaylistFragment : Fragment(){
 
             playlistFragmentMenu.setOnClickListener {
                 openBottomSheetMenu()
+            }
+
+            playlistFragmentBackButton.setOnClickListener {
+                parentFragmentManager.popBackStack()
             }
         }
 
@@ -242,7 +258,6 @@ onLongClicker(itemLongClickedId)
         binding.playlistFragmentSettingsSheet.numOfTracks.text =
             WordFormConverter.getTrackWordForm(playlist.numOfTracks)
         setSheetPlaylistArtwork(playlist.artwork)
-        setArtwork(playlist.artwork)
 
         binding.playlistFragmentShareSheet.setOnClickListener {
             sharePlaylist(tracks.isNullOrEmpty())
@@ -262,6 +277,7 @@ onLongClicker(itemLongClickedId)
 
     private fun setArtwork(uri: String) {
         var artwork = binding.playlistFragmentArtwork
+artwork.setImageURI(null)
         Glide.with(artwork)
             .load(uri)
             .placeholder(R.drawable.placeholder)

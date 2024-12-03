@@ -1,19 +1,21 @@
 package com.practicum.playlistmaker.library.ui.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import com.practicum.playlistmaker.databinding.FragmentPlaylistBinding
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.data.models.Playlist
-import com.practicum.playlistmaker.library.ui.fragments.PlaylistFragment.Companion.ARGS_PLAYLIST_ID
 import com.practicum.playlistmaker.library.ui.state.PlaylistCreatingState
-import com.practicum.playlistmaker.library.ui.state.PlaylistEditState
-import com.practicum.playlistmaker.library.ui.view_model.PlaylistCreatingViewModel
 import com.practicum.playlistmaker.library.ui.view_model.PlaylistEditInfoViewModel
 import com.practicum.playlistmaker.main.ui.RootActivity
+import com.practicum.playlistmaker.search.mapper.DimensConverter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -51,7 +53,9 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
     }
 
     private fun setEditViews(playlist: Playlist) {
-        playlistArtwork.setImageURI(playlist.artwork.toUri())
+        artworkUri = playlist.artwork.toUri()
+        setPlaylistArtwork()
+        // playlistArtwork.setImageURI(artworkUri)
         playlistNameEditText.editText?.setText(playlist.playlistName)
         playlistDescriptionEditText.editText?.setText(playlist.description)
         createPlaylistButton.setText("Сохранить")
@@ -64,6 +68,25 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
             playlistDescriptionEditText.editText?.text.toString()
         )
         parentFragmentManager.popBackStack()
+    }
+
+    private fun setPlaylistArtwork() {
+        Glide.with(playlistArtwork)
+            .load(artworkUri.toString())
+            .placeholder(R.drawable.placeholder)
+            .apply(
+                RequestOptions().transform(
+                    MultiTransformation(
+                        CenterCrop(),
+                        RoundedCorners(DimensConverter.dpToPx(8f, playlistArtwork))
+                    )
+                )
+            )
+            .into(playlistArtwork)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 
     override fun openExitDialog() {

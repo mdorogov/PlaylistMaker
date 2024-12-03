@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -66,7 +67,7 @@ open class PlaylistCreatingFragment : Fragment() {
     var isPlaylistNameEmpty = true
 
     private var _binding: FragmentPlaylistCreatingBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
 
     var isNewPlaylistDataFilled: Boolean = false
@@ -75,6 +76,8 @@ open class PlaylistCreatingFragment : Fragment() {
         if (uri != null) {
             Glide.with(playlistArtwork)
                 .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .placeholder(R.drawable.placeholder)
                 .apply(
                     RequestOptions().transform(
@@ -127,7 +130,7 @@ open class PlaylistCreatingFragment : Fragment() {
     }
 
     private fun setPlaylistCreatingViews() {
-        playlistArtwork = binding.playlistArtwork
+        playlistArtwork = this.binding.playlistArtwork
         playlistNameEditText = this.binding.playlistNameEdit
         playlistDescriptionEditText = this.binding.playlistDescriptionEdit
         createPlaylistButton = this.binding.createPlaylistButton

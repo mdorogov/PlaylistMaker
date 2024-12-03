@@ -24,6 +24,7 @@
                 android:layout_width="410dp"
                 android:layout_height="410dp"
                 android:foregroundGravity="fill_horizontal"
+                android:scaleType="centerCrop"
                 tools:src="@drawable/placeholder" />
 
             <ImageView
