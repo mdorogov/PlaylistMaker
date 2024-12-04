@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -44,7 +45,7 @@ import java.io.FileOutputStream
 import java.sql.Time
 import java.sql.Timestamp
 
-class PlaylistCreatingFragment : Fragment() {
+open class PlaylistCreatingFragment : Fragment() {
 
     companion object {
         fun newInstance() = PlaylistCreatingFragment().apply {
@@ -52,22 +53,21 @@ class PlaylistCreatingFragment : Fragment() {
         }
     }
 
-    private val viewModel: PlaylistCreatingViewModel by viewModel {
+    open val viewModel: PlaylistCreatingViewModel by viewModel {
         parametersOf()
     }
 
-    private lateinit var playlistArtwork: ImageView
-    private lateinit var playlistNameEditText: TextInputLayout
-    private lateinit var playlistDescriptionEditText: TextInputLayout
-    private lateinit var createPlaylistButton: Button
+    protected lateinit var playlistArtwork: ImageView
+    protected lateinit var playlistNameEditText: TextInputLayout
+    protected lateinit var playlistDescriptionEditText: TextInputLayout
+    protected lateinit var createPlaylistButton: Button
 
-    private lateinit var artworkUri: Uri
-    private var isArtworkChosen: Boolean = false
+    protected var artworkUri: Uri? = null
 
     var isPlaylistNameEmpty = true
 
     private var _binding: FragmentPlaylistCreatingBinding? = null
-    private val binding get() = _binding!!
+    protected val binding get() = _binding!!
 
 
     var isNewPlaylistDataFilled: Boolean = false
@@ -76,6 +76,8 @@ class PlaylistCreatingFragment : Fragment() {
         if (uri != null) {
             Glide.with(playlistArtwork)
                 .load(uri)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .placeholder(R.drawable.placeholder)
                 .apply(
                     RequestOptions().transform(
@@ -87,7 +89,6 @@ class PlaylistCreatingFragment : Fragment() {
                 )
                 .into(playlistArtwork)
             artworkUri = uri
-            isArtworkChosen = true
         }
     }
 
@@ -129,9 +130,10 @@ class PlaylistCreatingFragment : Fragment() {
     }
 
     private fun setPlaylistCreatingViews() {
-        playlistArtwork = binding.playlistArtwork
+        playlistArtwork = this.binding.playlistArtwork
         playlistNameEditText = this.binding.playlistNameEdit
         playlistDescriptionEditText = this.binding.playlistDescriptionEdit
+        createPlaylistButton = this.binding.createPlaylistButton
 
         binding.playlistCreatingFragment.animation =
             android.view.animation.AnimationUtils.loadAnimation(
@@ -154,7 +156,6 @@ class PlaylistCreatingFragment : Fragment() {
         binding.createPlaylistButton.setOnClickListener {
             if (!isPlaylistNameEmpty) {
                 createPlaylist()
-                saveChosenArtwork()
             }
         }
 
@@ -162,7 +163,7 @@ class PlaylistCreatingFragment : Fragment() {
     }
 
 
-    private fun openExitDialog() {
+    open fun openExitDialog() {
         if (!isPlaylistNameEmpty) {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Завершить создание плейлиста?")
@@ -217,34 +218,9 @@ class PlaylistCreatingFragment : Fragment() {
         binding.playlistDescriptionEditCreating.setSelectAllOnFocus(true)
     }
 
-    private fun saveChosenArtwork(): String {
-
-        if (isArtworkChosen) {
-            val filePath = File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "artworks"
-            )
-
-            if (!filePath.exists()) {
-                filePath.mkdirs()
-            }
-
-            val file = File(filePath, "art_" + System.currentTimeMillis().toString())
-            val inputStream = requireActivity().contentResolver.openInputStream(artworkUri)
-            val outputStream = FileOutputStream(file)
-            BitmapFactory.decodeStream(inputStream)
-                .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-
-            return file.absolutePath
-        } else {
-            return "android.resource://com.practicum.playlistmaker/drawable/artwork_placeholder"
-        }
-
-    }
-
-    private fun createPlaylist() {
+    open fun createPlaylist() {
         viewModel.createPlaylist(
-            saveChosenArtwork(),
+            artworkUri,
             binding.playlistNameEditTextCreating.text.toString(),
             binding.playlistDescriptionEditCreating.text?.toString()
         )
@@ -266,4 +242,6 @@ class PlaylistCreatingFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

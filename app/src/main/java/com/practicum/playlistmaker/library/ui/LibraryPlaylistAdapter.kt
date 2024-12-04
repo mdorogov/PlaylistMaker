@@ -11,6 +11,8 @@ import android.os.Looper
 import com.google.gson.Gson
 import com.practicum.playlistmaker.databinding.PlaylistLibraryViewBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
+import com.practicum.playlistmaker.library.ui.fragments.PlaylistAdapter
+import com.practicum.playlistmaker.library.ui.fragments.PlaylistAdapter.Companion
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 class LibraryPlaylistAdapter(
     private val context: Context,
     private var playlists: List<Playlist>,
+    private var onItemClicked: (Int) -> Unit
 ) : RecyclerView.Adapter<LibraryPlaylistsViewHolder>() {
     companion object {
         private const val SEARCHING_DELAY = 2000L
@@ -46,11 +49,19 @@ class LibraryPlaylistAdapter(
     override fun onBindViewHolder(holder: LibraryPlaylistsViewHolder, position: Int) {
         holder.bind(playlists[position])
         holder.itemView.setOnClickListener {
-            openPlayerDebounce(playlists[position])
+            openPlayerDebounce(position)
         }
     }
 
-    private fun openPlayerDebounce(playlist: Playlist) {
-        val current = isClickAllowed
+    private fun openPlayerDebounce(position: Int) {
+        if (isClickAllowed) {
+            isClickAllowed = false
+            onItemClicked(position)
+            CoroutineScope(Dispatchers.IO).launch {
+                delay(SEARCHING_DELAY)
+                isClickAllowed = true
+            }
+        }
+
     }
 }

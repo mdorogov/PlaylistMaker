@@ -12,16 +12,17 @@ import com.practicum.playlistmaker.search.mapper.DimensConverter
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.PlaylistSheetViewBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
+import com.practicum.playlistmaker.library.mapper.WordFormConverter
 
 class PlaylistViewHolder(private val binding: PlaylistSheetViewBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    private val artwork: ImageView = itemView.findViewById(R.id.artwork)
+    private val artwork: ImageView = itemView.findViewById(R.id.playlist_artwork)
 
 
     fun bind(model: Playlist) {
         binding.playlistName.text = model.playlistName
-        binding.numOfTracks.text = model.numOfTracks.toString()
+        binding.numOfTracks.text = WordFormConverter.getTrackWordForm(model.numOfTracks)
         setArtwork(model.artwork)
 
     }

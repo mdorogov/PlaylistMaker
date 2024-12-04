@@ -28,16 +28,9 @@
 
             <TextView
                 android:id="@+id/track_title"
+                style="@style/SingleTrackViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_14"
-                android:ellipsize="end"
-                android:fontFamily="@font/ys_display_regular"
-                android:maxLines="1"
-                android:paddingLeft="@dimen/padding_8"
-                android:textColor="?attr/colorOnSecondary"
-                android:textSize="@dimen/text_size_16"
-                android:textStyle="bold"
                 tools:text="Track Name" />
 
             <LinearLayout
@@ -57,7 +50,10 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/dot" />
+                    app:tint="?attr/colorTertiary"
+                    android:padding="5dp"
+                    android:layout_gravity="bottom"
+                    android:src="@drawable/dotter" />
 
                 <TextView
                     android:id="@+id/track_duration"

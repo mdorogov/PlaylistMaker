@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentFavoriteTracksBinding
 import com.practicum.playlistmaker.library.ui.state.FavoriteTracksState
-import com.practicum.playlistmaker.library.ui.state.PlaylistsState
 import com.practicum.playlistmaker.library.ui.view_model.FavoriteTracksViewModel
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.ui.TrackAdapter
@@ -44,7 +43,6 @@ class FavoriteTracksFragment : Fragment() {
         favoriteTracksViewModel.loadData()
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -72,7 +70,10 @@ class FavoriteTracksFragment : Fragment() {
         statusView = binding.favTracksStatusLayout
         trackRecycler.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        trackAdapter = TrackAdapter(requireContext(), tracks)
+        trackAdapter = TrackAdapter(requireContext(), tracks) { itemId ->
+            onLongClick(itemId)
+        }
+        trackRecycler.adapter = trackAdapter
     }
 
     override fun onDestroyView() {
@@ -91,10 +92,10 @@ class FavoriteTracksFragment : Fragment() {
     private fun showError(stringRes: Int) {
         when (stringRes) {
             1 -> {
+               trackRecycler.visibility = View.GONE
                 statusView.visibility = View.VISIBLE
-                _binding!!.favTracksErrorTxt.setText(R.string.fav_tracks_not_found_txt)
+                binding.favTracksErrorTxt.setText(R.string.fav_tracks_not_found_txt)
             }
-
             else -> {}
         }
     }
@@ -104,10 +105,10 @@ class FavoriteTracksFragment : Fragment() {
         tracks.addAll(favTracks)
         trackRecycler.visibility = View.VISIBLE
         statusView.visibility = View.GONE
-
-        trackRecycler.adapter = trackAdapter
         trackAdapter.notifyDataSetChanged()
     }
 
+    private fun onLongClick(itemId: Int) {
 
+    }
 }

@@ -9,12 +9,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import androidx.navigation.Navigation.findNavController
 import com.google.gson.Gson
 import com.practicum.playlistmaker.databinding.PlaylistSheetViewBinding
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.library.ui.view_model.PlaylistViewHolder
-import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -23,8 +23,7 @@ import kotlinx.coroutines.launch
 class PlaylistAdapter(
     private val context: Context,
     private var playlists: ArrayList<Playlist>,
-    private var onClick: OnPlaylistClick
-) : RecyclerView.Adapter<PlaylistViewHolder>() {
+    private var onItemClicked: (Int) -> Unit) : RecyclerView.Adapter<PlaylistViewHolder>() {
     companion object {
         private const val SEARCHING_DELAY = 2000L
     }
@@ -45,18 +44,14 @@ class PlaylistAdapter(
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         holder.bind(playlists[position])
         holder.itemView.setOnClickListener {
-            onClick.onClick(position)
-            // openPlayerDebounce(playlists[position])
+            openPlaylistDebounce(position)
         }
     }
 
-    private fun openPlayerDebounce(playlist: Playlist) {
-        val current = isClickAllowed
+    private fun openPlaylistDebounce(position: Int) {
         if (isClickAllowed) {
             isClickAllowed = false
-            val playerIntent = Intent(context, PlayerActivity::class.java)
-            playerIntent.putExtra(Intent.EXTRA_SUBJECT, Gson().toJson(playlist))
-            context.startActivity(playerIntent)
+            onItemClicked(position)
             CoroutineScope(Dispatchers.IO).launch {
                 delay(SEARCHING_DELAY)
                 isClickAllowed = true

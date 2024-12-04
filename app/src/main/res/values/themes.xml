@@ -11,5 +11,6 @@
         <item name="colorAccent">@color/blue</item>
         <item name="colorOnSurfaceVariant">@color/gray</item>
         <item name="colorSecondaryVariant">@color/gray_search</item>
+        <item name="colorTertiary">@color/gray</item>
     </style>
 </resources>

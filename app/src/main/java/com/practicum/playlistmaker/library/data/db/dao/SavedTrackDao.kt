@@ -22,6 +22,9 @@ interface SavedTrackDao {
     @Delete(entity = SavedTrackEntity::class)
     suspend fun deleteSavedTrackEntity(savedTrackEntity: SavedTrackEntity)
 
-    @Query("SELECT * FROM saved_tracks WHERE track_id IN (:savedIDs)")
+    @Query("SELECT * FROM saved_tracks WHERE track_id IN (:savedIDs) ORDER BY timeStamp ASC")
     fun getSavedTracks(savedIDs: List<Int>): List<SavedTrackEntity>
+
+    @Query("DELETE FROM saved_tracks WHERE track_id = :trackId")
+    suspend fun deleteSavedTrackById(trackId: Int)
 }

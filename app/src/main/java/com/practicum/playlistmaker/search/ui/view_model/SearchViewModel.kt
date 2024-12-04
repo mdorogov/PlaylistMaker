@@ -61,11 +61,8 @@ class SearchViewModel(
         errorMessage: String?,
         userRequest: String
     ) {
-        val songs = mutableListOf<Track>()
         if (foundTracks != null) {
-            songs.clear()
-            songs.addAll(foundTracks)
-            renderState(SearchState.Content(foundTracks = songs))
+            renderState(SearchState.Content(foundTracks))
         }
 
         if (errorMessage != null) {
@@ -86,16 +83,12 @@ class SearchViewModel(
     }
 
     fun setHistorySharedPrefListener() {
-        var sharedListener =
-            SharedPreferences.OnSharedPreferenceChangeListener { sharedPreferences, key ->
-                if (key == JSON_HISTORY_KEY) {
-                    val history = sharedPreferences?.getString(JSON_HISTORY_KEY, null)
-                    if (history != null) {
-                        loadTracksHistory()
-                    }
-                }
+        tracksInteractor.getChangedHistoryLiveData().observeForever {
+            historyChanged ->
+            if (historyChanged){
+                loadTracksHistory()
             }
-        tracksInteractor.setSharedPrefListener(sharedListener)
+        }
     }
 
 

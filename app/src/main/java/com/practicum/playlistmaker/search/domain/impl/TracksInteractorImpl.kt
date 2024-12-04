@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.search.domain.impl
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
 import com.practicum.playlistmaker.creator.Resource
 import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.search.domain.api.SearchHistoryRepository
@@ -35,11 +36,11 @@ class TracksInteractorImpl(private val trackSearcher: TrackSearchInteractor,
         return searchHistoryRepository.createTrackArrayListFromJson()
     }
 
-    override fun setSharedPrefListener(sharedListener: SharedPreferences.OnSharedPreferenceChangeListener) {
-        searchHistoryRepository.setSharedPrefListener(sharedListener)
-    }
-
     override fun addTrackToArray(track: Track) {
         searchHistoryRepository.addTrackToArray(track)
+    }
+
+    override fun getChangedHistoryLiveData(): LiveData<Boolean>{
+        return searchHistoryRepository.getChangedHistoryLiveData()
     }
 }
