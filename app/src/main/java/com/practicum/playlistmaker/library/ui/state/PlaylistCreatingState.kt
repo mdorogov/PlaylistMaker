@@ -7,4 +7,5 @@ import java.net.URI
 sealed interface PlaylistCreatingState {
     data class PlaylistCreated(val playlistName: String) : PlaylistCreatingState
     data class PlaylistEdit(val playlist: Playlist): PlaylistCreatingState
+    data class PlaylistIsUpdated(val isUpdated: Boolean): PlaylistCreatingState
 }

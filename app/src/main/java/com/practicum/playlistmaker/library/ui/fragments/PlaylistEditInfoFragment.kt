@@ -48,8 +48,16 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
     private fun render(state: PlaylistCreatingState?) {
         when (state) {
             is PlaylistCreatingState.PlaylistEdit -> setEditViews(state.playlist)
+            is PlaylistCreatingState.PlaylistIsUpdated -> showPlaylistFragment(state.isUpdated)
             else -> {}
         }
+    }
+
+    private fun showPlaylistFragment(isUpdated: Boolean) {
+       if (isUpdated){
+           parentFragmentManager.popBackStack()
+       }
+
     }
 
     private fun setEditViews(playlist: Playlist) {
@@ -67,7 +75,7 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
             playlistNameEditText.editText?.text.toString(),
             playlistDescriptionEditText.editText?.text.toString()
         )
-        parentFragmentManager.popBackStack()
+
     }
 
     private fun setPlaylistArtwork() {

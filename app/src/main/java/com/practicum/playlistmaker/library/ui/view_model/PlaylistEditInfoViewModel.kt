@@ -33,6 +33,7 @@ class PlaylistEditInfoViewModel(private val playlistInteractor: PlaylistsDbInter
                 playlistName,
                 playlistDesctription
             )
+            stateLiveData.postValue(PlaylistCreatingState.PlaylistIsUpdated(true))
         }
     }
 
