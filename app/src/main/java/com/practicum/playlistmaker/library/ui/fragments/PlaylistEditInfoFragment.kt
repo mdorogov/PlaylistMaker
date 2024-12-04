@@ -55,7 +55,7 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
 
     private fun showPlaylistFragment(isUpdated: Boolean) {
        if (isUpdated){
-           parentFragmentManager.popBackStack()
+           findNavController().popBackStack()
        }
 
     }
@@ -63,7 +63,6 @@ class PlaylistEditInfoFragment : PlaylistCreatingFragment() {
     private fun setEditViews(playlist: Playlist) {
         artworkUri = playlist.artwork.toUri()
         setPlaylistArtwork()
-        // playlistArtwork.setImageURI(artworkUri)
         playlistNameEditText.editText?.setText(playlist.playlistName)
         playlistDescriptionEditText.editText?.setText(playlist.description)
         createPlaylistButton.setText("Сохранить")
