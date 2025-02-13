@@ -37,12 +37,20 @@ class SavedTrackDbConverter {
         )
     }
 
-    fun map(entityArray: List<SavedTrackEntity>): List<Track> {
+    fun map(entityArray: List<SavedTrackEntity>, playlistIDs: List<Int>): Pair<List<Track>, Long> {
         var tracks = arrayListOf<Track>()
+        var durationOfAllTracks: Long = 0
 
         for (entity in entityArray) {
+            val track: Track = map(entity)
+            var trackDuration: Long? = track.trackTimeMillis.toLongOrNull()
+            if (trackDuration != null) durationOfAllTracks += trackDuration
+
             tracks.add(map(entity))
         }
-        return tracks
+
+        val trackSort = tracks.associateBy { it.trackId }
+        val sortedTracks = playlistIDs.reversed().mapNotNull { trackSort[it] }
+        return Pair(sortedTracks, durationOfAllTracks)
     }
 }

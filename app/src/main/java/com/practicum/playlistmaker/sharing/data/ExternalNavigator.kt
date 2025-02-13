@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import com.practicum.playlistmaker.search.data.models.Track
 import com.practicum.playlistmaker.sharing.domain.model.EmailData
 
 class ExternalNavigator(var context: Context) :AppCompatActivity() {
@@ -40,4 +41,16 @@ class ExternalNavigator(var context: Context) :AppCompatActivity() {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(intent)
     }
+
+    fun sharePlaylist(playlistData: String) {
+        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_TEXT, playlistData)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        shareIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(shareIntent)
+    }
+
+
 }

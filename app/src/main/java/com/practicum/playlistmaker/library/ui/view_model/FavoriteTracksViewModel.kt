@@ -29,7 +29,7 @@ class FavoriteTracksViewModel(
                     processResult(tracks)
                 }
         }
-        stateLiveData.postValue(FavoriteTracksState.ContentNotFound(1))
+            // stateLiveData.postValue(FavoriteTracksState.ContentNotFound(1))
     }
 
     private fun processResult(tracks: List<Track>) {

@@ -25,6 +25,6 @@ class Playlist(
         if (!savedTracksIDs.isNullOrEmpty()) {
 
             numOfTracks = savedTracksIDs!!.size
-        }
+        } else numOfTracks = 0
     }
 }

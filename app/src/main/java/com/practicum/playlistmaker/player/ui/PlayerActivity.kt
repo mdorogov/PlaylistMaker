@@ -21,14 +21,13 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.library.data.models.Playlist
 import com.practicum.playlistmaker.library.ui.fragments.PlaylistAdapter
 import com.practicum.playlistmaker.library.ui.fragments.PlaylistCreatingFragment
-import com.practicum.playlistmaker.player.domain.api.OnPlaylistClick
 import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.player.ui.view_model.PlayerViewModel
 import com.practicum.playlistmaker.search.data.models.Track
 import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.core.parameter.parametersOf
 
-class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
+class PlayerActivity() : AppCompatActivity() {
     private lateinit var viewModel: PlayerViewModel
 
     companion object {
@@ -115,7 +114,6 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
         if (this::playlistAdapter.isInitialized) {
             playlistAdapter.notifyDataSetChanged()
         }
-
     }
 
     private fun showTrackAddedToast(
@@ -126,6 +124,7 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
         if (isTrackAdded) {
             Toast.makeText(this, trackName + " добавлен в " + playlistName, Toast.LENGTH_SHORT)
                 .show()
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             Toast.makeText(
                 this,
@@ -136,8 +135,6 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
     }
 
     private fun openPlaylistCreatingFragment() {
-
-
     }
 
     private fun openPlaylistsBottomSheet(playlists: ArrayList<Playlist>?) {
@@ -148,7 +145,10 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
                 LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
             this.playlists = playlists
 
-            playlistAdapter = PlaylistAdapter(applicationContext, playlists, this)
+            playlistAdapter = PlaylistAdapter(applicationContext, playlists) { itemId ->
+                onClick(itemId)
+
+            }
             playlistRecycler.adapter = playlistAdapter
             playlistAdapter.notifyDataSetChanged()
         }
@@ -162,7 +162,6 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
                 .add(R.id.playlist_creating_container_view, fragment)
                 .addToBackStack(null)
                 .commit()
-
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -181,7 +180,6 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         overlay.visibility = View.VISIBLE
-                        loadPlaylists()
                     }
 
                     else -> {
@@ -196,16 +194,11 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
         })
     }
 
-    private fun loadPlaylists() {
-        if (!playlists.isNullOrEmpty()) {
-        }
-
-    }
-
     private fun changeContentVisibility(isVisible: Boolean) {
     }
 
     fun setPlayStatus(progress: String, isPlaying: Boolean) {
+        isTrackPlaying = isPlaying
         changeButtonStyle(isPlaying)
         playtime.text = progress
     }
@@ -328,9 +321,8 @@ class PlayerActivity() : AppCompatActivity(), OnPlaylistClick {
             .into(artworkView)
     }
 
-    override fun onClick(int: Int) {
+    fun onClick(int: Int) {
         val playlistId = playlists[int].id
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         viewModel.addTrackToPlaylist(playlistId)
     }
 

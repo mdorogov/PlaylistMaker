@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.practicum.playlistmaker.library.data.models.Playlist
@@ -28,10 +27,10 @@ class PlaylistsFragment : Fragment() {
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
 
-    private var playlists = arrayListOf<Playlist>()
+    private lateinit var playlists: List<Playlist>
 
 
-    private val playlistViewModel: PlaylistsViewModel by viewModel {
+    private val playlistsViewModel: PlaylistsViewModel by viewModel {
         parametersOf()
     }
 
@@ -47,22 +46,18 @@ class PlaylistsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        playlistViewModel.observeState().observe(viewLifecycleOwner) {
+        playlistsViewModel.observeState().observe(viewLifecycleOwner) {
             render(it)
         }
 
-        playlistViewModel.loadData()
+        playlistsViewModel.loadData()
         binding.createPlaylistButtonFragment.setOnClickListener {
-
-
             activity?.supportFragmentManager?.beginTransaction()
                 ?.replace(R.id.rootFragmentContainerView, PlaylistCreatingFragment())
                 ?.addToBackStack(null)
                 ?.commit()
 
             (activity as? RootActivity)?.setBottomNavigationView(false)
-
-
         }
 
 
@@ -70,6 +65,7 @@ class PlaylistsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        playlistsViewModel.loadData()
         (activity as? RootActivity)?.setBottomNavigationView(true)
     }
 
@@ -89,8 +85,9 @@ class PlaylistsFragment : Fragment() {
     private fun showError(stringRes: Int) {
         when (stringRes) {
             1 -> {
-                _binding!!.playlistsStatusLayout.visibility = View.VISIBLE
-                _binding!!.playlistsErrorTxt.setText(R.string.fragment_list_not_found_text)
+                binding!!.playlistsStatusLayout.visibility = View.VISIBLE
+                binding.allPlaylistsRecycler.visibility = View.GONE
+                binding!!.playlistsErrorTxt.setText(R.string.fragment_list_not_found_text)
             }
 
             else -> {}
@@ -99,15 +96,27 @@ class PlaylistsFragment : Fragment() {
 
     private fun showContent(playlists: List<Playlist>) {
         binding.playlistsStatusLayout.visibility = View.GONE
+        binding.allPlaylistsRecycler.visibility = View.VISIBLE
+
+        this.playlists = playlists
 
         val recyclerView = binding.allPlaylistsRecycler
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
-        var playlistAdapter = LibraryPlaylistAdapter(requireContext(), playlists)
+        var playlistAdapter = LibraryPlaylistAdapter(requireContext(), playlists){ itemId ->
+            onClick(itemId)
+        }
+
         recyclerView.adapter = playlistAdapter
         playlistAdapter.notifyDataSetChanged()
         recyclerView.visibility = View.VISIBLE
 
     }
 
-
+    fun onClick(int: Int) {
+        val playlistId = playlists[int].id
+        findNavController().navigate(
+            R.id.action_libraryFragment_to_playlistFragment,
+            PlaylistFragment.createArgs(playlistId)
+        )
+    }
 }

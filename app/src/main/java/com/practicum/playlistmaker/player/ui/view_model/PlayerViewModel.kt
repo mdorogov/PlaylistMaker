@@ -53,25 +53,26 @@ class PlayerViewModel(
             }
             screenPlayerStateLiveData.postValue(PlayerState.Content(trackModel, isTrackFavorite))
         }
-    }
-
-    private suspend fun isTrackFavoriteTEST(trackId: Int): Boolean {
-        return favoriteTracksDbInteractor.isTrackFavorite(trackId)
+        tracksPlayerInteractor.initializePlayer(trackModel.previewUrl)
     }
 
     private fun addTrackToFavorites() {
+        isTrackFavorite = true
         trackModel.setTimeStamp()
         viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksDbInteractor.insertFavTrack(trackModel)
+            screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(true))
         }
-        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(true))
+
     }
 
     private fun deleteTrackFromFavorites() {
+        isTrackFavorite = false
         viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksDbInteractor.deleteFavTrack(trackModel)
+            screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(false))
         }
-        screenPlayerStateLiveData.postValue(PlayerState.FavoriteTrackChanged(false))
+
     }
 
 
@@ -81,9 +82,7 @@ class PlayerViewModel(
     fun play() {
         playerStatusJob?.cancel()
         playerStatusJob = viewModelScope.launch {
-            tracksPlayerInteractor.play(trackModel.previewUrl)
-            delay(WAIT_FOR_PREPARED_PLAYER_TIME_DELAY)
-            PlayerState.PlayTime(tracksPlayerInteractor.getCurrentPlayingPosition())
+            tracksPlayerInteractor.play()
             startTimer()
         }
     }
@@ -102,6 +101,8 @@ class PlayerViewModel(
 
     fun checkOnStop() {
         if (tracksPlayerInteractor.getIsSongPlayed()) {
+            timerJob?.cancel()
+            playerStatusJob?.cancel()
             screenPlayerStateLiveData.postValue(PlayerState.PlayingStopped("00:00"))
         }
     }

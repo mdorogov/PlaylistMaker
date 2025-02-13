@@ -19,11 +19,12 @@ import kotlinx.coroutines.launch
 
 class TrackAdapter(
     private val context: Context,
-    private var tracks: ArrayList<Track>,
-) : RecyclerView.Adapter<TrackViewHolder>() {
-    companion object{
+    private var tracks: List<Track>,
+    private var onItemLongClicked: (Int) -> Unit) : RecyclerView.Adapter<TrackViewHolder>() {
+    companion object {
         private const val SEARCHING_DELAY = 2000L
     }
+
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
@@ -42,7 +43,13 @@ class TrackAdapter(
         holder.itemView.setOnClickListener {
             openPlayerDebounce(tracks[position])
         }
+
+        holder.itemView.setOnLongClickListener {
+            onItemLongClicked(this.tracks[position].trackId)
+            true
+        }
     }
+
 
     private fun openPlayerDebounce(track: Track) {
         val current = isClickAllowed
@@ -58,10 +65,4 @@ class TrackAdapter(
         }
     }
 
-    @SuppressLint("SuspiciousIndentation")
-    fun update(tracks: ArrayList<Track>) {
-        this.tracks.clear()
-        this.tracks = tracks
-        notifyDataSetChanged()
-    }
 }

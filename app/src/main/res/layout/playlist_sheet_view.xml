@@ -12,7 +12,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/artwork"
+            android:id="@+id/playlist_artwork"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_marginLeft="@dimen/padding_13"
@@ -28,15 +28,9 @@
 
             <TextView
                 android:id="@+id/playlist_name"
-                style="@style/CreatePlaylistHintStyle"
+                style="@style/SingleTrackViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_14"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingLeft="@dimen/padding_8"
-                android:textSize="@dimen/text_size_16"
-                android:textStyle="bold"
                 tools:text="U2 greatest hits" />
 
             <LinearLayout
@@ -51,6 +45,7 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:paddingLeft="@dimen/padding_8"
+                    tools:ignore="TextSizeCheck"
                     tools:text="99 треков" />
 
             </LinearLayout>
