@@ -1,5 +1,5 @@
 # PlaylistMaker
-PlaylistMaker is a music previews searcher app for Android. You can search and add songs to your favorites and personal playlists there.
+PlaylistMaker is a music previews searcher app for Android. You can search and add songs to your favorites and personal playlists there.\
 <img src="https://github.com/mdorogov/PlaylistMaker/blob/dev/docs/assets/images/application_preview.jpg" width="260"/>
 <img src="https://github.com/mdorogov/PlaylistMaker/blob/dev/docs/assets/images/application_preview_fav.jpg" width="260"/>
 
