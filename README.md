@@ -9,7 +9,7 @@ The app allows the user to access iTunes music library and listen to previews of
 **Built with** 
 The application is built in **Kotlin and XML**
 
-The next **libraries** are used:\
+The next **libraries** are used:
 - Room
 - Retrofit2
 - Koin
