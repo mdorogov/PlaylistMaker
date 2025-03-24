@@ -1,9 +1,9 @@
-# TrackTaster
+# PlaylistMaker
 TrackTaster is a music previews searcher app for Android. You can search and add songs to your favorites and personal playlists there.\
 <img src="https://github.com/mdorogov/PlaylistMaker/blob/dev/docs/assets/images/application_preview.jpg" width="260"/>
 <img src="https://github.com/mdorogov/PlaylistMaker/blob/dev/docs/assets/images/application_preview_fav.jpg" width="260"/>
 
-## About TrackTaster
+## About PlaylistMaker
 The app allows the user to access iTunes music library and listen to previews of any song.
 
 **Built with** 
